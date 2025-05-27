@@ -1,6 +1,6 @@
 ---
-name: Chore Template
-about: 환경 세팅 이슈 템플릿
+name: Design Template
+about: 디자인 이슈 템플릿
 title: "[design]"
 labels: design
 assignees: ""

@@ -1,5 +1,5 @@
 ---
-name: Chore Template
+name: Docs Template
 about: 문서 수정 이슈 템플릿
 title: "[docs]"
 labels: docs
