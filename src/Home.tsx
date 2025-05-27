@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { loadKakaoMap } from "./KakaoMapLoader";
 
 declare global {
@@ -8,20 +8,25 @@ declare global {
 }
 
 const Home = () => {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<any>(null);
+
   useEffect(() => {
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
-        const container = document.getElementById("map");
-        const options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-          level: 3,
-        };
-        new window.kakao.maps.Map(container, options);
+        if (mapRef.current && !mapInstance.current) {
+          const options = {
+            center: new window.kakao.maps.LatLng(37.5665, 126.978),
+            level: 3,
+          };
+          const map = new window.kakao.maps.Map(mapRef.current, options);
+          mapInstance.current = map;
+        }
       })
       .catch(console.error);
   }, []);
 
-  return <div id="map" style={{ width: "100vw", height: "100vh" }} />;
+  return <div ref={mapRef} style={{ width: "100vw", height: "100vh" }} />;
 };
 
 export default Home;
