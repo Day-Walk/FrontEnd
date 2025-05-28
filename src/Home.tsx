@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { loadKakaoMap } from "./KakaoMapLoader";
 import Header from "./global_components/Header/Header";
+import Footer from "./global_components/Footer/Footer";
 
 declare global {
   interface Window {
@@ -31,6 +32,7 @@ const Home = () => {
   return (
     <>
       <Header />
+      <Footer />
     </>
   );
 };
