@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { loadKakaoMap } from "./KakaoMapLoader";
+import Header from "./global_components/Header/Header";
 
 declare global {
   interface Window {
@@ -26,7 +27,12 @@ const Home = () => {
       .catch(console.error);
   }, []);
 
-  return <div ref={mapRef} style={{ width: "100vw", height: "100vh" }} />;
+  // return <div ref={mapRef} style={{ width: "100vw", height: "100vh" }} />;
+  return (
+    <>
+      <Header />
+    </>
+  );
 };
 
 export default Home;
