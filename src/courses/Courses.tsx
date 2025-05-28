@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import style from "./Courses.module.css";
 import Course from "./components/Course";
 import * as Interfaces from "./interfaces/Interfaces";
+import SearchBox from "./components/SearchBox";
 
 const Courses = () => {
   const [coursePages, setCoursePages] = useState<Interfaces.CourseListResponse>(
@@ -13,6 +14,9 @@ const Courses = () => {
   return (
     <>
       <div>코스 보기</div>
+      <div>
+        <SearchBox />
+      </div>
       <div>
         {coursePages &&
           coursePages.courseList.map((page) =>
