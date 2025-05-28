@@ -1,3 +1,4 @@
+@import url("./fonts/fonts.css");
 :root {
   --color-main: #00b493;
   --color-text: #333;
@@ -8,4 +9,13 @@ body {
   margin: 0;
   padding: 0;
   color: var(--color-text);
+  font-family: "NotoSansKR-Regular", sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  width: 100%;
+  /* 100% - header height */
+  height: calc(100% - 80px);
 }

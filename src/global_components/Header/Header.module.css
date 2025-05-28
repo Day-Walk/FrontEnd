@@ -1,0 +1,31 @@
+.header_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 48px;
+  height: 80px;
+  box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.15);
+}
+
+.header_logo {
+  width: 114px;
+  height: 40px;
+}
+.item_list_wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 64px;
+}
+.item_list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.selected_item {
+  font-weight: bold;
+  color: black;
+}
