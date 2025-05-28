@@ -14,7 +14,9 @@ const Courses = () => {
       <div>코스 보기</div>
       <div>
         {coursePages &&
-          coursePages.courseList.map((page) => page.page.map(() => <Course />))}
+          coursePages.courseList.map((page) =>
+            page.page.map((c) => <Course {...c} />),
+          )}
       </div>
     </>
   );
