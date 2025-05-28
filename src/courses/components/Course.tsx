@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import style from "../Courses.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
+import { Heart } from "lucide-react";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const Course = (nowCourse: Interfaces.Course) => {
   const [coursePages, setCoursePages] = useState<Interfaces.CourseListResponse>(
     Interfaces.dummyCourseList,
   );
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
+
   return (
     <div className={style.courseBlock}>
       <div className={style.header}>
@@ -17,7 +20,13 @@ const Course = (nowCourse: Interfaces.Course) => {
         </div>
         <div className={style.like}>
           <div>{course?.courseLike}</div>
-          <div>{course?.like}</div>
+          <div>
+            {course?.like ? (
+              <AiFillHeart color="#E96563" size={30} />
+            ) : (
+              <AiOutlineHeart size={30} />
+            )}
+          </div>
         </div>
       </div>
       <div className={style.coursePlaceList}>
@@ -29,7 +38,7 @@ const Course = (nowCourse: Interfaces.Course) => {
               className={style.placeImg}
             />
             <div className={style.placeInfo}>
-              <div className={style.idx}>{idx}</div>
+              <div className={style.idx}>{idx + 1}</div>
               <div>{place.placeName}</div>
               <div className={style.address}>
                 {place.address.split(" ").slice(0, 2).join(" ")}
