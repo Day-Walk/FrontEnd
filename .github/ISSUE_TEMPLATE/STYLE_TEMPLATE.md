@@ -1,8 +1,8 @@
 ---
-name: Design Template
+name: Style Template
 about: 디자인 이슈 템플릿
-title: "[design]"
-labels: design
+title: "[style]"
+labels: style
 assignees: ""
 ---
 
