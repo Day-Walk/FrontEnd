@@ -1,0 +1,11 @@
+:root {
+  --color-main: #00b493;
+  --color-text: #333;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--color-text);
+}
