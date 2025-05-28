@@ -12,7 +12,7 @@ const Courses = () => {
   const [nowPage, setNowPage] = useState<number>(0);
 
   return (
-    <>
+    <div className={style.courseWrapper}>
       <div>코스 보기</div>
       <div>
         <SearchBox />
@@ -30,7 +30,7 @@ const Courses = () => {
             )),
           )}
       </div>
-    </>
+    </div>
   );
 };
 

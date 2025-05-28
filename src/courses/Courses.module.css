@@ -18,6 +18,8 @@
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .placeBlock {
@@ -96,4 +98,9 @@
   transform: translateY(-50%);
   color: #999;
   pointer-events: none; /* 아이콘이 클릭을 막지 않게 */
+}
+
+.courseWrapper {
+  width: 80%;
+  margin-left: 10%;
 }
