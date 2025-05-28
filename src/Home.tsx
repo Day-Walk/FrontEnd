@@ -28,13 +28,7 @@ const Home = () => {
       .catch(console.error);
   }, []);
 
-  // return <div ref={mapRef} style={{ width: "100vw", height: "100vh" }} />;
-  return (
-    <>
-      <Header />
-      <Footer />
-    </>
-  );
+  return <div ref={mapRef} style={{ width: "100%", height: "100%" }} />;
 };
 
 export default Home;
