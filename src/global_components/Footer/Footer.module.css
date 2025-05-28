@@ -1,0 +1,42 @@
+.footer_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 40px;
+  background-color: #d9d9d9;
+  box-sizing: border-box;
+}
+
+.footer_title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.line {
+  height: 1px;
+  width: 100%;
+  background-color: #878787;
+  margin: 20px 0;
+}
+
+.boldText {
+  font-weight: bold;
+}
+
+.softText {
+  color: #878787;
+}
+.lastLine_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: end;
+  width: 100%;
+}
+.names p {
+  line-height: 1.5rem;
+  font-size: 14px;
+  word-spacing: 0.5rem;
+  color: #878787;
+}
