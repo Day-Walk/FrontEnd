@@ -5,10 +5,16 @@ import { Heart } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const Course = (nowCourse: Interfaces.Course) => {
-  const [coursePages, setCoursePages] = useState<Interfaces.CourseListResponse>(
-    Interfaces.dummyCourseList,
-  );
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
+  const [like, setLike] = useState<boolean>(course?.like || false);
+
+  const LikeIcon = () => {
+    return like ? (
+      <AiFillHeart color="#E96563" size={30} />
+    ) : (
+      <AiOutlineHeart size={30} />
+    );
+  };
 
   return (
     <div className={style.courseBlock}>
@@ -20,12 +26,8 @@ const Course = (nowCourse: Interfaces.Course) => {
         </div>
         <div className={style.like}>
           <div>{course?.courseLike}&nbsp;</div>
-          <div>
-            {course?.like ? (
-              <AiFillHeart color="#E96563" size={30} />
-            ) : (
-              <AiOutlineHeart size={30} />
-            )}
+          <div onClick={() => setLike(!like)}>
+            <LikeIcon />
           </div>
         </div>
       </div>
