@@ -8,11 +8,14 @@
   margin-bottom: 10px;
 }
 .title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
 }
 .like {
   display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
 }
 .coursePlaceList {
   display: flex;
@@ -34,22 +37,28 @@
 
 .placeInfo {
   position: absolute;
-  top: 120px;
-  left: 0;
+  top: 110px;
+  right: 10px;
   text-align: right;
   color: #fff;
   width: 190px;
   padding: 4px;
+  text-shadow: #333 0px 0px 4px;
 }
 
 .idx {
   font-size: 30px;
-  margin-bottom: 2px 0;
+}
+
+.placeName {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .address {
   font-size: 14px;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 .courseList {
   position: relative;
@@ -103,4 +112,10 @@
 .courseWrapper {
   width: 80%;
   margin-left: 10%;
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0 50px 0;
 }

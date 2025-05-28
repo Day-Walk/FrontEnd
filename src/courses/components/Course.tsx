@@ -19,7 +19,7 @@ const Course = (nowCourse: Interfaces.Course) => {
           코스
         </div>
         <div className={style.like}>
-          <div>{course?.courseLike}</div>
+          <div>{course?.courseLike}&nbsp;</div>
           <div>
             {course?.like ? (
               <AiFillHeart color="#E96563" size={30} />
@@ -39,7 +39,7 @@ const Course = (nowCourse: Interfaces.Course) => {
             />
             <div className={style.placeInfo}>
               <div className={style.idx}>{idx + 1}</div>
-              <div>{place.placeName}</div>
+              <div className={style.placeName}>{place.placeName}</div>
               <div className={style.address}>
                 {place.address.split(" ").slice(0, 2).join(" ")}
               </div>
