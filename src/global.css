@@ -6,7 +6,8 @@
 }
 
 html,
-body {
+body,
+#root {
   margin: 0;
   padding: 0;
   color: var(--color-text);
@@ -15,8 +16,20 @@ body {
   height: 100%;
 }
 
-#root {
-  width: 100%;
-  /* 100% - header height */
-  height: calc(100% - 80px);
+* {
+  box-sizing: border-box;
+}
+
+input,
+button,
+select,
+textarea {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  box-sizing: border-box;
+  appearance: none;
 }
