@@ -1,13 +1,11 @@
 @import url("./fonts/fonts.css");
-
 :root {
   --color-main: #00b493;
   --color-text: #333;
 }
 
 html,
-body,
-#root {
+body {
   margin: 0;
   padding: 0;
   color: var(--color-text);
@@ -32,4 +30,9 @@ textarea {
   background: none;
   box-sizing: border-box;
   appearance: none;
+}
+
+#root {
+  width: 100%;
+  height: calc(100% - 80px);
 }
