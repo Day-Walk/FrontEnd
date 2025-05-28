@@ -27,4 +27,5 @@
 }
 .selected_item {
   font-weight: bold;
+  color: black;
 }
