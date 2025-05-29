@@ -4,15 +4,23 @@ import MyCourse from "./components/MyCourse";
 import MyReview from "./components/MyReview";
 import LikeCourse from "./components/LikeCourse";
 import LikePlace from "./components/LikePlace";
+import { Settings } from "lucide-react";
+import * as Interfaces from "./interfaces/Interfaces";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
+  const [userName, setUserName] = useState<Interfaces.UserInfo>(
+    Interfaces.dummyUserInfo.userInfo,
+  );
 
   return (
     <div className={style.profileWrapper}>
       <div className={style.nameWrapper}>
-        <div>name</div>
-        <button>프로필 수정</button>
+        <div className={style.profileName}>{userName.name}</div>
+        <button className={style.settingBtn}>
+          <Settings size={20} />
+          <div>&nbsp;프로필 수정</div>
+        </button>
       </div>
       <div className={style.rightWrapper}>
         <ul className={style.menuList}>

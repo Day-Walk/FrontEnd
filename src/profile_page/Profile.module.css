@@ -7,6 +7,10 @@
 }
 
 .nameWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 10px;
   margin: 10px;
   border: 1px solid #cccccc;
@@ -268,4 +272,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.profileName {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+.settingBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 30px;
+  border-radius: 10px;
+  border: 1px solid #b4b4b4;
+  cursor: pointer;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }

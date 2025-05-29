@@ -58,6 +58,26 @@ export interface FavoritePlaceListResponse {
   placeList: FavoritePlace[];
 }
 
+export interface UserInfo {
+  userId: string;
+  name: string;
+}
+
+export interface UserInfoResponse {
+  success: boolean;
+  message: string;
+  userInfo: UserInfo;
+}
+
+export const dummyUserInfo: UserInfoResponse = {
+  success: true,
+  message: "유저 조회 성공!",
+  userInfo: {
+    userId: "12345678-1234-5678-1234-123456789123",
+    name: "홍길동",
+  },
+};
+
 export const dummyFavoritePlaces: FavoritePlaceListResponse = {
   success: true,
   message: "유저별 찜한 장소 조회 성공!",
