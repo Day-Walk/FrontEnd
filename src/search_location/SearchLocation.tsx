@@ -33,9 +33,17 @@ const SearchLocation = () => {
     searchPlace();
   };
 
-  const handleClickPlace = (placeId: string) => {
-    // todo : click log api
-    console.log("장소 클릭:", placeId);
+  const handleClickPlace = async (placeId: string) => {
+    try {
+      const res = await api.post("/click-log", {
+        userId: localStorage.getItem("userId"),
+        placeId: placeId,
+      });
+      console.log(res.data);
+      alert("장소 클릭이 기록되었습니다.");
+    } catch (error) {
+      console.error("장소 클릭 처리 실패:", error);
+    }
   };
 
   return (
@@ -70,7 +78,7 @@ const SearchLocation = () => {
               padding: "20px",
             }}
           >
-            {item.name}
+            {item.placeName}
           </div>
         ))
       ) : (
