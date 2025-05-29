@@ -65,7 +65,6 @@ export const ButtonGroup = <T,>({
 
 const Signup = () => {
   const [userInfo, setUserInfo] = useState<UserInfoType>({
-    // todo: kakao에서 받아온 값으로 변경
     userName: "",
     age: null,
     gender: null,
