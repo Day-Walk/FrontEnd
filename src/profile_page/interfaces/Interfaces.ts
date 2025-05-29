@@ -27,6 +27,7 @@ export interface Review {
   categoryName: string;
   subCategoryName: string;
   content: string;
+  address: string;
   stars: number;
   imgUrl: string | null;
   tagList: string[];
@@ -54,6 +55,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "카페",
           subCategoryName: "디저트",
           content: "정말 조용하고 깔끔한 공간이에요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.5,
           imgUrl: "https://picsum.photos/seed/review1/200",
           tagList: ["조용해요", "깨끗해요", "친절해요"],
@@ -64,6 +66,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "공원",
           subCategoryName: "자연",
           content: "산책하기 딱 좋아요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.0,
           imgUrl: "https://picsum.photos/seed/review2/200",
           tagList: ["산책하기좋아요", "넓어요"],
@@ -74,6 +77,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "전망대",
           subCategoryName: "관광지",
           content: "야경이 너무 예뻐요!",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 5.0,
           imgUrl: "https://picsum.photos/seed/review3/200",
           tagList: ["야경맛집", "인생샷"],
@@ -84,6 +88,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "시장",
           subCategoryName: "전통시장",
           content: "먹거리가 다양해서 좋아요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.2,
           imgUrl: "https://picsum.photos/seed/review4/200",
           tagList: ["푸짐해요", "저렴해요"],
@@ -94,6 +99,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "전시",
           subCategoryName: "문화",
           content: "전시도 보고 산책도 하기 좋아요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.8,
           imgUrl: "https://picsum.photos/seed/review5/200",
           tagList: ["디자인좋아요", "전시좋아요"],
@@ -108,6 +114,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "카페",
           subCategoryName: "디저트",
           content: "도넛이 진짜 맛있어요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 5.0,
           imgUrl: "https://picsum.photos/seed/review6/200",
           tagList: ["달콤해요", "인기많아요"],
@@ -118,6 +125,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "공원",
           subCategoryName: "자연",
           content: "조용하고 공기 좋아요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.3,
           imgUrl: "https://picsum.photos/seed/review7/200",
           tagList: ["한적해요", "공기좋아요"],
@@ -128,6 +136,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "공연",
           subCategoryName: "연극",
           content: "공연이 아주 인상적이었어요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.7,
           imgUrl: null,
           tagList: ["공연좋아요", "감동적이에요"],
@@ -138,6 +147,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "골목",
           subCategoryName: "한옥",
           content: "사진 찍기 좋아요.",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.6,
           imgUrl: "https://picsum.photos/seed/review9/200",
           tagList: ["전통느낌", "한옥", "인생샷"],
@@ -148,6 +158,7 @@ export const dummyReviewList: ReviewListResponse = {
           categoryName: "시장",
           subCategoryName: "전통시장",
           content: "빈대떡이 최고예요!",
+          address: "서울특별시 성동구 서울숲길 273",
           stars: 4.9,
           imgUrl: "https://picsum.photos/seed/review10/200",
           tagList: ["맛있어요", "전통시장"],
