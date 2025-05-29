@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./SearchLocation.module.css";
 
 import { api } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 const SearchLocation = () => {
   const [value, setValue] = useState("");
@@ -33,7 +34,14 @@ const SearchLocation = () => {
     searchPlace();
   };
 
+  const navigate = useNavigate();
   const handleClickPlace = async (placeId: string) => {
+    if (localStorage.getItem("userId") === null) {
+      alert("사용자 정보가 없습니다. 다시 회원가입을 진행해주세요.");
+      navigate("/signup");
+      return;
+    }
+
     try {
       const res = await api.post("/click-log", {
         userId: localStorage.getItem("userId"),
@@ -76,6 +84,10 @@ const SearchLocation = () => {
             }}
             style={{
               padding: "20px",
+              cursor: "pointer",
+              border: "1px solid #ccc",
+              width: "800px",
+              margin: "10px",
             }}
           >
             {item.placeName}

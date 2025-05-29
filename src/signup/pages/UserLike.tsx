@@ -103,6 +103,11 @@ const UserLike = () => {
       alert("카테고리와 태그를 올바르게 선택해주세요.");
       return;
     }
+    if (localStorage.getItem("userId") === null) {
+      alert("사용자 정보가 없습니다. 다시 회원가입을 진행해주세요.");
+      navigate("/signup");
+      return;
+    }
 
     try {
       const res = await api.post("/user-like", {
