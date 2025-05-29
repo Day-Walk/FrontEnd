@@ -94,12 +94,11 @@ const Signup = () => {
         age: userInfo.age,
       });
 
-      if (res.data.hasSuccess) {
-        let userId = res.data.userId;
-        localStorage.clear();
-        localStorage.setItem("userId", userId);
-        navigate("/signup/user-like");
-      }
+      let userId = res.data.userId;
+      localStorage.clear();
+      localStorage.setItem("userId", userId);
+      navigate("/signup/user-like");
+
       console.log(res.data);
     } catch (error) {
       console.error("회원가입 실패:", error);
