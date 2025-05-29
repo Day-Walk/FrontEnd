@@ -1,20 +1,10 @@
 import { useEffect, useState } from "react";
-import style from "../Courses.module.css";
+import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
-import { Heart } from "lucide-react";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const Course = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [like, setLike] = useState<boolean>(course?.like || false);
-
-  const LikeIcon = () => {
-    return like ? (
-      <AiFillHeart color="#E96563" size={30} />
-    ) : (
-      <AiOutlineHeart size={30} />
-    );
-  };
 
   return (
     <div className={style.courseBlock}>
@@ -23,12 +13,6 @@ const Course = (nowCourse: Interfaces.Course) => {
           "{course?.userName}" 님의{" "}
           <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
           코스
-        </div>
-        <div className={style.like}>
-          <div>{course?.courseLike}&nbsp;</div>
-          <div onClick={() => setLike(!like)}>
-            <LikeIcon />
-          </div>
         </div>
       </div>
       <div className={style.coursePlaceList}>

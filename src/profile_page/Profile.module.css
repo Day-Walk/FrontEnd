@@ -42,3 +42,90 @@
   background-color: white;
   color: #333 !important;
 }
+
+.courseBlock {
+  margin: 30px 10px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.title {
+  font-size: 26px;
+  font-weight: bold;
+}
+.like {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+.coursePlaceList {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.placeBlock {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.placeImg {
+  border-radius: 20px;
+}
+
+.placeInfo {
+  position: absolute;
+  top: 110px;
+  right: 10px;
+  text-align: right;
+  color: #fff;
+  width: 190px;
+  padding: 4px;
+  text-shadow: #333 0px 0px 4px;
+}
+
+.idx {
+  font-size: 30px;
+}
+
+.placeName {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.address {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.courseList {
+  position: relative;
+  padding-top: 10px;
+}
+.courseList::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #aaaaaa;
+}
+
+.courseWrapper {
+  width: 80%;
+  margin-left: 10%;
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0 50px 0;
+}

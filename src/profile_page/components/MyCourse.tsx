@@ -11,7 +11,6 @@ const MyCourse = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [nowPage, setNowPage] = useState<number>(1);
-  const [sort, setSort] = useState<string>("like"); // like or latest
   const [coursePage, setCoursePage] = useState<Interfaces.CoursePage>(
     coursePagesData.courseList[nowPage - 1],
   );
@@ -31,23 +30,6 @@ const MyCourse = () => {
   return (
     <div className={style.courseWrapper}>
       {/* <div>코스 보기</div> */}
-      <div>
-        <div className={style.sortWrapper}>
-          <button
-            className={sort == "like" ? style.click : undefined}
-            onClick={() => setSort("like")}
-          >
-            인기순
-          </button>
-          <p>|</p>
-          <button
-            className={sort == "latest" ? style.click : undefined}
-            onClick={() => setSort("latest")}
-          >
-            최신순
-          </button>
-        </div>
-      </div>
       <div>
         {coursePage &&
           coursePage.page.map((c, i) => (
