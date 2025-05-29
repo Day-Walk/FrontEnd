@@ -6,7 +6,6 @@ import { SquareCheck, Square } from "lucide-react";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
-
   const [isOpen, setIsOpen] = useState<boolean>(course?.isOpen || false);
 
   return (

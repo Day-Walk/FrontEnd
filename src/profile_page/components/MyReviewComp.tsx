@@ -13,7 +13,11 @@ const MyReviewComp = (nowReview: Interfaces.Review) => {
       <div className={style.reviewBlock}>
         <div className={style.reviewTop}>
           <div className={style.reviewImg}>
-            <img src={review?.imgUrl} alt="img" className={style.reviewImg} />
+            <img
+              src={review?.imgUrl ?? ""}
+              alt="img"
+              className={style.reviewImg}
+            />
           </div>
           <div className={style.reviewInfo}>
             <div className={style.rPlace}>{review?.placeName}</div>
