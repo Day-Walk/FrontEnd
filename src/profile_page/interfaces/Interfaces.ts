@@ -44,6 +44,97 @@ export interface ReviewListResponse {
   reviewList: ReviewPage[];
 }
 
+export interface FavoritePlace {
+  placeId: string;
+  name: string;
+  address: string;
+  imgUrl: string;
+  star: number;
+}
+
+export interface FavoritePlaceListResponse {
+  success: boolean;
+  message: string;
+  placeList: FavoritePlace[];
+}
+
+export const dummyFavoritePlaces: FavoritePlaceListResponse = {
+  success: true,
+  message: "유저별 찜한 장소 조회 성공!",
+  placeList: [
+    {
+      placeId: "1",
+      name: "서울숲 카페",
+      address: "서울특별시 성동구 서울숲길 50",
+      imgUrl: "https://picsum.photos/seed/place1/200",
+      star: 4.5,
+    },
+    {
+      placeId: "2",
+      name: "한강공원",
+      address: "서울특별시 영등포구 여의도동",
+      imgUrl: "https://picsum.photos/seed/place2/200",
+      star: 4.0,
+    },
+    {
+      placeId: "3",
+      name: "DDP",
+      address: "서울특별시 중구 을지로 281",
+      imgUrl: "https://picsum.photos/seed/place3/200",
+      star: 3.5,
+    },
+    {
+      placeId: "4",
+      name: "카페 노티드",
+      address: "서울특별시 강남구 도산대로 17길 40",
+      imgUrl: "https://picsum.photos/seed/place4/200",
+      star: 4.8,
+    },
+    {
+      placeId: "5",
+      name: "광장시장",
+      address: "서울특별시 종로구 창경궁로 88",
+      imgUrl: "https://picsum.photos/seed/place5/200",
+      star: 4.2,
+    },
+    {
+      placeId: "6",
+      name: "경복궁",
+      address: "서울특별시 종로구 사직로 161",
+      imgUrl: "https://picsum.photos/seed/place6/200",
+      star: 5.0,
+    },
+    {
+      placeId: "7",
+      name: "남산타워",
+      address: "서울특별시 용산구 남산공원길 105",
+      imgUrl: "https://picsum.photos/seed/place7/200",
+      star: 4.6,
+    },
+    {
+      placeId: "8",
+      name: "망원시장",
+      address: "서울특별시 마포구 망원로 6길 14",
+      imgUrl: "https://picsum.photos/seed/place8/200",
+      star: 4.1,
+    },
+    {
+      placeId: "9",
+      name: "북촌한옥마을",
+      address: "서울특별시 종로구 계동길 37",
+      imgUrl: "https://picsum.photos/seed/place9/200",
+      star: 4.7,
+    },
+    {
+      placeId: "10",
+      name: "성수동 수제화거리",
+      address: "서울특별시 성동구 아차산로 11길",
+      imgUrl: "https://picsum.photos/seed/place10/200",
+      star: 3.9,
+    },
+  ],
+};
+
 export const dummyReviewList: ReviewListResponse = {
   success: true,
   message: "유저별 리뷰 조회 성공!",
