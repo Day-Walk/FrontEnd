@@ -144,6 +144,7 @@
   font-size: 20px;
   font-weight: bold;
   padding: 20px 5px 5px 10px;
+  margin-bottom: 5px;
 }
 
 .reviewBlock {
@@ -221,4 +222,50 @@
   align-items: center;
   justify-content: space-between;
   margin: 10px 0;
+}
+.pBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: #e5e5e5 1px solid;
+  border-radius: 20px;
+  padding: 10px;
+  box-shadow: 0 0 2px rgba(102, 102, 102, 0.1);
+}
+.likePlaceImg {
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+.pInfo {
+  width: 200px;
+}
+.likePlaceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 한 줄에 2개 */
+  gap: 16px; /* 카드 사이 간격 */
+  margin-top: 30px;
+}
+.pName {
+  font-size: 20px;
+  font-weight: bold;
+}
+.pAddress {
+  font-size: 14px;
+  margin: 10px 0;
+}
+.pStar {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  padding-top: 10px;
+}
+.pHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
