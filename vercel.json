@@ -1,3 +1,13 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "http://3.34.185.1:8080/$1"
+    },
+    {
+      "src": "^(?!/api/|/assets/|/static/).*",
+      "dest": "/",
+      "status": 200
+    }
+  ]
 }
