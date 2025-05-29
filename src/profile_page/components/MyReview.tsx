@@ -33,10 +33,7 @@ const MyReview = () => {
       <div>
         {reviewPage &&
           reviewPage.page.map((r, i) => (
-            <div
-              className={i === 0 ? undefined : style.courseList}
-              key={r.placeName}
-            >
+            <div key={r.placeName}>
               <MyReviewComp {...r} />
             </div>
           ))}

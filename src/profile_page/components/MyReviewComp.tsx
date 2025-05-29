@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
+import { MapPin } from "lucide-react";
+import { Star } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 const MyReviewComp = (nowReview: Interfaces.Review) => {
   const [review, setReview] = useState<Interfaces.Review | null>(nowReview);
@@ -12,20 +15,31 @@ const MyReviewComp = (nowReview: Interfaces.Review) => {
           <div className={style.reviewImg}>
             <img src={review?.imgUrl} alt="img" className={style.reviewImg} />
           </div>
-          <div>
-            <div>{review?.placeName}</div>
-            <div>{review?.createAt}</div>
-            <div>{review?.address.split(" ").slice(0, 2).join(" ")}</div>
+          <div className={style.reviewInfo}>
+            <div className={style.rPlace}>{review?.placeName}</div>
+            <div className={style.rDate}>작성일 : {review?.createAt}</div>
+            <div className={style.rAddress}>
+              <MapPin size={14} />
+              {review?.address.split(" ").slice(0, 2).join(" ")}
+            </div>
             <div>{review?.content}</div>
           </div>
-          <div>{review?.stars}</div>
+          <div className={style.rStar}>
+            <Star size={20} fill="#FFEA00" color="#FFEA00" />
+            <div>&nbsp;{review?.stars.toFixed(1)}</div>
+          </div>
         </div>
-        <div className={style.reviewTagList}>
-          {review?.tagList.map((tag, index) => (
-            <span key={index} className={style.tag}>
-              {tag}
-            </span>
-          ))}
+        <div className={style.reviewBottom}>
+          <div className={style.reviewTagList}>
+            {review?.tagList.map((tag, index) => (
+              <span key={index} className={style.tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
+          <button className={style.deleteBtn}>
+            <Trash2 size={22} color="#E96563" />
+          </button>
         </div>
       </div>
     </div>
