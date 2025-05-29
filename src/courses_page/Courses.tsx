@@ -31,7 +31,7 @@ const Courses = () => {
 
   return (
     <div className={style.courseWrapper}>
-      <div>코스 보기</div>
+      {/* <div>코스 보기</div> */}
       <div>
         <SearchBox />
         <div className={style.sortWrapper}>
