@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./Signup.module.css";
+import styles from "../Signup.module.css";
 import { ArrowRight } from "lucide-react";
 
 const Gender = {
@@ -35,7 +35,7 @@ interface ButtonGroupProps<T> {
   onSelect: (value: T) => void;
 }
 
-const ButtonGroup = <T,>({
+export const ButtonGroup = <T,>({
   label,
   options,
   selected,
