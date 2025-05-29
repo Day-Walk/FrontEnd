@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "../Signup.module.css";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../utils/api";
 
 const Gender = {
   남: 0,
@@ -65,7 +66,7 @@ export const ButtonGroup = <T,>({
 const Signup = () => {
   const [userInfo, setUserInfo] = useState<UserInfoType>({
     // todo: kakao에서 받아온 값으로 변경
-    userName: "이희연",
+    userName: "",
     age: null,
     gender: null,
   });
@@ -80,12 +81,29 @@ const Signup = () => {
   const isFinished =
     userInfo.userName && userInfo.age !== null && userInfo.gender !== null;
   const navigate = useNavigate();
-  const handleClickNextBtn = () => {
+  const handleClickNextBtn = async () => {
     if (!isFinished) {
       alert("모든 정보를 입력해주세요.");
       return;
     }
-    navigate("/signup/user-like");
+
+    try {
+      const res = await api.post("/user", {
+        name: userInfo.userName,
+        gender: userInfo.gender,
+        age: userInfo.age,
+      });
+
+      if (res.data.hasSuccess) {
+        let userId = res.data.userId;
+        localStorage.clear();
+        localStorage.setItem("userId", userId);
+        navigate("/signup/user-like");
+      }
+      console.log(res.data);
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+    }
   };
   return (
     <div className={styles.container}>
