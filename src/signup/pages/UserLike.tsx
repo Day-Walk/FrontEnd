@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "../Signup.module.css";
 import { data } from "../data";
 import { ArrowRight, Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Tag {
   tag: string;
@@ -94,13 +95,14 @@ const UserLike = () => {
     }
     return true;
   };
-
+  const navigate = useNavigate();
   const handleClickCompleteBtn = () => {
     console.log(selectedTagList);
     if (!isFinished()) {
       alert("카테고리와 태그를 올바르게 선택해주세요.");
       return;
     }
+    navigate("/search");
   };
 
   return (
