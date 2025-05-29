@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import style from "../Profile.module.css";
-import Course from "./Course";
+import Course from "./MyCourseComp";
 import * as Interfaces from "../interfaces/Interfaces";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
@@ -29,7 +29,7 @@ const MyCourse = () => {
 
   return (
     <div className={style.courseWrapper}>
-      {/* <div>코스 보기</div> */}
+      <div className={style.subTitle}>나의 코스</div>
       <div>
         {coursePage &&
           coursePage.page.map((c, i) => (
