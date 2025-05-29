@@ -79,17 +79,17 @@
 }
 
 .next_btn {
+  width: 106px;
+  height: 44px;
   background-color: #d9d9d9;
   border-radius: 20px;
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 24px;
   font-weight: bold;
-  width: fit-content;
   gap: 8px;
-  margin-top: auto;
+  /* margin-top: auto; */
 }
 
 .active {
@@ -99,7 +99,7 @@
 .btn_wrapper {
   width: 100%;
   place-items: end;
-  padding-bottom: 80px;
+  padding-bottom: 60px;
 }
 
 .like_btns_wrapper {
@@ -112,7 +112,7 @@
   display: grid;
   grid-template-columns: repeat(5, minmax(200px, 1fr));
   gap: 16px;
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .tag_wrapper {

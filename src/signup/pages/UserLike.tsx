@@ -114,7 +114,7 @@ const UserLike = () => {
         </div>
         <div className={styles.category_wrapper}>
           {categories.map((category, index) => (
-            <div
+            <button
               key={category.categoryId}
               className={`${styles.element} ${styles.button} ${
                 selected.includes(index) ? styles.selected_btn : ""
@@ -124,7 +124,7 @@ const UserLike = () => {
               }}
             >
               {category.categoryName}
-            </div>
+            </button>
           ))}
         </div>
         <div className={styles.category_wrapper}>
@@ -158,12 +158,12 @@ const UserLike = () => {
         </div>
       </div>
       <div className={styles.btn_wrapper}>
-        <div
+        <button
           className={`${styles.next_btn} ${isFinished() ? styles.active : ""}`}
           onClick={handleClickCompleteBtn}
         >
           완료 !
-        </div>
+        </button>
       </div>
     </div>
   );

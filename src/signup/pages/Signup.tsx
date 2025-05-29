@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "../Signup.module.css";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Gender = {
   남: 0,
@@ -46,7 +47,7 @@ export const ButtonGroup = <T,>({
       <div className={styles.element_label}>{label}</div>
       <div className={styles.buttons}>
         {Object.entries(options).map(([key, value]) => (
-          <div
+          <button
             key={key}
             className={`${styles.element} ${styles.button} ${
               selected === value ? styles.selected_btn : ""
@@ -54,7 +55,7 @@ export const ButtonGroup = <T,>({
             onClick={() => onSelect(value)}
           >
             {key}
-          </div>
+          </button>
         ))}
       </div>
     </>
@@ -78,6 +79,14 @@ const Signup = () => {
 
   const isFinished =
     userInfo.userName && userInfo.age !== null && userInfo.gender !== null;
+  const navigate = useNavigate();
+  const handleClickNextBtn = () => {
+    if (!isFinished) {
+      alert("모든 정보를 입력해주세요.");
+      return;
+    }
+    navigate("/signup/user-like");
+  };
   return (
     <div className={styles.container}>
       <div className={styles.signup_wrapper}>
@@ -113,12 +122,13 @@ const Signup = () => {
       </div>
 
       <div className={styles.btn_wrapper}>
-        <div
+        <button
+          onClick={handleClickNextBtn}
           className={`${styles.next_btn} ${isFinished ? styles.active : ""}`}
         >
           다음
           <ArrowRight size={20} color="#FFF" />
-        </div>
+        </button>
       </div>
     </div>
   );

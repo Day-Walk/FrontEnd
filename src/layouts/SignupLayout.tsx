@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../signup/Signup.module.css";
 import { CircleArrowLeft } from "lucide-react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const SignupLayout = () => {
   return (
@@ -13,8 +13,18 @@ const SignupLayout = () => {
 };
 
 const SignupHeader = () => {
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate();
+  const handleClickBackBtn = () => {
+    if (pathname === "/signup/user-like") {
+      navigate("/signup");
+    } else {
+      window.location.href = "/";
+    }
+  };
+
   return (
-    <div className={styles.signup_header}>
+    <div className={styles.signup_header} onClick={handleClickBackBtn}>
       <CircleArrowLeft size={30} color="#333" />
     </div>
   );
