@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
-import { Pencil } from "lucide-react";
+import { MapPin, Pencil } from "lucide-react";
 import { SquareCheck, Square } from "lucide-react";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
@@ -46,6 +46,7 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
               <div className={style.idx}>{idx + 1}</div>
               <div className={style.placeName}>{place.placeName}</div>
               <div className={style.address}>
+                <MapPin size={14} />
                 {place.address.split(" ").slice(0, 2).join(" ")}
               </div>
             </div>

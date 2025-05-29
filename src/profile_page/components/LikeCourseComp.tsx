@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { MapPin } from "lucide-react";
 
 const LikeCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
@@ -42,6 +43,7 @@ const LikeCourseList = (nowCourse: Interfaces.Course) => {
               <div className={style.idx}>{idx + 1}</div>
               <div className={style.placeName}>{place.placeName}</div>
               <div className={style.address}>
+                <MapPin size={14} />
                 {place.address.split(" ").slice(0, 2).join(" ")}
               </div>
             </div>
