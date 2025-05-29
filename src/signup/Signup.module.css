@@ -1,11 +1,17 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 0 48px;
+  width: fit-content;
+}
 .signup_wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 12px;
-  margin: 0 auto;
-  padding: 0 48px;
-  width: fit-content;
 }
 .signup_header {
   display: flex;
@@ -13,7 +19,7 @@
   width: 100%;
   height: 80px;
   padding-left: 48px;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -70,4 +76,28 @@
   color: white;
   font-weight: bold;
   border: 2px solid var(--color-main);
+}
+
+.next_btn {
+  background-color: #d9d9d9;
+  border-radius: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px;
+  font-weight: bold;
+  width: fit-content;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.active {
+  background-color: var(--color-text);
+}
+
+.btn_wrapper {
+  width: 100%;
+  place-items: end;
+  padding-bottom: 80px;
 }
