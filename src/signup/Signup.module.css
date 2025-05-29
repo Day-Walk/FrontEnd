@@ -1,0 +1,143 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 0 48px;
+  width: fit-content;
+}
+.signup_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+.signup_header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  padding-left: 48px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: white;
+}
+
+.signup_title {
+  color: var(--color-main);
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 32px;
+}
+
+.element_label {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 32px;
+}
+
+.element {
+  font-size: 18px;
+  height: 46px;
+  border: 2px solid #d9d9d9;
+  border-radius: 10px;
+}
+
+.input {
+  width: 500px;
+  padding: 12px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-main);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
+}
+
+.button {
+  width: 120px;
+  display: grid;
+  place-items: center;
+}
+
+.selected_btn {
+  background-color: var(--color-main);
+  color: white;
+  font-weight: bold;
+  border: 2px solid var(--color-main);
+}
+
+.next_btn {
+  width: 106px;
+  height: 44px;
+  background-color: #d9d9d9;
+  border-radius: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  gap: 8px;
+  /* margin-top: auto; */
+}
+
+.active {
+  background-color: var(--color-text);
+}
+
+.btn_wrapper {
+  width: 100%;
+  place-items: end;
+  padding-bottom: 60px;
+}
+
+.like_btns_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.category_wrapper {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.tag_wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+.checkbox:checked {
+  background-color: var(--color-main);
+  border-color: var(--color-main);
+}
+
+.warning {
+  color: #e96563;
+  font-weight: bold;
+}
