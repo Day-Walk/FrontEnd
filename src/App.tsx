@@ -7,6 +7,7 @@ import Profile from "./profile_page/Profile";
 import SignupLayout from "./layouts/SignupLayout";
 import Signup from "./signup/pages/Signup";
 import UserLike from "./signup/pages/UserLike";
+import CourseDetail from "./course_detail/CourseDetail";
 
 const App = () => (
   <Routes>
@@ -14,6 +15,7 @@ const App = () => (
       <Route path="/" element={<Home />} />
       <Route path="/courses" element={<Courses />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/course-detail/:id" element={<CourseDetail />} />
     </Route>
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />
