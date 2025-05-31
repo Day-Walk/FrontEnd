@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./CourseDetail.module.css";
@@ -33,12 +33,33 @@ const CourseDetail = () => {
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
+          const firstPlace = courseDetail?.placeList[0];
+          const center = firstPlace
+            ? new window.kakao.maps.LatLng(
+                firstPlace.location.lat,
+                firstPlace.location.lng,
+              )
+            : new window.kakao.maps.LatLng(37.5665, 126.978);
+
           const options = {
-            center: new window.kakao.maps.LatLng(37.5665, 126.978),
+            center,
             level: 3,
           };
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
+
+          courseDetail?.placeList.forEach((place) => {
+            const markerPosition = new window.kakao.maps.LatLng(
+              place.location.lat,
+              place.location.lng,
+            );
+
+            new window.kakao.maps.Marker({
+              map,
+              position: markerPosition,
+              title: place.placeName,
+            });
+          });
         }
       })
       .catch(console.error);
