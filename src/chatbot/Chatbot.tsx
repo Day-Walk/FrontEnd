@@ -7,6 +7,8 @@ import {
   ChevronUp,
   MapPin,
 } from "lucide-react";
+import ChatMessage from "./components/ChatMessage";
+import UserMessage from "./components/UserMessage";
 
 const Chatbot = () => {
   const placeholderText =
@@ -85,11 +87,6 @@ const Chatbot = () => {
     setValue("");
   };
 
-  const [toggleDetail, setToggleDetail] = useState<boolean>(false);
-
-  const handleToggleDetail = () => {
-    setToggleDetail((prev) => !prev);
-  };
   return (
     <div className={styles.chatbot_container}>
       <div className={styles.chat_wrapper}>
@@ -102,65 +99,9 @@ const Chatbot = () => {
           <div className={styles.content}>
             {chatLog.map((chat, index) =>
               chat.isUser ? (
-                <div
-                  key={index}
-                  className={`${styles.message} ${styles.user_message}`}
-                  style={index === 0 ? { marginTop: "20px" } : {}}
-                >
-                  {chat.message}
-                </div>
+                <UserMessage message={chat.message} />
               ) : (
-                <div
-                  key={index}
-                  style={index === 0 ? { marginTop: "20px" } : {}}
-                >
-                  <BotMessageSquare size={40} color="#00B493" strokeWidth={2} />
-
-                  <div className={`${styles.message} ${styles.chat_message}`}>
-                    <div>{chat.message.header}</div>
-                    <div className={styles.place_wrapper}>
-                      {chat.message?.placeList.map(
-                        (place: any, idx: number) => (
-                          <div key={place.placeId} className={styles.place_box}>
-                            <img
-                              src={place.imgUrl}
-                              alt={place.name}
-                              className={styles.place_img}
-                            />
-                            <div className={styles.place_info}>
-                              <div className={styles.place_idx}>{idx + 1}</div>
-                              <div>{place.name}</div>
-                              <div className={styles.place_address}>
-                                <MapPin size={14} />
-                                {place.address.split(" ").slice(0, 2).join(" ")}
-                              </div>
-                            </div>
-                          </div>
-                        ),
-                      )}
-                    </div>
-                    {chat.message.footer && toggleDetail ? (
-                      <>
-                        <div
-                          className={styles.toggle}
-                          onClick={handleToggleDetail}
-                        >
-                          <ChevronUp size={20} />
-                          코스 설명 접기
-                        </div>
-                        <div>{chat.message.footer}</div>
-                      </>
-                    ) : (
-                      <div
-                        className={styles.toggle}
-                        onClick={handleToggleDetail}
-                      >
-                        <ChevronDown size={20} />
-                        코스 설명 더보기
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <ChatMessage message={chat.message} />
               ),
             )}
           </div>

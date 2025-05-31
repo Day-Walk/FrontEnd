@@ -74,9 +74,6 @@
   color: var(--color-main);
   font-weight: bold;
   font-size: 18px;
-}
-
-.message {
   width: 300px;
   padding: 10px 16px;
   border-radius: 10px;
@@ -84,6 +81,10 @@
   font-size: 16px;
   line-height: 1.3rem;
   position: relative;
+}
+
+.message:first-of-type {
+  margin-top: 20px;
 }
 
 .user_message {

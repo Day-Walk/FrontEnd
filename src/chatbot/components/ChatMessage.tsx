@@ -1,0 +1,59 @@
+import React, { useState } from "react";
+import styles from "../Chatbot.module.css";
+import { BotMessageSquare, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+
+interface ChatMessageProps {
+  message: any;
+}
+
+const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+  const [toggleDetail, setToggleDetail] = useState<boolean>(false);
+
+  const handleToggleDetail = () => {
+    setToggleDetail((prev) => !prev);
+  };
+  return (
+    <div>
+      <BotMessageSquare size={40} color="#00B493" strokeWidth={2} />
+
+      <div className={`${styles.message} ${styles.chat_message}`}>
+        <div>{message.header}</div>
+        <div className={styles.place_wrapper}>
+          {message?.placeList.map((place: any, idx: number) => (
+            <div key={place.placeId} className={styles.place_box}>
+              <img
+                src={place.imgUrl}
+                alt={place.name}
+                className={styles.place_img}
+              />
+              <div className={styles.place_info}>
+                <div className={styles.place_idx}>{idx + 1}</div>
+                <div>{place.name}</div>
+                <div className={styles.place_address}>
+                  <MapPin size={14} />
+                  {place.address.split(" ").slice(0, 2).join(" ")}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {message.footer && toggleDetail ? (
+          <>
+            <div className={styles.toggle} onClick={handleToggleDetail}>
+              <ChevronUp size={20} />
+              코스 설명 접기
+            </div>
+            <div>{message.footer}</div>
+          </>
+        ) : (
+          <div className={styles.toggle} onClick={handleToggleDetail}>
+            <ChevronDown size={20} />
+            코스 설명 더보기
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ChatMessage;
