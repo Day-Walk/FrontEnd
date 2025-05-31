@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import styles from "./Chatbot.module.css";
-import { BotMessageSquare } from "lucide-react";
+import {
+  BotMessageSquare,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  MapPin,
+} from "lucide-react";
 
 const Chatbot = () => {
   const placeholderText =
@@ -19,7 +25,7 @@ const Chatbot = () => {
         placeList: [
           {
             placeId: "12345678-1234-5678-1234-123456789123",
-            imgUrl: "https://via.placeholder.com/150",
+            imgUrl: "https://picsum.photos/200",
             name: "공화춘",
             address: "서울시 중구 충정로 1가 123-45",
             category: "음식점",
@@ -28,7 +34,7 @@ const Chatbot = () => {
           },
           {
             placeId: "22345678-1234-5678-1234-123456789124",
-            imgUrl: "https://via.placeholder.com/150",
+            imgUrl: "https://picsum.photos/200",
             name: "이태원 브루어리",
             address: "서울시 용산구 이태원로 88",
             category: "술집",
@@ -37,7 +43,7 @@ const Chatbot = () => {
           },
           {
             placeId: "32345678-1234-5678-1234-123456789125",
-            imgUrl: "https://via.placeholder.com/150",
+            imgUrl: "https://picsum.photos/200",
             name: "스윗카페",
             address: "서울시 강남구 역삼로 22",
             category: "카페",
@@ -46,7 +52,7 @@ const Chatbot = () => {
           },
           {
             placeId: "42345678-1234-5678-1234-123456789126",
-            imgUrl: "https://via.placeholder.com/150",
+            imgUrl: "https://picsum.photos/200",
             name: "피자굽는남자",
             address: "서울시 마포구 합정동 123",
             category: "음식점",
@@ -55,7 +61,7 @@ const Chatbot = () => {
           },
           {
             placeId: "52345678-1234-5678-1234-123456789127",
-            imgUrl: "https://via.placeholder.com/150",
+            imgUrl: "https://picsum.photos/200",
             name: "해피마사지",
             address: "서울시 송파구 가락동 456",
             category: "서비스",
@@ -79,6 +85,11 @@ const Chatbot = () => {
     setValue("");
   };
 
+  const [toggleDetail, setToggleDetail] = useState<boolean>(false);
+
+  const handleToggleDetail = () => {
+    setToggleDetail((prev) => !prev);
+  };
   return (
     <div className={styles.chatbot_container}>
       <div className={styles.chat_wrapper}>
@@ -103,15 +114,51 @@ const Chatbot = () => {
                   key={index}
                   style={index === 0 ? { marginTop: "20px" } : {}}
                 >
-                  <BotMessageSquare
-                    size={40}
-                    color="#00B493"
-                    strokeWidth={2}
-                    // style={{ position: "absolute", top: 10 }}
-                  />
+                  <BotMessageSquare size={40} color="#00B493" strokeWidth={2} />
 
                   <div className={`${styles.message} ${styles.chat_message}`}>
-                    {chat.message.header}
+                    <div>{chat.message.header}</div>
+                    <div className={styles.place_wrapper}>
+                      {chat.message?.placeList.map(
+                        (place: any, idx: number) => (
+                          <div key={place.placeId} className={styles.place_box}>
+                            <img
+                              src={place.imgUrl}
+                              alt={place.name}
+                              className={styles.place_img}
+                            />
+                            <div className={styles.place_info}>
+                              <div className={styles.place_idx}>{idx + 1}</div>
+                              <div>{place.name}</div>
+                              <div className={styles.place_address}>
+                                <MapPin size={14} />
+                                {place.address.split(" ").slice(0, 2).join(" ")}
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                    {chat.message.footer && toggleDetail ? (
+                      <>
+                        <div
+                          className={styles.toggle}
+                          onClick={handleToggleDetail}
+                        >
+                          <ChevronUp size={20} />
+                          코스 설명 접기
+                        </div>
+                        <div>{chat.message.footer}</div>
+                      </>
+                    ) : (
+                      <div
+                        className={styles.toggle}
+                        onClick={handleToggleDetail}
+                      >
+                        <ChevronDown size={20} />
+                        코스 설명 더보기
+                      </div>
+                    )}
                   </div>
                 </div>
               ),
@@ -119,7 +166,6 @@ const Chatbot = () => {
           </div>
         )}
 
-        {/* </div> */}
         <div className={styles.input_wrapper}>
           <textarea
             value={value}

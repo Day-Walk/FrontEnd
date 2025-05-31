@@ -98,4 +98,60 @@
   background-color: #fff;
   color: #333;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+}
+
+.place_wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.place_box {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.place_img {
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.place_info {
+  text-align: right;
+  color: #fff;
+  text-shadow: 0 0 4px #333;
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}
+.place_idx {
+  font-size: 20px;
+  font-weight: bold;
+}
+.place_address {
+  font-size: 12px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  color: #b0b0b0;
+  cursor: pointer;
+  font-size: 14px;
 }
