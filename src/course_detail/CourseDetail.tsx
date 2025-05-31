@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./CourseDetail.module.css";
+import GetCourseDetail from "./components/GetCourseDetail";
+import * as Interfaces from "./interfaces/Interface";
 
 declare global {
   interface Window {
@@ -11,6 +13,18 @@ declare global {
 
 const CourseDetail = () => {
   const { id } = useParams();
+  // if (!id) {
+  //   return <div>Error : 코스 ID가 없습니다.</div>;
+  // }
+  // const { data, loading, error } = GetCourseDetail(id);
+
+  // if (loading) return <div>로딩 중...</div>;
+  // if (error) return <div>{error}</div>;
+
+  const [courseDetail, setCourseDetail] =
+    useState<Interfaces.CourseDetail | null>(
+      Interfaces.dummyCourseDetail.courseInfo,
+    );
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -34,6 +48,26 @@ const CourseDetail = () => {
     <div className={style.courseDetailWrapper}>
       <div className={style.detailLeft}>
         <h1>Course Detail : {id}</h1>
+        <div>
+          {courseDetail?.placeList.map((p, i) => (
+            <div key={p.placeId} className={style.placeBlock}>
+              <img
+                src={p.imgUrl}
+                alt={p.placeName}
+                className={style.placeImg}
+              />
+              <div className={style.placeInfo}>
+                <div className={style.idx}>{i + 1}</div>
+                <div className={style.placeName}>{p.placeName}</div>
+                <div className={style.address}>{p.address}</div>
+                <div className={style.category}>
+                  {p.category} / {p.subCategory}
+                </div>
+                <div className={style.stars}>평점: {p.stars}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div
         ref={mapRef}

@@ -5,4 +5,5 @@
 }
 .detailLeft {
   width: 400px;
+  overflow-y: auto;
 }
