@@ -7,3 +7,50 @@
   width: 400px;
   overflow-y: auto;
 }
+.placeBlock,
+.placeBlockClick {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  margin: 14px auto;
+  padding: 16px 20px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+}
+.placeBlockClick {
+  border: 1px solid var(--color-main);
+}
+.idx {
+  font-size: 20px;
+  font-weight: bold;
+}
+.placeImg {
+  width: 100px;
+  height: 100px;
+  margin: 0 20px;
+}
+.placeCategory {
+  display: flex;
+}
+.category {
+  font-size: 12px;
+  background-color: var(--color-main);
+  color: white;
+  padding: 4px 10px;
+  margin-right: 10px;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+.placeName {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+.address {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}

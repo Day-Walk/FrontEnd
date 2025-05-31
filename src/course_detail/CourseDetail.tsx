@@ -4,6 +4,7 @@ import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./CourseDetail.module.css";
 import GetCourseDetail from "./components/GetCourseDetail";
 import * as Interfaces from "./interfaces/Interface";
+import { Star } from "lucide-react";
 
 declare global {
   interface Window {
@@ -25,6 +26,7 @@ const CourseDetail = () => {
     useState<Interfaces.CourseDetail | null>(
       Interfaces.dummyCourseDetail.courseInfo,
     );
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -69,22 +71,35 @@ const CourseDetail = () => {
     <div className={style.courseDetailWrapper}>
       <div className={style.detailLeft}>
         <h1>Course Detail : {id}</h1>
+        <div>{courseDetail?.userName}님의</div>
+        <div>{courseDetail?.title} 코스</div>
         <div>
           {courseDetail?.placeList.map((p, i) => (
-            <div key={p.placeId} className={style.placeBlock}>
+            <div
+              key={p.placeId}
+              onClick={() => setSelectedPlaceId(p.placeId)}
+              className={
+                selectedPlaceId == p.placeId
+                  ? style.placeBlockClick
+                  : style.placeBlock
+              }
+            >
+              <div className={style.idx}>{i + 1}</div>
               <img
                 src={p.imgUrl}
                 alt={p.placeName}
                 className={style.placeImg}
               />
               <div className={style.placeInfo}>
-                <div className={style.idx}>{i + 1}</div>
+                <div className={style.placeCategory}>
+                  <div className={style.category}>{p.subCategory}</div>
+                  <div className={style.stars}>
+                    <Star size={20} fill="#fabd55" color="#fabd55" />
+                    {p.stars}
+                  </div>
+                </div>
                 <div className={style.placeName}>{p.placeName}</div>
                 <div className={style.address}>{p.address}</div>
-                <div className={style.category}>
-                  {p.category} / {p.subCategory}
-                </div>
-                <div className={style.stars}>평점: {p.stars}</div>
               </div>
             </div>
           ))}
