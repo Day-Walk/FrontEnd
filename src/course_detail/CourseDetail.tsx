@@ -27,6 +27,16 @@ const CourseDetail = () => {
       Interfaces.dummyCourseDetail.courseInfo,
     );
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] =
+    useState<Interfaces.CourseDetailPlace | null>(null);
+  const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
+    setSelectedPlaceId(p.placeId);
+    setSelectedPlace(p);
+  };
+
+  useEffect(() => {
+    console.log(selectedPlaceId);
+  }, [selectedPlaceId]);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -77,7 +87,7 @@ const CourseDetail = () => {
           {courseDetail?.placeList.map((p, i) => (
             <div
               key={p.placeId}
-              onClick={() => setSelectedPlaceId(p.placeId)}
+              onClick={() => handlePlaceClick(p)}
               className={
                 selectedPlaceId == p.placeId
                   ? style.placeBlockClick
@@ -105,10 +115,30 @@ const CourseDetail = () => {
           ))}
         </div>
       </div>
-      <div
-        ref={mapRef}
-        style={{ width: "calc(100% - 400px)", height: "100%" }}
-      />
+      <div className={style.detailRight}>
+        <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
+        {selectedPlace && (
+          <div className={style.placeModal}>
+            <button
+              className={style.slideInButton}
+              onClick={() => setSelectedPlace(null)}
+            >
+              ◀
+            </button>
+            <img
+              src={selectedPlace.imgUrl}
+              alt={selectedPlace.placeName}
+              className={style.modalImg}
+            />
+            <div className={style.modalContent}>
+              <h3>{selectedPlace.placeName}</h3>
+              <p>{selectedPlace.address}</p>
+              <p>⭐ {selectedPlace.stars.toFixed(1)}</p>
+              <button onClick={() => setSelectedPlace(null)}>닫기</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
