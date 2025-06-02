@@ -123,6 +123,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  cursor: pointer;
   border-radius: 20px;
 }
 
@@ -131,7 +132,6 @@
   height: auto;
   flex-shrink: 0;
   object-fit: cover;
-  cursor: pointer;
 }
 
 .place_info {
@@ -148,6 +148,9 @@
 }
 .place_address {
   font-size: 12px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
 
 .toggle {

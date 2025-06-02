@@ -5,6 +5,7 @@ import ChatMessage from "./components/ChatMessage";
 import UserMessage from "./components/UserMessage";
 
 import ChatbotMap from "./components/ChatbotMap";
+import { MainButton } from "./components/Buttons";
 
 const Chatbot = () => {
   const placeholderText =
@@ -131,9 +132,7 @@ const Chatbot = () => {
             className={styles.chat_input}
             placeholder={placeholderText}
           />
-          <button className={styles.sendBtn} onClick={handleClickSendBtn}>
-            전송
-          </button>
+          <MainButton paddingY={10}>전송</MainButton>
         </div>
       </div>
       <ChatbotMap

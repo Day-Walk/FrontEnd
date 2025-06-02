@@ -40,7 +40,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 <div className={styles.place_idx}>{idx + 1}</div>
                 <div>{place.name}</div>
                 <div className={styles.place_address}>
-                  <MapPin size={14} />
+                  <MapPin
+                    size={14}
+                    style={{
+                      filter: " drop-shadow(0 0 4px #333)",
+                    }}
+                  />
                   {place.address.split(" ").slice(0, 2).join(" ")}
                 </div>
               </div>
