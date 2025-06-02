@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import style from "../CourseDetail.module.css";
 import * as Interfaces from "../interfaces/Interface";
 import * as rInterfaces from "../interfaces/ReviewInterface";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { CircleChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pen, Share2, Star } from "lucide-react";
+import { CircleChevronRight, Pencil, CircleUserRound } from "lucide-react";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [selectedPlace, setSelectedPlace] =
@@ -52,9 +53,30 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         style={{ left: isModalOpen ? "0px" : "-380px" }}
       >
         <div className={style.placeModal}>
-          <div style={{ marginBottom: "20px" }}>
+          <div className={style.modalHeader}>
             <div className={style.modalTitle}>{selectedPlace?.name}</div>
-            <span className={style.category}>{selectedPlace?.category}</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span className={style.placeModalCategory}>
+                {selectedPlace?.category}
+              </span>
+              <div>
+                <Pencil size={26} />
+                &nbsp;
+                {selectedPlace?.like ? (
+                  <AiFillHeart size={26} color="#E96563" />
+                ) : (
+                  <AiOutlineHeart size={26} color="#E96563" />
+                )}
+                &nbsp;
+                <Share2 size={26} />
+              </div>
+            </div>
           </div>
 
           {selectedPlace?.imgUrlList.length > 0 && (
@@ -123,9 +145,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             <div>
               <div className={style.modalReviewTitle}>
                 <div>리뷰({reviewTotal.reviewNum})</div>
-                <div>
+                <div className={style.stars}>
                   <Star size={20} color="#FABD55" fill="#FABD55" />
-                  {reviewTotal.stars}
+                  &nbsp;{reviewTotal.stars}
                 </div>
               </div>
               <div className={style.reviewTags}>
@@ -140,10 +162,12 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                 <div key={index} className={style.reviewBlock}>
                   <div className={style.reviewHeader}>
                     <span className={style.reviewUserName}>
-                      {review.userName}
+                      <CircleUserRound size={24} />
+                      &nbsp;{review.userName}
                     </span>
-                    <div className={style.reviewStars}>
-                      ⭐ {review.stars.toFixed(1)}
+                    <div className={style.stars}>
+                      <Star size={20} color="#FABD55" fill="#FABD55" /> &nbsp;
+                      {review.stars.toFixed(1)}
                     </div>
                   </div>
                   <div className={style.reviewContentBlock}>

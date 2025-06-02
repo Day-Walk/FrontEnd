@@ -39,6 +39,7 @@
   display: flex;
 }
 .category,
+.placeModalCategory,
 .reviewTotalTag {
   font-size: 12px;
   background-color: var(--color-main);
@@ -51,9 +52,21 @@
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
 }
+.placeModalCategory {
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  -ms-border-radius: 14px;
+  -o-border-radius: 14px;
+}
 .reviewTotalTag {
   background-color: #2c5044;
   white-space: nowrap; /* 줄바꿈 방지 */
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 14px;
 }
 .placeName {
   font-size: 18px;
@@ -209,8 +222,17 @@
 .courseTitle {
   font-size: 24px;
   font-weight: bold;
-  margin: 24px;
   line-height: 1.5;
+  margin: 24px;
+}
+.headTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.modalHeader {
+  margin-bottom: 20px;
 }
 .modalTitle {
   font-size: 22px;
@@ -229,6 +251,7 @@
   display: flex;
   align-items: center;
   margin: 8px 0;
+  justify-content: space-between;
 }
 .reviewImg {
   width: 80px;
@@ -238,6 +261,16 @@
   display: flex;
   align-items: center;
   margin: 16px 0;
+}
+.reviewDate {
+  font-size: 14px;
+  color: #999;
+  margin-left: 10px;
+}
+.reviewContent {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 .reviewTags {
   display: flex;
@@ -274,4 +307,10 @@
   justify-content: end;
   font-size: 18px;
   font-weight: bold;
+}
+.stars,
+.reviewUserName {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
 }

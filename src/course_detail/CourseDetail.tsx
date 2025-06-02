@@ -4,9 +4,9 @@ import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./CourseDetail.module.css";
 import GetCourseDetail from "./components/GetCourseDetail";
 import * as Interfaces from "./interfaces/Interface";
-import { Star } from "lucide-react";
+import { Star, Share2 } from "lucide-react";
 import PlaceModal from "./components/PlaceModal";
-
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 declare global {
   interface Window {
     kakao: any;
@@ -83,9 +83,25 @@ const CourseDetail = () => {
         {/* <h1>Course Detail : {id}</h1> */}
         <div>
           <div className={style.courseTitle}>
-            <div>
-              <span className={style.userName}>{courseDetail?.userName}</span>
-              님의
+            <div className={style.headTitle}>
+              <div>
+                <span className={style.userName}>{courseDetail?.userName}</span>
+                님의
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ fontSize: "16px" }}>
+                  {courseDetail?.courseLike}&nbsp;
+                </div>
+                {courseDetail?.like ? (
+                  <AiFillHeart size={26} color="#E96563" />
+                ) : (
+                  <AiOutlineHeart size={26} color="#E96563" />
+                )}
+
+                <span>
+                  <Share2 size={24} />
+                </span>
+              </div>
             </div>
             <div>{courseDetail?.title} 코스</div>
           </div>
@@ -113,7 +129,7 @@ const CourseDetail = () => {
                   <div className={style.category}>{p.subCategory}</div>
                   <div className={style.stars}>
                     <Star size={20} fill="#fabd55" color="#fabd55" />
-                    {p.stars}
+                    <span>&nbsp;{p.stars}</span>
                   </div>
                 </div>
                 <div className={style.placeName}>{p.placeName}</div>
