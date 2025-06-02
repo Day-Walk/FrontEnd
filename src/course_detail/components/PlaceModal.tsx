@@ -50,7 +50,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
     <div className={style.placeModalWrapper}>
       <div
         className={style.slideGroup}
-        style={{ left: isModalOpen ? "0px" : "-380px" }}
+        style={{ left: isModalOpen ? "0px" : "-400px" }}
       >
         <div className={style.placeModal}>
           <div className={style.modalHeader}>
@@ -144,13 +144,16 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             </div>
             <div>
               <div className={style.modalReviewTitle}>
-                <div>리뷰({reviewTotal.reviewNum})</div>
+                <div>리뷰({reviewTotal.reviewNum})&nbsp;</div>
                 <div className={style.stars}>
                   <Star size={20} color="#FABD55" fill="#FABD55" />
                   &nbsp;{reviewTotal.stars}
                 </div>
               </div>
-              <div className={style.reviewTags}>
+              <div
+                className={style.reviewTags}
+                style={{ marginBottom: "24px" }}
+              >
                 {reviewTotal.tagList.map((tag, index) => (
                   <span key={index} className={style.reviewTotalTag}>
                     {tag}

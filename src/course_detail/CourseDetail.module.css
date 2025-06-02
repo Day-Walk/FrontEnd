@@ -52,6 +52,14 @@
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
 }
+.reviewTotalTag {
+  background-color: #2c5044;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  margin: 0;
+}
 .placeModalCategory {
   font-size: 14px;
   padding: 6px 14px;
@@ -60,13 +68,6 @@
   -moz-border-radius: 14px;
   -ms-border-radius: 14px;
   -o-border-radius: 14px;
-}
-.reviewTotalTag {
-  background-color: #2c5044;
-  white-space: nowrap; /* 줄바꿈 방지 */
-  font-size: 14px;
-  padding: 6px 14px;
-  border-radius: 14px;
 }
 .placeName {
   font-size: 18px;
@@ -102,7 +103,7 @@
   background: white;
   box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
   padding: 16px 16px 16px 26px;
-  width: 380px;
+  width: 400px;
   height: 100%;
   overflow-y: auto;
 }
@@ -189,7 +190,7 @@
 .slideInButton {
   z-index: 20;
   position: absolute;
-  left: 380px;
+  left: 400px;
   top: 50%;
   width: 24px;
   transform: translateY(-50%);
@@ -203,7 +204,7 @@
 .slideOutButton {
   z-index: 20;
   position: absolute;
-  left: 380px;
+  left: 400px;
   top: 50%;
   width: 24px;
   transform: translateY(-50%);
@@ -235,8 +236,8 @@
   margin-bottom: 20px;
 }
 .modalTitle {
-  font-size: 22px;
-  margin: 8px 0;
+  font-size: 26px;
+  margin: 14px 0;
   font-weight: bold;
 }
 .reviewBlock {
@@ -271,18 +272,19 @@
   font-size: 16px;
   margin-top: 10px;
   margin-left: 10px;
+  line-height: 18px;
 }
 .reviewTags {
   display: flex;
   flex-wrap: wrap; /* 줄바꿈 허용 */
-  gap: 4px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 .reviewTag {
   font-size: 12px;
   color: var(--color-main);
   background-color: white;
   padding: 4px 10px;
-  margin-right: 10px;
   border: 1px solid var(--color-main);
   border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -298,10 +300,10 @@
 .modalReviewTitle {
   display: flex;
   align-items: center;
-  margin: 20px 0;
+  margin: 20px 0 14px 0;
 }
 .viewDetailButton {
-  margin: 20px 10px;
+  margin: 30px 0;
   width: 100%;
   display: flex;
   justify-content: end;
@@ -313,4 +315,7 @@
   display: flex;
   align-items: center;
   font-size: 14px;
+}
+.reviewUserName {
+  font-weight: bold;
 }
