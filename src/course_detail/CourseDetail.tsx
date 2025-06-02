@@ -5,6 +5,7 @@ import style from "./CourseDetail.module.css";
 import GetCourseDetail from "./components/GetCourseDetail";
 import * as Interfaces from "./interfaces/Interface";
 import { Star } from "lucide-react";
+import PlaceModal from "./components/PlaceModal";
 
 declare global {
   interface Window {
@@ -26,9 +27,8 @@ const CourseDetail = () => {
     useState<Interfaces.CourseDetail | null>(
       Interfaces.dummyCourseDetail.courseInfo,
     );
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
-  const [selectedPlace, setSelectedPlace] =
-    useState<Interfaces.CourseDetailPlace | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(1);
+
   const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
     setSelectedPlaceId(p.placeId);
     setSelectedPlace(p);
@@ -80,9 +80,17 @@ const CourseDetail = () => {
   return (
     <div className={style.courseDetailWrapper}>
       <div className={style.detailLeft}>
-        <h1>Course Detail : {id}</h1>
-        <div>{courseDetail?.userName}님의</div>
-        <div>{courseDetail?.title} 코스</div>
+        {/* <h1>Course Detail : {id}</h1> */}
+        <div>
+          <div className={style.courseTitle}>
+            <div>
+              <span className={style.userName}>{courseDetail?.userName}</span>
+              님의
+            </div>
+            <div>{courseDetail?.title} 코스</div>
+          </div>
+          <div>{courseDetail?.like}</div>
+        </div>
         <div>
           {courseDetail?.placeList.map((p, i) => (
             <div
@@ -117,26 +125,8 @@ const CourseDetail = () => {
       </div>
       <div className={style.detailRight}>
         <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-        {selectedPlace && (
-          <div className={style.placeModal}>
-            <button
-              className={style.slideInButton}
-              onClick={() => setSelectedPlace(null)}
-            >
-              ◀
-            </button>
-            <img
-              src={selectedPlace.imgUrl}
-              alt={selectedPlace.placeName}
-              className={style.modalImg}
-            />
-            <div className={style.modalContent}>
-              <h3>{selectedPlace.placeName}</h3>
-              <p>{selectedPlace.address}</p>
-              <p>⭐ {selectedPlace.stars.toFixed(1)}</p>
-              <button onClick={() => setSelectedPlace(null)}>닫기</button>
-            </div>
-          </div>
+        {selectedPlaceId && (
+          <PlaceModal placeId={selectedPlaceId ? selectedPlaceId : ""} />
         )}
       </div>
     </div>
