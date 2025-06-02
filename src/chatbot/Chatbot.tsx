@@ -6,6 +6,8 @@ import UserMessage from "./components/UserMessage";
 
 import ChatbotMap from "./components/ChatbotMap";
 import { MainButton } from "./components/Buttons";
+import { Modal } from "@mui/material";
+import AddCourseModal from "./components/AddCourseModal";
 
 const Chatbot = () => {
   const placeholderText =
@@ -98,47 +100,59 @@ const Chatbot = () => {
     lng: number;
   } | null>(null);
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
-    <div className={styles.chatbot_container}>
-      <div className={styles.chat_wrapper}>
-        {chatLog.length === 0 ? (
-          <div className={styles.empty_chat}>
-            <BotMessageSquare size={80} color="#00B493" strokeWidth={1} />
-            <div className={styles.message}>챗봇에게 물어보세요!</div>
-          </div>
-        ) : (
-          <div className={styles.content}>
-            {chatLog.map((chat, index) =>
-              chat.isUser ? (
-                <UserMessage message={chat.message} key={index} />
-              ) : (
-                <ChatMessage
-                  message={chat.message}
-                  key={index}
-                  selectedMarker={selectedMarker}
-                  setSelectedMarker={setSelectedMarker}
-                />
-              ),
-            )}
-          </div>
-        )}
+    <>
+      <Modal open={open} onClose={handleClose}>
+        <AddCourseModal
+          courseInfo={chatLog[1].message.placeList}
+          handleClose={handleClose}
+        />
+      </Modal>
+      <div className={styles.chatbot_container}>
+        <div className={styles.chat_wrapper}>
+          {chatLog.length === 0 ? (
+            <div className={styles.empty_chat}>
+              <BotMessageSquare size={80} color="#00B493" strokeWidth={1} />
+              <div className={styles.message}>챗봇에게 물어보세요!</div>
+            </div>
+          ) : (
+            <div className={styles.content}>
+              {chatLog.map((chat, index) =>
+                chat.isUser ? (
+                  <UserMessage message={chat.message} key={index} />
+                ) : (
+                  <ChatMessage
+                    message={chat.message}
+                    key={index}
+                    selectedMarker={selectedMarker}
+                    setSelectedMarker={setSelectedMarker}
+                    handleModalOpen={handleOpen}
+                  />
+                ),
+              )}
+            </div>
+          )}
 
-        <div className={styles.input_wrapper}>
-          <textarea
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            className={styles.chat_input}
-            placeholder={placeholderText}
-          />
-          <MainButton paddingY={10}>전송</MainButton>
+          <div className={styles.input_wrapper}>
+            <textarea
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              className={styles.chat_input}
+              placeholder={placeholderText}
+            />
+            <MainButton paddingY={10}>전송</MainButton>
+          </div>
         </div>
+        <ChatbotMap
+          mapInfo={mapInfo}
+          selectedMarker={selectedMarker}
+          setSelectedMarker={setSelectedMarker}
+        />
       </div>
-      <ChatbotMap
-        mapInfo={mapInfo}
-        selectedMarker={selectedMarker}
-        setSelectedMarker={setSelectedMarker}
-      />
-    </div>
+    </>
   );
 };
 
