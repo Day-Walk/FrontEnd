@@ -8,6 +8,7 @@ import SignupLayout from "./layouts/SignupLayout";
 import Signup from "./signup/pages/Signup";
 import UserLike from "./signup/pages/UserLike";
 import CourseDetail from "./course_detail/CourseDetail";
+import Chatbot from "./chatbot/Chatbot";
 
 const App = () => (
   <Routes>
@@ -16,6 +17,7 @@ const App = () => (
       <Route path="/courses" element={<Courses />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/course-detail/:id" element={<CourseDetail />} />
+      <Route path="/chatbot" element={<Chatbot />} />
     </Route>
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />
