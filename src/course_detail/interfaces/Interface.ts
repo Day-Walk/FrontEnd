@@ -25,6 +25,59 @@ export interface CourseDetailResponse {
   courseInfo: CourseDetail;
 }
 
+export interface PlaceDetailLocation {
+  lat: number;
+  lng: number;
+}
+
+export interface PlaceDetail {
+  placeId: string;
+  imgUrlList: string[];
+  name: string;
+  address: string;
+  category: string;
+  subCategory: string;
+  location: PlaceDetailLocation;
+  openTime: string;
+  closeDate: string;
+  detail: string;
+  content: string;
+  phoneNum: string[];
+  like: boolean;
+}
+
+export interface PlaceDetailResponse {
+  success: boolean;
+  message: string;
+  placeInfo: PlaceDetail;
+}
+
+export const dummyPlaceDetail: PlaceDetailResponse = {
+  success: true,
+  message: "장소 상세 조회 성공!",
+  placeInfo: {
+    placeId: "12345678-1234-5678-1234-123456789123",
+    imgUrlList: [
+      "https://picsum.photos/seed/place1/400",
+      "https://picsum.photos/seed/place2/400",
+    ],
+    name: "공화춘",
+    address: "서울시 중구 충정로 123",
+    category: "음식점",
+    subCategory: "중식",
+    location: {
+      lat: 37.564213,
+      lng: 126.977829,
+    },
+    openTime: "11:00 ~ 23:00",
+    closeDate: "매주 월요일 휴무",
+    detail: "화장실 있음, 주차장 있음",
+    content: "100년 전통의 중식당. 자장면의 본고장.",
+    phoneNum: ["010-1234-1234", "02-1234-5678"],
+    like: true,
+  },
+};
+
 export const dummyCourseDetail: CourseDetailResponse = {
   success: true,
   message: "코스 상세 조회 성공!",
