@@ -17,6 +17,7 @@ export interface CourseDetail {
   title: string;
   placeList: CourseDetailPlace[];
   like: boolean;
+  courseLike: number;
 }
 
 export interface CourseDetailResponse {
@@ -85,6 +86,7 @@ export const dummyCourseDetail: CourseDetailResponse = {
     userName: "마리오",
     title: "날씨 좋은 날 데이트",
     like: true,
+    courseLike: 250,
     placeList: [
       {
         placeId: "11111111-1111-1111-1111-111111111111",
