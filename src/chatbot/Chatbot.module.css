@@ -55,8 +55,12 @@
   flex: 1;
   font-weight: 400;
   line-height: 1.3rem;
+  /* -ms-overflow-style: none; */
 }
 
+.chat_input::-webkit-scrollbar {
+  display: none;
+}
 .chat_input:focus {
   outline: none;
 }
@@ -155,4 +159,38 @@
   color: #b0b0b0;
   cursor: pointer;
   font-size: 14px;
+}
+
+@keyframes boing {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.map_marker {
+  width: 40px;
+  aspect-ratio: 1/1;
+  background-color: var(--color-main);
+  border-radius: 999px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.selected_marker {
+  animation: boing 1s ease-in-out infinite;
+}
+
+.selected_img {
+  outline: 3px solid var(--color-main);
 }

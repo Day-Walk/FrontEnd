@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Chatbot.module.css";
-import {
-  BotMessageSquare,
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  MapPin,
-} from "lucide-react";
+import { BotMessageSquare, CookingPot } from "lucide-react";
 import ChatMessage from "./components/ChatMessage";
 import UserMessage from "./components/UserMessage";
+
+import ChatbotMap from "./components/ChatbotMap";
 
 const Chatbot = () => {
   const placeholderText =
     "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
+
   const [chatLog, setChatLog] = useState<any[]>([
     {
       isUser: true,
@@ -33,6 +30,7 @@ const Chatbot = () => {
             category: "음식점",
             subCategory: "중식",
             stars: 4.8,
+            location: { lat: 37.5714, lng: 126.9769 },
           },
           {
             placeId: "22345678-1234-5678-1234-123456789124",
@@ -42,6 +40,7 @@ const Chatbot = () => {
             category: "술집",
             subCategory: "맥주집",
             stars: 4.5,
+            location: { lat: 37.572, lng: 126.9802 },
           },
           {
             placeId: "32345678-1234-5678-1234-123456789125",
@@ -51,6 +50,7 @@ const Chatbot = () => {
             category: "카페",
             subCategory: "디저트카페",
             stars: 4.2,
+            location: { lat: 37.5698, lng: 126.9827 },
           },
           {
             placeId: "42345678-1234-5678-1234-123456789126",
@@ -60,6 +60,7 @@ const Chatbot = () => {
             category: "음식점",
             subCategory: "양식",
             stars: 4.6,
+            location: { lat: 37.5733, lng: 126.9812 },
           },
           {
             placeId: "52345678-1234-5678-1234-123456789127",
@@ -69,11 +70,16 @@ const Chatbot = () => {
             category: "서비스",
             subCategory: "마사지",
             stars: 4.9,
+            location: { lat: 37.5718, lng: 126.9785 },
           },
         ],
       },
     },
   ]);
+
+  const mapInfo = chatLog[1].message.placeList.map(
+    (place: any) => place.location,
+  );
 
   const [value, setValue] = useState<string>("");
   const handleClickSendBtn = () => {
@@ -86,6 +92,12 @@ const Chatbot = () => {
     setChatLog((prev) => [...prev, { isUser: true, message: value }]);
     setValue("");
   };
+  const [selectedMarker, setSelectedMarker] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+
+  console.log(mapInfo);
 
   return (
     <div className={styles.chatbot_container}>
@@ -99,9 +111,14 @@ const Chatbot = () => {
           <div className={styles.content}>
             {chatLog.map((chat, index) =>
               chat.isUser ? (
-                <UserMessage message={chat.message} />
+                <UserMessage message={chat.message} key={index} />
               ) : (
-                <ChatMessage message={chat.message} />
+                <ChatMessage
+                  message={chat.message}
+                  key={index}
+                  selectedMarker={selectedMarker}
+                  setSelectedMarker={setSelectedMarker}
+                />
               ),
             )}
           </div>
@@ -119,7 +136,11 @@ const Chatbot = () => {
           </button>
         </div>
       </div>
-      <div className={styles.mapSection}>지도</div>
+      <ChatbotMap
+        mapInfo={mapInfo}
+        selectedMarker={selectedMarker}
+        setSelectedMarker={setSelectedMarker}
+      />
     </div>
   );
 };

@@ -4,9 +4,15 @@ import { BotMessageSquare, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 
 interface ChatMessageProps {
   message: any;
+  selectedMarker: { lat: number; lng: number } | null;
+  setSelectedMarker: (value: { lat: number; lng: number }) => void;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({
+  message,
+  selectedMarker,
+  setSelectedMarker,
+}) => {
   const [toggleDetail, setToggleDetail] = useState<boolean>(false);
 
   const handleToggleDetail = () => {
@@ -20,7 +26,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <div>{message.header}</div>
         <div className={styles.place_wrapper}>
           {message?.placeList.map((place: any, idx: number) => (
-            <div key={place.placeId} className={styles.place_box}>
+            <div
+              onClick={() => setSelectedMarker(place.location)}
+              key={place.placeId}
+              className={`${styles.place_box} ${selectedMarker === place.location ? styles.selected_img : ""}`}
+            >
               <img
                 src={place.imgUrl}
                 alt={place.name}
