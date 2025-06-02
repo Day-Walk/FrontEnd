@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../Signup.module.css";
 import { data } from "../data";
 import { Check } from "lucide-react";
@@ -49,6 +49,15 @@ const UserLike = () => {
   const handleClickCategory = (index: number) => {
     setSelected((prev) => {
       if (prev.includes(index)) {
+        setSelectedTagList((prev) =>
+          prev.filter(
+            (item) => item.categoryName !== categories[index].categoryName,
+          ),
+        );
+
+        selectedTagList.filter(
+          (item) => item.categoryName !== categories[index].categoryName,
+        );
         return prev.filter((item) => item !== index);
       } else {
         if (prev.length >= 3) {
@@ -101,6 +110,10 @@ const UserLike = () => {
       return;
     }
   };
+
+  useEffect(() => {
+    console.log(selectedTagList);
+  }, [selectedTagList]);
 
   return (
     <div className={styles.container}>
