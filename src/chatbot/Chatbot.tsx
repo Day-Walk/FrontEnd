@@ -100,7 +100,7 @@ const Chatbot = () => {
     lng: number;
   } | null>(null);
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
