@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../Signup.module.css";
 import { data } from "../data";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 
 interface Tag {
   tag: string;
@@ -11,19 +11,19 @@ interface Tag {
 }
 
 interface SelectedTagList {
-  categoryId: string;
+  categoryName: string;
   tagList: string[];
 }
 
 const SelectTag = ({ tag, tagId, checked, handleChange }: Tag) => {
   return (
-    <div className={styles.tag_wrapper} onClick={handleChange}>
+    <div className={styles.tag_wrapper}>
       <input
         type="checkbox"
         className={styles.checkbox}
         id={tagId}
         checked={checked}
-        readOnly
+        onChange={handleChange}
       />
       <label htmlFor={tagId}>{tag}</label>
       <Check
@@ -59,29 +59,29 @@ const UserLike = () => {
     });
   };
 
-  const handleClickTag = (categoryId: string, tagId: string) => {
+  const handleClickTag = (categoryName: string, keyword: string) => {
     setSelectedTagList((prev) => {
-      const existing = prev.find((item) => item.categoryId === categoryId);
+      const existing = prev.find((item) => item.categoryName === categoryName);
 
       if (existing) {
-        const updatedTagList = existing.tagList.includes(tagId)
-          ? existing.tagList.filter((tag) => tag !== tagId)
+        const updatedTagList = existing.tagList.includes(keyword)
+          ? existing.tagList.filter((tag) => tag !== keyword)
           : existing.tagList.length < 5
-            ? [...existing.tagList, tagId]
+            ? [...existing.tagList, keyword]
             : (alert("태그는 최대 5개까지만 선택할 수 있습니다."),
               existing.tagList);
 
         if (updatedTagList.length === 0) {
-          return prev.filter((item) => item.categoryId !== categoryId);
+          return prev.filter((item) => item.categoryName !== categoryName);
         }
 
         return prev.map((item) =>
-          item.categoryId === categoryId
+          item.categoryName === categoryName
             ? { ...item, tagList: updatedTagList }
             : item,
         );
       } else {
-        return [...prev, { categoryId, tagList: [tagId] }];
+        return [...prev, { categoryName, tagList: [keyword] }];
       }
     });
   };
@@ -95,10 +95,9 @@ const UserLike = () => {
     return true;
   };
 
-  const handleClickCompleteBtn = () => {
+  const handleClickCompleteBtn = async () => {
     console.log(selectedTagList);
     if (!isFinished()) {
-      alert("카테고리와 태그를 올바르게 선택해주세요.");
       return;
     }
   };
@@ -144,12 +143,12 @@ const UserLike = () => {
                     selectedTagList
                       .find(
                         (item) =>
-                          item.categoryId === categories[index].categoryId,
+                          item.categoryName === categories[index].categoryName,
                       )
-                      ?.tagList.includes(tag.tagId) ?? false
+                      ?.tagList.includes(tag.keyword) ?? false
                   }
                   handleChange={() => {
-                    handleClickTag(categories[index].categoryId, tag.tagId);
+                    handleClickTag(categories[index].categoryName, tag.keyword);
                   }}
                 />
               ))}

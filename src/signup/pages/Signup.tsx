@@ -64,8 +64,7 @@ export const ButtonGroup = <T,>({
 
 const Signup = () => {
   const [userInfo, setUserInfo] = useState<UserInfoType>({
-    // todo: kakao에서 받아온 값으로 변경
-    userName: "이희연",
+    userName: "",
     age: null,
     gender: null,
   });
@@ -79,10 +78,10 @@ const Signup = () => {
 
   const isFinished =
     userInfo.userName && userInfo.age !== null && userInfo.gender !== null;
+
   const navigate = useNavigate();
-  const handleClickNextBtn = () => {
+  const handleClickNextBtn = async () => {
     if (!isFinished) {
-      alert("모든 정보를 입력해주세요.");
       return;
     }
     navigate("/signup/user-like");
