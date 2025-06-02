@@ -125,6 +125,7 @@
   overflow: hidden;
   cursor: pointer;
   border-radius: 20px;
+  flex-shrink: 0;
 }
 
 .place_img {

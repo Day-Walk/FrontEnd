@@ -7,12 +7,14 @@ interface ChatMessageProps {
   message: any;
   selectedMarker: { lat: number; lng: number } | null;
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
+  handleModalOpen: () => void;
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
   message,
   selectedMarker,
   setSelectedMarker,
+  handleModalOpen,
 }) => {
   const [toggleDetail, setToggleDetail] = useState<boolean>(false);
 
@@ -68,7 +70,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         )}
 
         <div className={styles.button_wrapper}>
-          <MainButton fontSize={14} bgColor="#E96563" style={{ flexShrink: 0 }}>
+          <MainButton
+            fontSize={14}
+            bgColor="#E96563"
+            style={{ flexShrink: 0 }}
+            onClick={handleModalOpen}
+          >
             내 코스에 추가하기
           </MainButton>
           <MainButton fontSize={14} bgColor="#333" style={{ flexShrink: 0 }}>
