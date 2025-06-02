@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./Search.module.css";
 import * as Interfaces from "./interfaces/Interface";
-import { Star, Share2 } from "lucide-react";
+import { Star, Share2, ThumbsUp, MapPin } from "lucide-react";
 import PlaceModal from "../course_detail/components/PlaceModal";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import SearchBox from "./components/SearchBox";
+
 declare global {
   interface Window {
     kakao: any;
@@ -74,12 +75,11 @@ const Search = () => {
         {/* <h1>Course Detail : {id}</h1> */}
         <div>
           <div className={style.courseTitle}>
-            <div className={style.headTitle}>
-              <div>name님이 좋아하실만한 Pick!</div>
+            <div>
+              name님이 좋아하실만한{" "}
+              <span style={{ color: "var(--color-main)" }}>Pick!</span>
             </div>
-            {/* <div>{searchPlaceList?.title} 코스</div> */}
           </div>
-          {/* <div>{searchPlaceList?.like}</div> */}
         </div>
         <div>
           {searchPlaceList?.placeList.map((p, i) => (
@@ -98,15 +98,26 @@ const Search = () => {
                 className={style.placeImg}
               />
               <div className={style.placeInfo}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span className={style.placeRecommend}>
+                    <span>추천&nbsp;</span>
+                    <ThumbsUp size={14} color="var(--color-main)" />
+                  </span>
+                  <div className={style.placeName}>&nbsp;{p.placeName}</div>
+                </div>
+                <div className={style.address}>
+                  <MapPin size={14} />
+                  {p.address}
+                </div>
                 <div className={style.placeCategory}>
-                  <div className={style.category}>{p.subCategory}</div>
+                  <div className={style.category}>
+                    {p.category}({p.subCategory})
+                  </div>
                   <div className={style.stars}>
                     <Star size={20} fill="#fabd55" color="#fabd55" />
-                    <span>&nbsp;{p.stars}</span>
+                    <span>&nbsp;{p.stars.toFixed(1)}</span>
                   </div>
                 </div>
-                <div className={style.placeName}>{p.placeName}</div>
-                <div className={style.address}>{p.address}</div>
               </div>
             </div>
           ))}
