@@ -8,6 +8,7 @@ interface ChatMessageProps {
   selectedMarker: { lat: number; lng: number } | null;
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
   handleModalOpen: () => void;
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
@@ -15,11 +16,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   selectedMarker,
   setSelectedMarker,
   handleModalOpen,
+  inputRef,
 }) => {
   const [toggleDetail, setToggleDetail] = useState<boolean>(false);
 
   const handleToggleDetail = () => {
     setToggleDetail((prev) => !prev);
+  };
+
+  const handleClickUpdateBtn = () => {
+    inputRef.current?.focus();
   };
   return (
     <div>
@@ -77,6 +83,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             onClick={handleModalOpen}
           >
             내 코스에 추가하기
+          </MainButton>
+          <MainButton
+            fontSize={14}
+            bgColor="#F7A19B"
+            style={{ flexShrink: 0 }}
+            onClick={handleClickUpdateBtn}
+          >
+            수정하기
           </MainButton>
           <MainButton fontSize={14} bgColor="#333" style={{ flexShrink: 0 }}>
             지도에 표시하기
