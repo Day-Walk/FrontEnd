@@ -44,7 +44,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
         <X
           color="#333"
           size={24}
-          style={{ placeSelf: "end" }}
+          style={{ placeSelf: "end", cursor: "pointer" }}
           onClick={handleClose}
         />
         <h2 className={styles.title}>내 코스에 추가하기</h2>

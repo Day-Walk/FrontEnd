@@ -103,6 +103,10 @@ const Chatbot = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <>
       <Modal open={open} onClose={handleClose}>
@@ -130,18 +134,24 @@ const Chatbot = () => {
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
                     handleModalOpen={handleOpen}
+                    inputRef={inputRef}
                   />
                 ),
               )}
             </div>
           )}
 
-          <div className={styles.input_wrapper}>
+          <div
+            className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
+          >
             <textarea
               value={value}
               onChange={(e) => setValue(e.target.value)}
               className={styles.chat_input}
               placeholder={placeholderText}
+              ref={inputRef}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
             />
             <MainButton paddingY={10}>전송</MainButton>
           </div>
