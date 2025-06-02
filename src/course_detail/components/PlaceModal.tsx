@@ -3,6 +3,7 @@ import style from "../CourseDetail.module.css";
 import * as Interfaces from "../interfaces/Interface";
 import * as rInterfaces from "../interfaces/ReviewInterface";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { CircleChevronRight, ChevronLeft } from "lucide-react";
 
 const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [selectedPlace, setSelectedPlace] =
@@ -16,136 +17,179 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [reviewTotal, setReviewTotal] = useState<rInterfaces.ReviewTotal>(
     rInterfaces.dummyReviewTotal.reviewTotal,
   );
+  const [isModalOpen, setIsModalOpen] = useState(true); // false = 모달을 왼쪽으로 숨김
+
+  const [slideDirection, setSlideDirection] = useState("");
+
+  const handleNext = () => {
+    setSlideDirection("slide-left");
+    setCurrentImgIndex((prev) =>
+      prev === selectedPlace!.imgUrlList.length - 1 ? 0 : prev + 1,
+    );
+  };
 
   const handlePrev = () => {
+    setSlideDirection("slide-right");
     setCurrentImgIndex((prev) =>
       prev === 0 ? selectedPlace!.imgUrlList.length - 1 : prev - 1,
     );
   };
 
-  const handleNext = () => {
-    setCurrentImgIndex((prev) =>
-      prev === selectedPlace!.imgUrlList.length - 1 ? 0 : prev + 1,
-    );
-  };
+  useEffect(() => {
+    if (slideDirection) {
+      const timer = setTimeout(() => setSlideDirection(""), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [slideDirection]);
 
   if (selectedPlace === null) {
     return <div>장소 정보를 불러오는 중...</div>;
   }
   return (
     <div className={style.placeModalWrapper}>
-      <div className={style.placeModal}>
-        <button
-          className={style.slideInButton}
-          onClick={() => setSelectedPlace(null)}
-        >
-          ◀
-        </button>
-
-        <div style={{ marginBottom: "20px" }}>
-          <div className={style.modalTitle}>{selectedPlace?.name}</div>
-          <span className={style.category}>{selectedPlace?.category}</span>
-        </div>
-
-        {selectedPlace?.imgUrlList.length > 0 && (
-          <div className={style.sliderWrapper}>
-            <button className={style.arrowLeft} onClick={handlePrev}>
-              <ChevronLeft />
-            </button>
-
-            <img
-              src={selectedPlace.imgUrlList[currentImgIndex]}
-              alt={`Place Image ${currentImgIndex + 1}`}
-              className={style.modalImg}
-            />
-
-            <button className={style.arrowRight} onClick={handleNext}>
-              <ChevronRight />
-            </button>
+      <div
+        className={style.slideGroup}
+        style={{ left: isModalOpen ? "0px" : "-380px" }}
+      >
+        <div className={style.placeModal}>
+          <div style={{ marginBottom: "20px" }}>
+            <div className={style.modalTitle}>{selectedPlace?.name}</div>
+            <span className={style.category}>{selectedPlace?.category}</span>
           </div>
-        )}
 
-        <div className={style.modalContent}>
-          <div>
-            <div className={style.modalSubTitle}>주소</div>
-            <p>{selectedPlace?.address}</p>
-          </div>
-          <div>
-            <div className={style.modalSubTitle}>운영 시간</div>
-            <p>{selectedPlace.openTime}</p>
-          </div>
-          <div>
-            <div className={style.modalSubTitle}>전화번호</div>
-            <p>
-              {selectedPlace.phoneNum.map((num) => (
-                <p key={num} className={style.phoneNum}>
-                  {num}
-                </p>
-              ))}
-            </p>
-          </div>
-          <div>
-            <div className={style.modalSubTitle}>매장 정보</div>
-            <p>{selectedPlace.detail}</p>
-          </div>
-          <div>
-            <div className={style.modalSubTitle}>가게 설명</div>
-            <p>{selectedPlace.content}</p>
-          </div>
-          {/* <p>⭐ {selectedPlace?.stars.toFixed(1)}</p> */}
+          {selectedPlace?.imgUrlList.length > 0 && (
+            <div className={style.sliderWrapper}>
+              <button className={style.arrowLeft} onClick={handlePrev}>
+                <ChevronLeft />
+              </button>
 
-          <div>
-            <div className={style.modalReviewTitle}>
-              <div>리뷰({reviewTotal.reviewNum})</div>
-              <div>
-                <Star size={20} color="#FABD55" fill="#FABD55" />
-                {reviewTotal.stars}
-              </div>
-            </div>
-            <div className={style.reviewTags}>
-              {reviewTotal.tagList.map((tag, index) => (
-                <span key={index} className={style.reviewTotalTag}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {reviewList.page.map((review, index) => (
-              <div key={index} className={style.reviewBlock}>
-                <div className={style.reviewHeader}>
-                  <span className={style.reviewUserName}>
-                    {review.userName}
-                  </span>
-                  <div className={style.reviewStars}>
-                    ⭐ {review.stars.toFixed(1)}
-                  </div>
-                </div>
-                <div className={style.reviewContentBlock}>
-                  {review.imgUrl && (
+              <div className={style.slideViewport}>
+                <div
+                  className={style.slideTrack}
+                  style={{
+                    transform: `translateX(-${currentImgIndex * 100}%)`,
+                  }}
+                >
+                  {selectedPlace?.imgUrlList.map((imgUrl, index) => (
                     <img
-                      src={review.imgUrl}
-                      alt={`Review Image ${index + 1}`}
-                      className={style.reviewImg}
+                      key={index}
+                      src={imgUrl}
+                      className={style.modalImg}
+                      alt={`Place Image ${index + 1}`}
                     />
-                  )}
-                  <div>
-                    <span className={style.reviewDate}>
-                      작성일 : {review.createAt}
-                    </span>
-                    <p className={style.reviewContent}>{review.content}</p>
-                  </div>
-                </div>
-                <div className={style.reviewTags}>
-                  {review.tagList.map((tag, tagIndex) => (
-                    <span key={tagIndex} className={style.reviewTag}>
-                      {tag}
-                    </span>
                   ))}
                 </div>
               </div>
-            ))}
+
+              <button className={style.arrowRight} onClick={handleNext}>
+                <ChevronRight />
+              </button>
+            </div>
+          )}
+
+          <div className={style.modalContent}>
+            <div>
+              <div className={style.modalSubTitle}>주소</div>
+              <p>{selectedPlace?.address}</p>
+            </div>
+            <div>
+              <div className={style.modalSubTitle}>운영 시간</div>
+              <p>{selectedPlace.openTime}</p>
+            </div>
+            <div>
+              <div className={style.modalSubTitle}>전화번호</div>
+              <p>
+                {selectedPlace.phoneNum.map((num) => (
+                  <p key={num} className={style.phoneNum}>
+                    {num}
+                  </p>
+                ))}
+              </p>
+            </div>
+            <div>
+              <div className={style.modalSubTitle}>매장 정보</div>
+              <p>{selectedPlace.detail}</p>
+            </div>
+            <div>
+              <div className={style.modalSubTitle}>가게 설명</div>
+              <p>{selectedPlace.content}</p>
+            </div>
+            <div className={style.viewDetailButton}>
+              <button style={{ display: "flex", alignItems: "center" }}>
+                <span>상세 정보 보기&nbsp;</span>
+                <CircleChevronRight size={24} />
+              </button>
+            </div>
+            <div>
+              <div className={style.modalReviewTitle}>
+                <div>리뷰({reviewTotal.reviewNum})</div>
+                <div>
+                  <Star size={20} color="#FABD55" fill="#FABD55" />
+                  {reviewTotal.stars}
+                </div>
+              </div>
+              <div className={style.reviewTags}>
+                {reviewTotal.tagList.map((tag, index) => (
+                  <span key={index} className={style.reviewTotalTag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {reviewList.page.map((review, index) => (
+                <div key={index} className={style.reviewBlock}>
+                  <div className={style.reviewHeader}>
+                    <span className={style.reviewUserName}>
+                      {review.userName}
+                    </span>
+                    <div className={style.reviewStars}>
+                      ⭐ {review.stars.toFixed(1)}
+                    </div>
+                  </div>
+                  <div className={style.reviewContentBlock}>
+                    {review.imgUrl && (
+                      <img
+                        src={review.imgUrl}
+                        alt={`Review Image ${index + 1}`}
+                        className={style.reviewImg}
+                      />
+                    )}
+                    <div>
+                      <span className={style.reviewDate}>
+                        작성일 : {review.createAt}
+                      </span>
+                      <p className={style.reviewContent}>{review.content}</p>
+                    </div>
+                  </div>
+                  <div className={style.reviewTags}>
+                    {review.tagList.map((tag, tagIndex) => (
+                      <span key={tagIndex} className={style.reviewTag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+
+        {!isModalOpen && (
+          <button
+            className={style.slideOutButton}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <ChevronRight size={24} />
+          </button>
+        )}
+        {isModalOpen && (
+          <button
+            className={style.slideInButton}
+            onClick={() => setIsModalOpen(false)}
+          >
+            <ChevronLeft size={24} />
+          </button>
+        )}
       </div>
     </div>
   );

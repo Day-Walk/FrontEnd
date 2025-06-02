@@ -27,7 +27,7 @@ const CourseDetail = () => {
     useState<Interfaces.CourseDetail | null>(
       Interfaces.dummyCourseDetail.courseInfo,
     );
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(1);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
 
   const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
     setSelectedPlaceId(p.placeId);
@@ -125,7 +125,7 @@ const CourseDetail = () => {
       </div>
       <div className={style.detailRight}>
         <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-        {selectedPlaceId && (
+        {selectedPlaceId && selectedPlaceId.length > 0 && (
           <PlaceModal placeId={selectedPlaceId ? selectedPlaceId : ""} />
         )}
       </div>
