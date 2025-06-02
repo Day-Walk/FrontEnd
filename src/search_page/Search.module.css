@@ -1,0 +1,360 @@
+.courseDetailWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.detailLeft {
+  width: 380px;
+  overflow-y: auto;
+  box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
+  z-index: 10;
+  background-color: white;
+}
+.detailRight {
+  width: calc(100% - 380px);
+}
+.placeBlock,
+.placeBlockClick {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  margin: 14px auto;
+  padding: 16px 20px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+}
+.placeBlockClick {
+  border: 1px solid var(--color-main);
+}
+.idx {
+  font-size: 20px;
+  font-weight: bold;
+}
+.placeImg {
+  width: 100px;
+  height: 100px;
+  margin: 0 20px;
+}
+.placeCategory {
+  display: flex;
+}
+.category,
+.placeModalCategory,
+.reviewTotalTag {
+  font-size: 12px;
+  background-color: var(--color-main);
+  color: white;
+  padding: 4px 10px;
+  margin-right: 10px;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+.reviewTotalTag {
+  background-color: #2c5044;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  margin: 0;
+}
+.placeModalCategory {
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  -ms-border-radius: 14px;
+  -o-border-radius: 14px;
+}
+.placeName {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+.address {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+.placeModalWrapper {
+  position: relative;
+  height: 100%;
+  top: -100%;
+  z-index: 4;
+}
+.slideGroup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex; /* 모달과 버튼을 나란히 */
+  height: 100%;
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+.placeModal {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  z-index: 5;
+  background: white;
+  box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
+  padding: 16px 16px 16px 26px;
+  width: 400px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sliderWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.arrowLeft,
+.arrowRight {
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  padding: 6px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.arrowLeft {
+  left: 10px;
+}
+
+.arrowRight {
+  right: 10px;
+}
+.slideContainer {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.modalImg {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+.sliderWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.slideViewport {
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+  position: relative;
+}
+
+.slideTrack {
+  display: flex;
+  transition: transform 0.4s ease-in-out;
+  width: 100%;
+  height: 100%;
+}
+
+.modalImg {
+  min-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.modalContent p {
+  font-size: 14px;
+  color: #444;
+}
+.slideInButton {
+  z-index: 20;
+  position: absolute;
+  left: 400px;
+  top: 50%;
+  width: 24px;
+  transform: translateY(-50%);
+  background: white;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 30px 20px 30px 0;
+  cursor: pointer;
+  box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
+}
+.slideOutButton {
+  z-index: 20;
+  position: absolute;
+  left: 400px;
+  top: 50%;
+  width: 24px;
+  transform: translateY(-50%);
+  background: white;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 30px 20px 30px 0;
+  cursor: pointer;
+  box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
+}
+.userName {
+  color: var(--color-main);
+  font-weight: bold;
+  font-size: 24px;
+}
+.courseTitle {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.5;
+  margin: 24px;
+}
+.headTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.modalHeader {
+  margin-bottom: 20px;
+}
+.modalTitle {
+  font-size: 26px;
+  margin: 14px 0;
+  font-weight: bold;
+}
+.reviewBlock {
+  width: 100%;
+  margin: 10px auto;
+  padding: 10px;
+  border: 1px solid #d5d5d5;
+  border-radius: 20px;
+  background-color: white;
+}
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  justify-content: space-between;
+}
+.reviewImg {
+  width: 80px;
+  height: 80px;
+}
+.reviewContentBlock {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+.reviewDate {
+  font-size: 14px;
+  color: #999;
+  margin-left: 10px;
+}
+.reviewContent {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-left: 10px;
+  line-height: 18px;
+}
+.reviewTags {
+  display: flex;
+  flex-wrap: wrap; /* 줄바꿈 허용 */
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.reviewTag {
+  font-size: 12px;
+  color: var(--color-main);
+  background-color: white;
+  padding: 4px 10px;
+  border: 1px solid var(--color-main);
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+.modalSubTitle {
+  font-size: 18px;
+  margin: 20px 0 10px 0;
+  font-weight: bold;
+}
+.modalReviewTitle {
+  display: flex;
+  align-items: center;
+  margin: 20px 0 14px 0;
+}
+.viewDetailButton {
+  margin: 30px 0;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  font-size: 18px;
+  font-weight: bold;
+}
+.stars,
+.reviewUserName {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+.reviewUserName {
+  font-weight: bold;
+}
+.searchBoxWrapper {
+  position: absolute;
+  right: 10px;
+  top: 70px;
+  z-index: 99;
+}
+.searchWrapper {
+  background-color: white;
+  position: relative;
+  display: inline-block;
+  width: 420px;
+  height: 50px;
+  border-radius: 12px;
+  border: 1px solid #848484;
+  margin: 20px 0 10px 0;
+  display: flex;
+  align-items: center;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchInput {
+  width: 350px;
+  border: none;
+  font-size: 18px;
+  height: 38px;
+  margin: 0 10px;
+}
+.searchInput:focus {
+  outline: none;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: none; /* 아이콘이 클릭을 막지 않게 */
+}
