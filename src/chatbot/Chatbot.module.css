@@ -87,7 +87,7 @@
   position: relative;
 }
 
-.message:first-of-type {
+.message:first-child {
   margin-top: 20px;
 }
 
@@ -196,4 +196,10 @@
 
 .selected_img {
   outline: 3px solid var(--color-main);
+}
+.button_wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  justify-content: space-between;
 }

@@ -98,8 +98,6 @@ const Chatbot = () => {
     lng: number;
   } | null>(null);
 
-  console.log(mapInfo);
-
   return (
     <div className={styles.chatbot_container}>
       <div className={styles.chat_wrapper}>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "../Chatbot.module.css";
 import { BotMessageSquare, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { MainButton } from "./Buttons";
 
 interface ChatMessageProps {
   message: any;
@@ -21,7 +22,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   return (
     <div>
       <BotMessageSquare size={40} color="#00B493" strokeWidth={2} />
-
       <div className={`${styles.message} ${styles.chat_message}`}>
         <div>{message.header}</div>
         <div className={styles.place_wrapper}>
@@ -66,6 +66,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             코스 설명 더보기
           </div>
         )}
+
+        <div className={styles.button_wrapper}>
+          <MainButton fontSize={14} bgColor="#E96563" style={{ flexShrink: 0 }}>
+            내 코스에 추가하기
+          </MainButton>
+          <MainButton fontSize={14} bgColor="#333" style={{ flexShrink: 0 }}>
+            지도에 표시하기
+          </MainButton>
+        </div>
       </div>
     </div>
   );

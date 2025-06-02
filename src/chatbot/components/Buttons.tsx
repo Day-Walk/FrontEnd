@@ -9,6 +9,7 @@ type ButtonProps = {
   bgColor?: string;
   children: React.ReactNode;
   onClick?: () => void;
+  style?: React.CSSProperties;
 };
 
 export const MainButton: React.FC<ButtonProps> = ({
@@ -20,6 +21,7 @@ export const MainButton: React.FC<ButtonProps> = ({
   bgColor = "#00B493",
   children,
   onClick,
+  style = {},
 }) => {
   return (
     <button
@@ -33,6 +35,7 @@ export const MainButton: React.FC<ButtonProps> = ({
         border: "none",
         borderRadius: "10px",
         cursor: "pointer",
+        ...style,
       }}
     >
       {children}
@@ -49,6 +52,7 @@ export const BorderButton: React.FC<ButtonProps> = ({
   bgColor = "#FFF",
   children,
   onClick,
+  style,
 }) => {
   return (
     <button
@@ -62,6 +66,7 @@ export const BorderButton: React.FC<ButtonProps> = ({
         border: `2px solid ${fontColor}`,
         borderRadius: "10px",
         cursor: "pointer",
+        ...style,
       }}
     >
       {children}
