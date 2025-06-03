@@ -9,6 +9,7 @@ import Signup from "./signup/pages/Signup";
 import UserLike from "./signup/pages/UserLike";
 import CourseDetail from "./course_detail/CourseDetail";
 import Chatbot from "./chatbot/Chatbot";
+import Search from "./search_page/Search";
 
 const App = () => (
   <Routes>
@@ -18,6 +19,7 @@ const App = () => (
       <Route path="/profile" element={<Profile />} />
       <Route path="/course-detail/:id" element={<CourseDetail />} />
       <Route path="/chatbot" element={<Chatbot />} />
+      <Route path="/search" element={<Search />} />
     </Route>
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />
