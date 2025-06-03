@@ -7,6 +7,8 @@ import { Star, Share2, ThumbsUp, MapPin } from "lucide-react";
 import PlaceModal from "../course_detail/components/PlaceModal";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import SearchBox from "./components/SearchBox";
+import RecommendedList from "./components/RecommendList";
+import PlaceList from "./components/PlaceList";
 
 declare global {
   interface Window {
@@ -15,15 +17,17 @@ declare global {
 }
 
 const Search = () => {
-  const [searchPlaceList, setSearchPlaceList] =
-    useState<Interfaces.SearchPlaceResponse | null>(
-      Interfaces.dummySearchPlaceResponse,
-    );
+  const [recommendedPlaces, setRecommendedPlaces] = useState<
+    Interfaces.GroupedPlaceList[0]
+  >(Interfaces.dummySearchPlaceResponse.placeList["추천픽"]);
+  const [regularPlaces, setRegularPlaces] = useState<
+    Interfaces.GroupedPlaceList[1]
+  >(Interfaces.dummySearchPlaceResponse.placeList["장소"]);
+
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
 
-  const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
+  const handlePlaceClick = (p: Interfaces.SearchPlace) => {
     setSelectedPlaceId(p.placeId);
-    setSelectedPlace(p);
   };
 
   useEffect(() => {
@@ -37,7 +41,7 @@ const Search = () => {
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
-          const firstPlace = searchPlaceList?.placeList[0];
+          const firstPlace = recommendedPlaces[0];
           const center = firstPlace
             ? new window.kakao.maps.LatLng(
                 firstPlace.location.lat,
@@ -52,7 +56,7 @@ const Search = () => {
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
 
-          searchPlaceList?.placeList.forEach((place) => {
+          recommendedPlaces.forEach((place) => {
             const markerPosition = new window.kakao.maps.LatLng(
               place.location.lat,
               place.location.lng,
@@ -67,7 +71,7 @@ const Search = () => {
         }
       })
       .catch(console.error);
-  }, []);
+  }, [recommendedPlaces]);
 
   return (
     <div className={style.courseDetailWrapper}>
@@ -82,45 +86,17 @@ const Search = () => {
           </div>
         </div>
         <div>
-          {searchPlaceList?.placeList.map((p, i) => (
-            <div
-              key={p.placeId}
-              onClick={() => handlePlaceClick(p)}
-              className={
-                selectedPlaceId == p.placeId
-                  ? style.placeBlockClick
-                  : style.placeBlock
-              }
-            >
-              <img
-                src={p.imgUrl}
-                alt={p.placeName}
-                className={style.placeImg}
-              />
-              <div className={style.placeInfo}>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <span className={style.placeRecommend}>
-                    <span>추천&nbsp;</span>
-                    <ThumbsUp size={14} color="var(--color-main)" />
-                  </span>
-                  <div className={style.placeName}>&nbsp;{p.placeName}</div>
-                </div>
-                <div className={style.address}>
-                  <MapPin size={14} />
-                  {p.address}
-                </div>
-                <div className={style.placeCategory}>
-                  <div className={style.category}>
-                    {p.category}({p.subCategory})
-                  </div>
-                  <div className={style.stars}>
-                    <Star size={20} fill="#fabd55" color="#fabd55" />
-                    <span>&nbsp;{p.stars.toFixed(1)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          <RecommendedList
+            places={recommendedPlaces}
+            selectedPlaceId={selectedPlaceId}
+            onPlaceClick={handlePlaceClick}
+          />
+          <hr color="#e5e5e5" style={{ margin: "20px" }} />
+          <PlaceList
+            places={regularPlaces}
+            selectedPlaceId={selectedPlaceId}
+            onPlaceClick={handlePlaceClick}
+          />
         </div>
       </div>
       <div className={style.detailRight}>
