@@ -53,32 +53,6 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         style={{ left: isModalOpen ? "0px" : "-400px" }}
       >
         <div className={style.placeModal}>
-          <div className={style.modalHeader}>
-            <div className={style.modalTitle}>{selectedPlace?.name}</div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span className={style.placeModalCategory}>
-                {selectedPlace?.category}
-              </span>
-              <div>
-                <Pencil size={26} />
-                &nbsp;
-                {selectedPlace?.like ? (
-                  <AiFillHeart size={26} color="#E96563" />
-                ) : (
-                  <AiOutlineHeart size={26} color="#E96563" />
-                )}
-                &nbsp;
-                <Share2 size={26} />
-              </div>
-            </div>
-          </div>
-
           {selectedPlace?.imgUrlList.length > 0 && (
             <div className={style.sliderWrapper}>
               <button className={style.arrowLeft} onClick={handlePrev}>
@@ -109,6 +83,54 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             </div>
           )}
 
+          <div className={style.modalHeader}>
+            <div className={style.modalTitle}>{selectedPlace?.name}</div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span className={style.placeModalCategory}>
+                {selectedPlace?.category}({selectedPlace?.subCategory})
+              </span>
+              <div>
+                <Pencil size={26} />
+                &nbsp;
+                {selectedPlace?.like ? (
+                  <AiFillHeart size={26} color="#E96563" />
+                ) : (
+                  <AiOutlineHeart size={26} color="#E96563" />
+                )}
+                &nbsp;
+                <Share2 size={26} />
+              </div>
+            </div>
+          </div>
+
+          <div style={{ padding: "0 16px 0 26px" }}>
+            <div className={style.modalReviewTitle}>
+              <div className={style.stars}>
+                <Star size={20} color="#FABD55" fill="#FABD55" />
+                &nbsp;{reviewTotal.stars}
+              </div>
+            </div>
+            <div className={style.reviewTags} style={{ marginBottom: "24px" }}>
+              {reviewTotal.tagList.map((tag, index) => (
+                <span key={index} className={style.reviewTotalTag}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div>
+              <p>{selectedPlace.content}</p>
+            </div>
+            <br />
+            <br />
+            <hr color="#E5E5E5" />
+          </div>
+
           <div className={style.modalContent}>
             <div>
               <div className={style.modalSubTitle}>주소</div>
@@ -132,10 +154,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
               <div className={style.modalSubTitle}>매장 정보</div>
               <p>{selectedPlace.detail}</p>
             </div>
-            <div>
-              <div className={style.modalSubTitle}>가게 설명</div>
-              <p>{selectedPlace.content}</p>
-            </div>
+
             <div className={style.viewDetailButton}>
               <button style={{ display: "flex", alignItems: "center" }}>
                 <span>상세 정보 보기&nbsp;</span>
@@ -143,24 +162,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
               </button>
             </div>
             <div>
-              <div className={style.modalReviewTitle}>
-                <div>리뷰({reviewTotal.reviewNum})&nbsp;</div>
-                <div className={style.stars}>
-                  <Star size={20} color="#FABD55" fill="#FABD55" />
-                  &nbsp;{reviewTotal.stars}
-                </div>
-              </div>
-              <div
-                className={style.reviewTags}
-                style={{ marginBottom: "24px" }}
-              >
-                {reviewTotal.tagList.map((tag, index) => (
-                  <span key={index} className={style.reviewTotalTag}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
+              <div>리뷰&nbsp;({reviewTotal.reviewNum})</div>
               {reviewList.page.map((review, index) => (
                 <div key={index} className={style.reviewBlock}>
                   <div className={style.reviewHeader}>
@@ -185,7 +187,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                       <span className={style.reviewDate}>
                         작성일 : {review.createAt}
                       </span>
-                      <p className={style.reviewContent}>{review.content}</p>
+                      <div className={style.reviewContent}>
+                        {review.content}
+                      </div>
                     </div>
                   </div>
                   <div className={style.reviewTags}>
