@@ -4,6 +4,7 @@ import { ImageUp, Star } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Rating from "react-rating";
 import * as Interfaces from "./interfaces/Interface";
+import axios from "axios";
 
 const ReviewForm = () => {
   const { placeId } = useParams();
@@ -48,6 +49,30 @@ const ReviewForm = () => {
       };
     } else {
       alert("JPG / JPEG / PNG 형식의 파일 업로드만 가능합니다.");
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    if (!rating || selectedTags.length === 0 || !content) {
+      alert("별점, 태그, 리뷰 내용을 모두 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("/api/reviews", {
+        userId: "11111111-1111-1111", // 더미 유저 ID
+        placeId: "22222222-2222-2222", // 더미 장소 ID
+        tagList: selectedTags,
+        stars: rating,
+        imgUrl: uploadImgUrl || null,
+        content: content, // 리뷰 텍스트
+      });
+
+      console.log("리뷰 등록 성공:", response.data);
+      alert("리뷰가 등록되었습니다!");
+    } catch (error) {
+      console.error("리뷰 등록 실패:", error);
+      alert("리뷰 등록 중 오류가 발생했습니다.");
     }
   };
 
@@ -143,7 +168,9 @@ const ReviewForm = () => {
 
         <div className={style.buttonRow}>
           <button className={style.cancel}>취소</button>
-          <button className={style.submit}>리뷰 등록하기</button>
+          <button onClick={handleSubmitReview} className={style.submit}>
+            리뷰 등록하기
+          </button>
         </div>
       </div>
     </div>
