@@ -7,6 +7,7 @@ import * as Interfaces from "./interfaces/Interface";
 import { Star, Share2 } from "lucide-react";
 import PlaceModal from "./components/PlaceModal";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { CustomMarker } from "./components/CustomMarker";
 declare global {
   interface Window {
     kakao: any;
@@ -28,6 +29,8 @@ const CourseDetail = () => {
       Interfaces.dummyCourseDetail.courseInfo,
     );
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
+  const [selectedPlace, setSelectedPlace] =
+    useState<Interfaces.CourseDetailPlace | null>(null);
 
   const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
     setSelectedPlaceId(p.placeId);
@@ -55,27 +58,38 @@ const CourseDetail = () => {
 
           const options = {
             center,
-            level: 3,
+            level: 7,
           };
+
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
 
-          courseDetail?.placeList.forEach((place) => {
-            const markerPosition = new window.kakao.maps.LatLng(
-              place.location.lat,
-              place.location.lng,
-            );
-
-            new window.kakao.maps.Marker({
+          courseDetail?.placeList.forEach((place, index) => {
+            CustomMarker(
               map,
-              position: markerPosition,
-              title: place.placeName,
-            });
+              place,
+              index,
+              selectedPlaceId,
+              () => handlePlaceClick(place),
+              style.mapMarker,
+              style.selectedMarker,
+            );
           });
         }
       })
       .catch(console.error);
-  }, []);
+  }, [courseDetail, selectedPlaceId]);
+
+  useEffect(() => {
+    if (!window.kakao || !selectedPlace || !mapInstance.current) return;
+
+    const newCenter = new window.kakao.maps.LatLng(
+      selectedPlace.location.lat,
+      selectedPlace.location.lng,
+    );
+
+    mapInstance.current.setCenter(newCenter);
+  }, [selectedPlace]);
 
   return (
     <div className={style.courseDetailWrapper}>
