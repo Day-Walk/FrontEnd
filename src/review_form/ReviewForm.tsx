@@ -1,18 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./ReviewForm.module.css";
-import { Star } from "lucide-react";
+import { ImageUp, Star } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Rating from "react-rating";
-
-const MAX_TAGS = 5;
-
-const TAGS = [
-  "음식이 맛있어요",
-  "양이 많아요",
-  "직원이 친절해요",
-  "청결해요",
-  "재방문의사 있어요",
-];
+import * as Interfaces from "./interfaces/Interface";
 
 const ReviewForm = () => {
   const { placeId } = useParams();
@@ -22,7 +13,12 @@ const ReviewForm = () => {
   const [rating, setRating] = useState(5);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [image, setImage] = useState<File | null>(null);
+  const [uploadImgUrl, setUploadImgUrl] = useState(""); // 서버에 전송할 url
   const [content, setContent] = useState("");
+  const [placeTags, setPlaceTags] = useState<Interfaces.PlaceTagInfo>(
+    Interfaces.dummyPlaceTagResponse.placeInfo,
+  );
+  const MAX_TAGS = 5;
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -35,17 +31,35 @@ const ReviewForm = () => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
+    const { files } = e.target;
+    if (!files || files.length === 0) {
+      alert("파일을 선택해주세요.");
+      return;
+    }
+    const file = files[0];
+    if (file.type === "image/png" || file.type === "image/jpeg") {
+      setImage(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setUploadImgUrl(reader.result);
+        }
+      };
+    } else {
+      alert("JPG / JPEG / PNG 형식의 파일 업로드만 가능합니다.");
     }
   };
 
   return (
     <div className={style.pageWrapper}>
       <div className={style.reviewWrapper}>
+        <div className={style.reviewHeader}>리뷰 작성하기</div>
         <div className={style.card}>
-          <h3>볼리블러 배불러 음식점</h3>
-          <span className={style.sub}>음식점(양식)</span>
+          <h3>{placeTags.placeName}</h3>
+          <span className={style.sub}>
+            {placeTags?.categoryName}({placeTags?.subCategoryName})
+          </span>
           <div className={style.contentBox}>
             <p className={style.sub}>평점을 표시해 주세요</p>
             <div className={style.starBox}>
@@ -64,16 +78,16 @@ const ReviewForm = () => {
         <div className={style.card}>
           <h3>태그 선택</h3>
           <p className={style.sub}>
-            태그는 최소 1개 ~ 최대 5개 선택({selectedTags.length}/{MAX_TAGS})
+            태그는 최소 1개 - 최대 5개 선택({selectedTags.length}/{MAX_TAGS})
           </p>
           <div className={style.tagBox}>
-            {TAGS.map((tag) => (
+            {placeTags.tagList.map((tag) => (
               <button
-                key={tag}
-                className={`${style.tag} ${selectedTags.includes(tag) ? style.selected : ""}`}
-                onClick={() => toggleTag(tag)}
+                key={tag.tagId}
+                className={`${style.tag} ${selectedTags.includes(tag.tagId) ? style.selected : ""}`}
+                onClick={() => toggleTag(tag.tagId)}
               >
-                {tag}
+                {tag.fullName}
               </button>
             ))}
           </div>
@@ -87,12 +101,30 @@ const ReviewForm = () => {
           <label className={style.imageUpload}>
             <input
               type="file"
-              accept="image/*"
+              accept="image/png, image/jpeg, image/jpg"
               hidden
               onChange={handleImageChange}
             />
             <div className={style.imagePlaceholder}>
-              {image ? image.name : "사진은 1장만 가능해요"}
+              {image ? (
+                <span style={{ margin: "10px 0" }}>{image.name}</span>
+              ) : (
+                <>
+                  <ImageUp size={32} color="#b0b0b0" />
+                  JPG / JPEG / PNG 형식의 파일 업로드
+                </>
+              )}
+
+              {/* 이미지 미리보기 */}
+              {uploadImgUrl && (
+                <div className={style.previewWrapper}>
+                  <img
+                    src={uploadImgUrl}
+                    alt="미리보기"
+                    className={style.previewImage}
+                  />
+                </div>
+              )}
             </div>
           </label>
         </div>
@@ -103,7 +135,7 @@ const ReviewForm = () => {
           <textarea
             className={style.textarea}
             maxLength={500}
-            placeholder="이곳에서의 경험을 자세히 알려주세요..."
+            placeholder="이곳에서의 경험을 자세히 알려주세요 😊"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
