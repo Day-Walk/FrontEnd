@@ -320,6 +320,18 @@
   font-weight: bold;
 }
 
+@keyframes boing {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
 .mapMarker {
   width: 40px;
   aspect-ratio: 1/1;
