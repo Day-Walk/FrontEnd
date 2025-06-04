@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import style from "./ReviewForm.module.css";
 import { Star } from "lucide-react";
 import { useParams } from "react-router-dom";
+import Rating from "react-rating";
 
 const MAX_TAGS = 5;
 
@@ -18,8 +19,7 @@ const ReviewForm = () => {
   // if (!placeId) {
   //   throw new Error("placeId is required");
   // }
-  const [rating, setRating] = useState(1);
-  const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [rating, setRating] = useState(5);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [image, setImage] = useState<File | null>(null);
   const [content, setContent] = useState("");
@@ -46,26 +46,23 @@ const ReviewForm = () => {
         <div className={style.card}>
           <h3>볼리블러 배불러 음식점</h3>
           <span className={style.sub}>음식점(양식)</span>
-          <p className={style.sub}>평점을 표시해 주세요</p>
-          <div className={style.starBox}>
-            {[1, 2, 3, 4, 5].map((v) => (
-              <Star
-                key={v}
-                size={32}
-                color={v <= (hoverRating ?? rating) ? "#FFC700" : "#E0E0E0"}
-                fill={v <= (hoverRating ?? rating) ? "#FFC700" : "none"}
-                onMouseEnter={() => setHoverRating(v)}
-                onMouseLeave={() => setHoverRating(null)}
-                onClick={() => setRating(v)}
-                style={{ cursor: "pointer" }}
+          <div className={style.contentBox}>
+            <p className={style.sub}>평점을 표시해 주세요</p>
+            <div className={style.starBox}>
+              <Rating
+                initialRating={rating}
+                fractions={2}
+                onChange={(value) => setRating(value)}
+                emptySymbol={<Star size={32} color="#e0e0e0" fill="none" />}
+                fullSymbol={<Star size={32} color="#ffc700" fill="#ffc700" />}
               />
-            ))}
+            </div>
+            <div className={style.ratingValue}>{rating.toFixed(1)}</div>
           </div>
-          <div className={style.ratingValue}>{rating.toFixed(1)}</div>
         </div>
 
         <div className={style.card}>
-          <h4>태그 선택</h4>
+          <h3>태그 선택</h3>
           <p className={style.sub}>
             태그는 최소 1개 ~ 최대 5개 선택({selectedTags.length}/{MAX_TAGS})
           </p>
@@ -83,9 +80,9 @@ const ReviewForm = () => {
         </div>
 
         <div className={style.card}>
-          <h4>
+          <h3>
             사진 첨부<span className={style.sub}> (선택)</span>
-          </h4>
+          </h3>
           <p className={style.sub}>사진은 1장만 가능해요</p>
           <label className={style.imageUpload}>
             <input
@@ -101,7 +98,7 @@ const ReviewForm = () => {
         </div>
 
         <div className={style.card}>
-          <h4>리뷰 글 작성</h4>
+          <h3>리뷰 글 작성</h3>
           <p className={style.sub}>최대 500자 이내({content.length}/500)</p>
           <textarea
             className={style.textarea}
