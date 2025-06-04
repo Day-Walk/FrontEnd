@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Congestion.module.css";
 import MapCompnent from "./components/MapComponent";
 import { BorderButton, MainButton } from "../chatbot/components/Buttons";
 import { Slider } from "@mui/material";
 import { Box } from "@mui/system";
 import Marker from "./components/Marker";
+import axios from "axios";
+
+export interface CongestionData {
+  area_congest_lvl: string;
+  area_congest_num: number;
+  area_nm: string;
+  category: string;
+  congestion_color: string;
+  x: number;
+  y: number;
+}
 
 const CongestionMap = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -32,6 +43,21 @@ const CongestionMap = () => {
     },
   ];
   const markerText = ["붐빔", "약간붐빔", "보통", "여유"];
+  const [realData, setRealData] = useState<CongestionData[]>();
+
+  const getData = async () => {
+    const url =
+      "https://data.seoul.go.kr/SeoulRtd/getCategoryList?page=1&category=전체보기&count=all&sort=true";
+    try {
+      const res = await axios.get(url);
+      setRealData(res.data.row);
+    } catch (error) {
+      console.error("API 호출 실패:", error);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <>
       <div className={styles.wrapper}>
@@ -63,10 +89,10 @@ const CongestionMap = () => {
         )}
         <hr color="#e5e5e5" style={{ marginTop: "20px", width: "100%" }} />
         <div className={styles.marker_wrapper}>
-          <Marker color="#EF4444" size="40px" shadow={true} />
-          <Marker color="#F97316" size="40px" shadow={true} />
-          <Marker color="#EAB308" size="40px" shadow={true} />
-          <Marker color="#22C55E" size="40px" shadow={true} />
+          <Marker color="#EF4444" size={40} shadow={true} />
+          <Marker color="#F97316" size={40} shadow={true} />
+          <Marker color="#EAB308" size={40} shadow={true} />
+          <Marker color="#22C55E" size={40} shadow={true} />
         </div>
         <div className={styles.marker_wrapper}>
           {markerText.map((text, index) => (
@@ -75,7 +101,7 @@ const CongestionMap = () => {
         </div>
       </div>
 
-      <MapCompnent />
+      <MapCompnent realData={realData ?? []} />
     </>
   );
 };
