@@ -10,6 +10,7 @@ import UserLike from "./signup/pages/UserLike";
 import CourseDetail from "./course_detail/CourseDetail";
 import Chatbot from "./chatbot/Chatbot";
 import Search from "./search_page/Search";
+import CongestionMap from "./congestion/CongestionMap";
 
 const App = () => (
   <Routes>
@@ -20,6 +21,7 @@ const App = () => (
       <Route path="/course-detail/:id" element={<CourseDetail />} />
       <Route path="/chatbot" element={<Chatbot />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/congestion" element={<CongestionMap />} />
     </Route>
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />
