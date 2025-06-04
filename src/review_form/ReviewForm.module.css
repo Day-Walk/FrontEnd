@@ -1,20 +1,29 @@
 .pageWrapper {
   background-color: #f5f5f5;
-  padding: 20px 0 30px 0;
+  padding: 14px 0 30px 0;
 }
 
 .reviewWrapper {
   max-width: 600px;
-  margin: 20px auto;
+  margin: 10px auto;
   padding: 16px;
 }
-
+.reviewHeader {
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  padding-bottom: 14px;
+}
 .card {
   background: white;
   border-radius: 12px;
   padding: 24px;
   margin: 24px 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
 h3 {
   font-weight: bold;
@@ -32,7 +41,16 @@ h3 {
   margin-top: 4px;
   margin-bottom: 8px;
 }
-
+.previewWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+.previewImage {
+  width: 200px;
+  max-height: 300px;
+}
 .starBox {
   display: flex;
   gap: 6px;
@@ -48,7 +66,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 .tag {
@@ -68,19 +86,23 @@ h3 {
 
 .imageUpload {
   display: block;
-  margin-top: 12px;
+  margin: 12px auto;
+  width: 70%;
 }
 
 .imagePlaceholder {
-  height: 120px;
-  border: 2px dashed #ccc;
+  min-height: 120px;
+  border: 1px solid #ccc;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
   color: #aaa;
   font-size: 14px;
-  background-color: #fafafa;
+  margin-top: 20px;
+  cursor: pointer;
 }
 
 .textarea {
@@ -92,6 +114,9 @@ h3 {
   border-radius: 8px;
   resize: none;
   margin-top: 10px;
+}
+textarea::placeholder {
+  color: #aaa;
 }
 
 .buttonRow {
