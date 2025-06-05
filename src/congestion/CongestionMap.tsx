@@ -3,9 +3,9 @@ import styles from "./Congestion.module.css";
 import MapCompnent from "./components/MapComponent";
 import { BorderButton, MainButton } from "../chatbot/components/Buttons";
 import { Slider } from "@mui/material";
-import { Box } from "@mui/system";
 import Marker from "./components/Marker";
 import axios from "axios";
+import { RotateCcw } from "lucide-react";
 
 export interface CongestionData {
   area_congest_lvl: string;
@@ -76,6 +76,10 @@ const CongestionMap = () => {
             </ButtonComponent>
           );
         })}
+        <div className={styles.refresh_button} onClick={getData}>
+          새로고침
+          <RotateCcw size={16} color="#333" />
+        </div>
         {tabIndex === 1 && (
           <Slider
             marks={marks}
@@ -87,7 +91,7 @@ const CongestionMap = () => {
             style={{ width: "320px" }}
           ></Slider>
         )}
-        <hr color="#e5e5e5" style={{ marginTop: "20px", width: "100%" }} />
+        <hr color="#e5e5e5" style={{ width: "100%" }} />
         <div className={styles.marker_wrapper}>
           <Marker color="#EF4444" size={40} shadow={true} />
           <Marker color="#F97316" size={40} shadow={true} />
