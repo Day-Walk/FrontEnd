@@ -19,6 +19,7 @@
   border: 5px solid #fff;
   display: grid;
   place-items: center;
+  position: relative;
 }
 
 .marker_shadow {
@@ -55,4 +56,17 @@
   cursor: pointer;
   font-weight: bold;
   font-size: 14px;
+}
+
+.marker_info {
+  position: absolute;
+  top: -15px;
+  left: 60px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 20px;
+  border: 2px solid var(--color-main);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
