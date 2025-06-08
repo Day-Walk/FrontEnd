@@ -12,6 +12,7 @@ import Chatbot from "./chatbot/Chatbot";
 import Search from "./search_page/Search";
 import CongestionMap from "./congestion/CongestionMap";
 import ReviewForm from "./review_form/ReviewForm";
+import Login from "./signup/pages/Login";
 
 const App = () => (
   <Routes>
@@ -29,6 +30,7 @@ const App = () => (
       <Route path="/signup" element={<Signup />} />
       <Route path="/signup/user-like" element={<UserLike />} />
     </Route>
+    <Route path="login" element={<Login />} />
   </Routes>
 );
 
