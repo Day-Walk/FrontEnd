@@ -1,0 +1,50 @@
+.background {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/src/assets/Banner.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 150px;
+}
+.login_wrapper {
+  background-color: white;
+  box-shadow: 9px 16px 12px rgba(21, 21, 21, 0.25);
+  border-radius: 20px;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  place-content: end;
+  place-self: end;
+  width: fit-content;
+}
+
+.kakao_login {
+  background-image: url("./assets/Kakao.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 300px;
+  aspect-ratio: 600 / 90;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.title {
+  color: #2c5044;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.discription {
+  color: #2c5044;
+}
