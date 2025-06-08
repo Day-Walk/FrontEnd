@@ -35,6 +35,7 @@
   width: 300px;
   aspect-ratio: 600 / 90;
   margin-top: 20px;
+  cursor: pointer;
 }
 
 .title {

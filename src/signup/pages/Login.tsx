@@ -3,6 +3,12 @@ import styles from "../Login.module.css";
 import Logo from "../../assets/DayWalkLogo.png";
 
 const Login = () => {
+  const handleClickLogin = () => {
+    const REST_API_KEY = "e3325f522736f4e123141deaf49845ae";
+    const REDIRECT_URI = "http://localhost:5173/auth/kakao-callback";
+    const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+    window.location.href = url;
+  };
   return (
     <div className={styles.background}>
       <img src={Logo} className={styles.logo} />
@@ -13,7 +19,7 @@ const Login = () => {
           AI 투어 가이드 서비스
         </div>
         <div className={styles.discription}>추가설명...</div>
-        <div className={styles.kakao_login}></div>
+        <div onClick={handleClickLogin} className={styles.kakao_login}></div>
       </div>
     </div>
   );
