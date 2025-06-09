@@ -15,7 +15,7 @@ const ReviewForm = () => {
   if (!placeId) {
     alert("잘못된 접근입니다. 장소 ID가 없습니다.");
   }
-  let userIdState = useRecoilValue(userId);
+  const userIdState = useRecoilValue(userId);
   const [rating, setRating] = useState(5);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [image, setImage] = useState<File | null>(null);
