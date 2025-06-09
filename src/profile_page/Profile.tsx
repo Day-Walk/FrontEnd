@@ -6,19 +6,24 @@ import LikeCourse from "./components/LikeCourse";
 import LikePlace from "./components/LikePlace";
 import { Settings } from "lucide-react";
 import * as Interfaces from "./interfaces/Interfaces";
+import { userName } from "../recoil/userInfo";
+import { useRecoilValue } from "recoil";
+import EditNameModal from "./components/EditNameModal";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
-  const userName = localStorage.getItem("userName") || "";
+  const userNameState = useRecoilValue(userName);
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <div className={style.profileWrapper}>
       <div className={style.nameWrapper}>
-        <div className={style.profileName}>{userName}</div>
-        <button className={style.settingBtn}>
+        <div className={style.profileName}>{userNameState}</div>
+        <button onClick={() => setModalOpen(true)} className={style.settingBtn}>
           <Settings size={20} />
           <div>&nbsp;프로필 수정</div>
         </button>
+        {modalOpen && <EditNameModal onClose={() => setModalOpen(false)} />}
       </div>
       <div className={style.rightWrapper}>
         <ul className={style.menuList}>
