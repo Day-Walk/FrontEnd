@@ -17,6 +17,7 @@
 .header_logo {
   width: 114px;
   height: 40px;
+  cursor: pointer;
 }
 .item_list_wrapper {
   display: flex;
