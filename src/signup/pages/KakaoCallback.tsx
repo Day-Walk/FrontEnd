@@ -17,6 +17,8 @@ const KakaoCallback = () => {
       });
 
       setUserId(res.data.userInfo.userId);
+      localStorage.setItem("userId", res.data.userInfo.userId);
+
       let nextPage = res.data.userInfo.nextPage;
 
       const authHeader = res.headers["authorization"];
