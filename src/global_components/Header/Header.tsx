@@ -1,5 +1,7 @@
 import styles from "./Header.module.css";
 import Logo from "../../assets/DayWalkLogo.png";
+import { useNavigate } from "react-router-dom";
+
 import {
   BotMessageSquare,
   CircleUserRound,
@@ -10,13 +12,31 @@ import {
 import { useState } from "react";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState<number>(0);
+
   const handleClickHeaderItem = (index: number) => {
     setSelectedItem(index);
+
+    // 페이지 이동
+    const routes = [
+      "/courses",
+      "/search",
+      "/chatbot",
+      "/congestion",
+      "/profile",
+    ];
+    navigate(routes[index]);
   };
+
   return (
     <div className={styles.header_wrapper}>
-      <img src={Logo} alt="Logo" className={styles.header_logo} />
+      <img
+        onClick={() => handleClickHeaderItem(0)}
+        src={Logo}
+        alt="Logo"
+        className={styles.header_logo}
+      />
       <HeaderItems
         handleClick={handleClickHeaderItem}
         selectedItem={selectedItem}
@@ -25,6 +45,7 @@ const Header = () => {
         size={32}
         color={selectedItem === 4 ? "#00B493" : "#333333"}
         onClick={() => handleClickHeaderItem(4)}
+        style={{ cursor: "pointer" }}
       />
     </div>
   );
