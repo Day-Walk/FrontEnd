@@ -9,14 +9,12 @@ import * as Interfaces from "./interfaces/Interfaces";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
-  const [userName, setUserName] = useState<Interfaces.UserInfo>(
-    Interfaces.dummyUserInfo.userInfo,
-  );
+  const userName = localStorage.getItem("userName") || "";
 
   return (
     <div className={style.profileWrapper}>
       <div className={style.nameWrapper}>
-        <div className={style.profileName}>{userName.name}</div>
+        <div className={style.profileName}>{userName}</div>
         <button className={style.settingBtn}>
           <Settings size={20} />
           <div>&nbsp;프로필 수정</div>
