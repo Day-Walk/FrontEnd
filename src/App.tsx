@@ -25,7 +25,7 @@ const App = () => (
       <Route path="/chatbot" element={<Chatbot />} />
       <Route path="/search" element={<Search />} />
       <Route path="/congestion" element={<CongestionMap />} />
-      <Route path="/review/:id" element={<ReviewForm />} />
+      <Route path="/review/:placeId" element={<ReviewForm />} />
     </Route>
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />
