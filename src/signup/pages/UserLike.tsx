@@ -52,7 +52,6 @@ const SelectTag = ({
 };
 
 const UserLike = () => {
-  // todo : 카테고리 전체 조회 api로 조회
   const [data, setData] = useState<Category[]>([]);
   const categories = data.map((category) => ({
     categoryId: category.categoryId,
@@ -136,7 +135,7 @@ const UserLike = () => {
           tagList: item.tagList,
         })),
       });
-      navigate("/");
+      navigate("/courses");
     } catch (error) {
       console.error("사용자 선호 카테고리 저장 오류:", error);
     }

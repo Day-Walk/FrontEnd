@@ -32,14 +32,7 @@ const KakaoCallback = () => {
       localStorage.setItem("accessToken", token);
 
       if (nextPage === "home") {
-        // navigate("/");
-        // test
-        navigate("/signup", {
-          state: {
-            id: userId,
-            name,
-          },
-        });
+        navigate("/");
       } else if (nextPage === "init") {
         navigate("/signup", {
           state: {
