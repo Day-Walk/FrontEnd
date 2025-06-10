@@ -34,11 +34,19 @@ const Course = (nowCourse: Interfaces.Course) => {
       <div className={style.coursePlaceList}>
         {course?.placeList.map((place, idx) => (
           <div key={place.placeId} className={style.placeBlock}>
-            <img
-              src={place.imgUrl}
-              alt={place.placeName}
-              className={style.placeImg}
-            />
+            {place.imgUrl ? (
+              <img
+                src={place.imgUrl}
+                alt={place.placeName}
+                className={style.placeImg}
+              />
+            ) : (
+              <div
+                className={style.placeImg}
+                style={{ backgroundColor: "#6e6e6e" }}
+              ></div>
+            )}
+
             <div className={style.placeInfo}>
               <div className={style.idx}>{idx + 1}</div>
               <div className={style.placeName}>{place.placeName}</div>
