@@ -33,6 +33,8 @@
 
 .placeImg {
   border-radius: 20px;
+  width: 200px;
+  height: 200px;
 }
 
 .placeInfo {
@@ -50,10 +52,19 @@
   font-size: 30px;
 }
 
-.placeName {
+.placeName,
+.placeNameEllipsis {
   margin-top: 4px;
   font-size: 18px;
   font-weight: bold;
+}
+.placeNameEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+  min-width: 0;
+  margin-left: 20px;
 }
 
 .address {
@@ -78,10 +89,9 @@
   position: relative;
   display: inline-block;
   width: 420px;
-  height: 40px;
   border-radius: 12px;
   border: 1px solid #cccccc;
-  margin: 20px 0 10px 0;
+  margin: 40px 0 10px 0;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
@@ -91,10 +101,9 @@
 .searchInput {
   width: 350px;
   border: none;
-  border-radius: 12px;
   font-size: 18px;
   height: 38px;
-  margin: 0 10px;
+  margin: 4px 10px 4px 20px;
 }
 .searchInput:focus {
   outline: none;
