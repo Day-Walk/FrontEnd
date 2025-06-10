@@ -5,9 +5,32 @@ import { MapPin } from "lucide-react";
 import { Star } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import NoImage from "../../assets/NoImage.png";
+import { api } from "../../utils/api";
 
-const MyReviewComp = (nowReview: Interfaces.Review) => {
+interface Props {
+  nowReview: Interfaces.Review;
+  onDelete: (reviewId: string) => void; // 부모에게 삭제 사실 알림
+}
+
+const MyReviewComp = ({ nowReview, onDelete }: Props) => {
   const [review, setReview] = useState<Interfaces.Review | null>(nowReview);
+  const token = localStorage.getItem("accessToken");
+
+  const handleDeleteReview = async () => {
+    try {
+      await api.delete("/review", {
+        data: { reviewId: review?.reviewId },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert("리뷰 삭제 완료!");
+      if (review?.reviewId) onDelete(review.reviewId);
+    } catch (error) {
+      console.error("리뷰 삭제 실패:", error);
+      alert("리뷰 삭제 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <div>
@@ -42,7 +65,7 @@ const MyReviewComp = (nowReview: Interfaces.Review) => {
               </span>
             ))}
           </div>
-          <button className={style.deleteBtn}>
+          <button className={style.deleteBtn} onClick={handleDeleteReview}>
             <Trash2 size={22} color="#E96563" />
           </button>
         </div>
