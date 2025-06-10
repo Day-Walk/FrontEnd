@@ -16,30 +16,33 @@ const KakaoCallback = () => {
         name,
         kakaoId: kakaoId,
       });
-
-      const userId = res.data.userInfo.userId;
-      setUserId(userId);
-      localStorage.setItem("userId", userId);
-
       let nextPage = res.data.userInfo.nextPage;
 
       const authHeader = res.headers["authorization"];
-
       const token = authHeader.startsWith("Bearer ")
         ? authHeader.slice(7)
         : authHeader;
 
       localStorage.setItem("accessToken", token);
 
-      if (nextPage === "home") {
-        navigate("/");
-      } else if (nextPage === "init") {
+      const { userId, userName } = res.data.userInfo;
+
+      setUserId(userId);
+      localStorage.setItem("userId", userId);
+
+      // 신규유저
+      if (nextPage === "init") {
         navigate("/signup", {
           state: {
             id: userId,
             name,
           },
         });
+      }
+      // 기존유저
+      if (nextPage === "home") {
+        localStorage.setItem("userName", userName);
+        navigate("/");
       }
     } catch (error) {
       console.error("Login api error : ", error);
