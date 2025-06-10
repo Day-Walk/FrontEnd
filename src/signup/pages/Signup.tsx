@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styles from "../Signup.module.css";
 import { ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userName } from "../../recoil/userInfo";
+import { api } from "../../utils/api";
 
 const Gender = {
   남: 0,
@@ -65,8 +66,11 @@ export const ButtonGroup = <T,>({
 };
 
 const Signup = () => {
+  const location = useLocation();
+  const { id, name } = location.state;
+
   const [userInfo, setUserInfo] = useState<UserInfoType>({
-    userName: "",
+    userName: name || "",
     age: null,
     gender: null,
   });
@@ -87,9 +91,20 @@ const Signup = () => {
     if (!isFinished) {
       return;
     }
-    setUserName(userInfo.userName);
-    localStorage.setItem("userName", userInfo.userName);
-    navigate("/signup/user-like");
+
+    try {
+      const res = await api.post("/user", {
+        id,
+        name: userInfo.userName,
+        gender: userInfo.gender,
+        age: userInfo.age,
+      });
+      setUserName(userInfo.userName);
+      localStorage.setItem("userName", userInfo.userName);
+      navigate("/signup/user-like");
+    } catch (error) {
+      console.error("user 초기 정보 저장 오류 : ", error);
+    }
   };
   return (
     <div className={styles.container}>

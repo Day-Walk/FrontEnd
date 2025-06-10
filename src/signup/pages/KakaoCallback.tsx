@@ -9,30 +9,40 @@ const KakaoCallback = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const setUserId = useSetRecoilState(userId);
-  const postLogin = async (kakaoId: number, nickname: string) => {
+
+  const postLogin = async (kakaoId: number, name: string) => {
     try {
       const res = await api.post("/user/login", {
-        name: nickname,
+        name,
         kakaoId: kakaoId,
       });
-
-      setUserId(res.data.userInfo.userId);
-      localStorage.setItem("userId", res.data.userInfo.userId);
-
       let nextPage = res.data.userInfo.nextPage;
 
       const authHeader = res.headers["authorization"];
-
       const token = authHeader.startsWith("Bearer ")
         ? authHeader.slice(7)
         : authHeader;
 
       localStorage.setItem("accessToken", token);
 
+      const { userId, userName } = res.data.userInfo;
+
+      setUserId(userId);
+      localStorage.setItem("userId", userId);
+
+      // 신규유저
+      if (nextPage === "init") {
+        navigate("/signup", {
+          state: {
+            id: userId,
+            name,
+          },
+        });
+      }
+      // 기존유저
       if (nextPage === "home") {
+        localStorage.setItem("userName", userName);
         navigate("/");
-      } else if (nextPage === "init") {
-        navigate("/signup");
       }
     } catch (error) {
       console.error("Login api error : ", error);
