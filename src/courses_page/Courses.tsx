@@ -55,7 +55,7 @@ const Courses = () => {
       }
     };
     fetchCourses();
-  }, [sort]);
+  }, [sort, nowPage]);
 
   // 검색결과 저장
   const handleSearchResults = (data: Interfaces.CourseListResponse) => {
