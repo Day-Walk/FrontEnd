@@ -52,10 +52,19 @@
   font-size: 30px;
 }
 
-.placeName {
+.placeName,
+.placeNameEllipsis {
   margin-top: 4px;
   font-size: 18px;
   font-weight: bold;
+}
+.placeNameEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+  min-width: 0;
+  margin-left: 20px;
 }
 
 .address {
