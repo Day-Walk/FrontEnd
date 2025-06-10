@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from "react";
 import styles from "../Signup.module.css";
-import { data } from "../data";
 import { Check } from "lucide-react";
+import { api } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
-interface Tag {
-  tag: string;
-  tagId: string;
+type TagInfoProps = {
   checked: boolean;
   handleChange: () => void;
-}
+};
+
+type Tag = {
+  tagId: string;
+  keyword: string;
+};
+
+type Category = {
+  categoryId: string;
+  categoryName: string;
+  tagList: Tag[];
+};
 
 interface SelectedTagList {
-  categoryName: string;
+  categoryId: string;
   tagList: string[];
 }
 
-const SelectTag = ({ tag, tagId, checked, handleChange }: Tag) => {
+const SelectTag = ({
+  keyword,
+  tagId,
+  checked,
+  handleChange,
+}: Tag & TagInfoProps) => {
   return (
     <div className={styles.tag_wrapper}>
       <input
@@ -25,7 +40,7 @@ const SelectTag = ({ tag, tagId, checked, handleChange }: Tag) => {
         checked={checked}
         onChange={handleChange}
       />
-      <label htmlFor={tagId}>{tag}</label>
+      <label htmlFor={tagId}>{keyword}</label>
       <Check
         color="#FFF"
         size={14}
@@ -38,11 +53,12 @@ const SelectTag = ({ tag, tagId, checked, handleChange }: Tag) => {
 
 const UserLike = () => {
   // todo : 카테고리 전체 조회 api로 조회
-  const categories = data.categoryList.map((category) => ({
+  const [data, setData] = useState<Category[]>([]);
+  const categories = data.map((category) => ({
     categoryId: category.categoryId,
     categoryName: category.categoryName,
   }));
-  const tagList = data.categoryList.map((category) => category.tagList);
+  const tagList = data.map((category) => category.tagList);
   const [selected, setSelected] = useState<number[]>([]);
   const [selectedTagList, setSelectedTagList] = useState<SelectedTagList[]>([]);
 
@@ -51,12 +67,12 @@ const UserLike = () => {
       if (prev.includes(index)) {
         setSelectedTagList((prev) =>
           prev.filter(
-            (item) => item.categoryName !== categories[index].categoryName,
+            (item) => item.categoryId !== categories[index].categoryId,
           ),
         );
 
         selectedTagList.filter(
-          (item) => item.categoryName !== categories[index].categoryName,
+          (item) => item.categoryId !== categories[index].categoryId,
         );
         return prev.filter((item) => item !== index);
       } else {
@@ -68,29 +84,29 @@ const UserLike = () => {
     });
   };
 
-  const handleClickTag = (categoryName: string, keyword: string) => {
+  const handleClickTag = (categoryId: string, tagId: string) => {
     setSelectedTagList((prev) => {
-      const existing = prev.find((item) => item.categoryName === categoryName);
+      const existing = prev.find((item) => item.categoryId === categoryId);
 
       if (existing) {
-        const updatedTagList = existing.tagList.includes(keyword)
-          ? existing.tagList.filter((tag) => tag !== keyword)
+        const updatedTagList = existing.tagList.includes(tagId)
+          ? existing.tagList.filter((tag) => tag !== tagId)
           : existing.tagList.length < 5
-            ? [...existing.tagList, keyword]
+            ? [...existing.tagList, tagId]
             : (alert("태그는 최대 5개까지만 선택할 수 있습니다."),
               existing.tagList);
 
         if (updatedTagList.length === 0) {
-          return prev.filter((item) => item.categoryName !== categoryName);
+          return prev.filter((item) => item.categoryId !== categoryId);
         }
 
         return prev.map((item) =>
-          item.categoryName === categoryName
+          item.categoryId === categoryId
             ? { ...item, tagList: updatedTagList }
             : item,
         );
       } else {
-        return [...prev, { categoryName, tagList: [keyword] }];
+        return [...prev, { categoryId, tagList: [tagId] }];
       }
     });
   };
@@ -104,17 +120,41 @@ const UserLike = () => {
     return true;
   };
 
+  const navigate = useNavigate();
+
   const handleClickCompleteBtn = async () => {
     console.log(selectedTagList);
     if (!isFinished()) {
       return;
     }
+
+    try {
+      const res = await api.post("/user-like", {
+        userId: localStorage.getItem("userId"),
+        categoryList: selectedTagList.map((item) => ({
+          categoryId: item.categoryId,
+          tagList: item.tagList,
+        })),
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("사용자 선호 카테고리 저장 오류:", error);
+    }
+  };
+
+  const getAllCategories = async () => {
+    try {
+      const res = await api.get("/category/all");
+      const categoryData = res.data.categoryList;
+      setData(categoryData);
+    } catch (error) {
+      console.error("카테고리 조회 오류:", error);
+    }
   };
 
   useEffect(() => {
-    console.log(selectedTagList);
-  }, [selectedTagList]);
-
+    getAllCategories();
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles.signup_wrapper}>
@@ -150,18 +190,18 @@ const UserLike = () => {
               {tags.map((tag) => (
                 <SelectTag
                   key={tag.tagId}
-                  tag={tag.keyword}
+                  keyword={tag.keyword}
                   tagId={tag.tagId}
                   checked={
                     selectedTagList
                       .find(
                         (item) =>
-                          item.categoryName === categories[index].categoryName,
+                          item.categoryId === categories[index].categoryId,
                       )
-                      ?.tagList.includes(tag.keyword) ?? false
+                      ?.tagList.includes(tag.tagId) ?? false
                   }
                   handleChange={() => {
-                    handleClickTag(categories[index].categoryName, tag.keyword);
+                    handleClickTag(categories[index].categoryId, tag.tagId);
                   }}
                 />
               ))}
