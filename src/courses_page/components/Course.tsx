@@ -3,10 +3,13 @@ import style from "../Courses.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
 import { Heart, MapPin } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const Course = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [like, setLike] = useState<boolean>(course?.like || false);
+  const courseId = nowCourse.courseId;
+  const navigate = useNavigate();
 
   const LikeIcon = () => {
     return like ? (
@@ -16,10 +19,14 @@ const Course = (nowCourse: Interfaces.Course) => {
     );
   };
 
+  const handleCourseClick = () => {
+    navigate(`/course/${courseId}`);
+  };
+
   return (
     <div className={style.courseBlock}>
       <div className={style.header}>
-        <div className={style.title}>
+        <div onClick={handleCourseClick} className={style.title}>
           "{course?.userName}" 님의{" "}
           <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
           코스
@@ -31,7 +38,7 @@ const Course = (nowCourse: Interfaces.Course) => {
           </div>
         </div>
       </div>
-      <div className={style.coursePlaceList}>
+      <div onClick={handleCourseClick} className={style.coursePlaceList}>
         {course?.placeList.map((place, idx) => (
           <div key={place.placeId} className={style.placeBlock}>
             {place.imgUrl ? (
@@ -49,7 +56,12 @@ const Course = (nowCourse: Interfaces.Course) => {
 
             <div className={style.placeInfo}>
               <div className={style.idx}>{idx + 1}</div>
-              <div className={style.placeName}>{place.placeName}</div>
+              {place.placeName.length < 9 ? (
+                <div className={style.placeName}>{place.placeName}</div>
+              ) : (
+                <div className={style.placeNameEllipsis}>{place.placeName}</div>
+              )}
+
               <div className={style.address}>
                 <MapPin size={14} />
                 {place.address.split(" ").slice(0, 2).join(" ")}
