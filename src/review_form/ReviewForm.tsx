@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./ReviewForm.module.css";
 import { ImageUp, Star } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Rating from "react-rating";
 import * as Interfaces from "./interfaces/Interface";
 import axios from "axios";
@@ -26,6 +26,7 @@ const ReviewForm = () => {
   );
   const MAX_TAGS = 5;
   const token = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPlaceInfo = async () => {
@@ -65,24 +66,35 @@ const ReviewForm = () => {
     );
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (!files || files.length === 0) {
       alert("파일을 선택해주세요.");
       return;
     }
+
     const file = files[0];
-    if (file.type === "image/png" || file.type === "image/jpeg") {
-      setImage(file);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setUploadImgUrl(reader.result);
-        }
-      };
-    } else {
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
       alert("JPG / JPEG / PNG 형식의 파일 업로드만 가능합니다.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await api.post("/image", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("***", response.data);
+      const imageUrl = response.data.imageUrl;
+      setImage(file);
+      setUploadImgUrl(imageUrl);
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      alert("이미지 업로드 중 오류가 발생했습니다.");
     }
   };
 
@@ -96,7 +108,7 @@ const ReviewForm = () => {
       console.log("accessToken", token);
       console.log("userIdState", userIdState);
       const response = await api.post(
-        "/reviews",
+        "/review",
         {
           userId: userIdState,
           placeId: placeId,
@@ -114,6 +126,7 @@ const ReviewForm = () => {
 
       console.log("리뷰 등록 성공:", response.data);
       alert("리뷰가 등록되었습니다!");
+      navigate(-1);
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
       alert("리뷰 등록 중 오류가 발생했습니다.");
