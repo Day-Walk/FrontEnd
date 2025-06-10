@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
+import NoImage from "../../assets/NoImage.png";
 
 const Course = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
@@ -88,10 +89,7 @@ const Course = (nowCourse: Interfaces.Course) => {
                 className={style.placeImg}
               />
             ) : (
-              <div
-                className={style.placeImg}
-                style={{ backgroundColor: "#6e6e6e" }}
-              ></div>
+              <img src={NoImage} className={style.placeImg} />
             )}
 
             <div className={style.placeInfo}>
