@@ -4,11 +4,38 @@ import * as Interfaces from "../interfaces/Interfaces";
 import { MapPin, Pencil } from "lucide-react";
 import { SquareCheck, Square } from "lucide-react";
 import NoImage from "../../assets/NoImage.png";
+import { api } from "../../utils/api";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
 
-  const [isOpen, setIsOpen] = useState<boolean>(course?.isOpen || false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    setIsOpen(course?.visible);
+  }, []);
+
+  const handleToggleVisibility = async () => {
+    if (!course) return;
+
+    try {
+      await api.put(
+        "/course/visible",
+        { courseId: course.courseId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setIsOpen(!isOpen);
+    } catch (error) {
+      console.error("공개 설정 변경 실패:", error);
+      alert("공개 설정 변경 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <div className={style.courseBlock}>
@@ -18,17 +45,15 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
           코스
         </div>
         <div className={style.sideButtons}>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className={style.btnCenter}
-          >
+          <button onClick={handleToggleVisibility} className={style.btnCenter}>
             {isOpen ? (
-              <SquareCheck color="var(--color-main)" size={20} />
+              <SquareCheck color="var(--color-main)" size={24} />
             ) : (
-              <Square size={20} />
+              <Square size={24} />
             )}
             <label>&nbsp;공개</label>
           </button>
+          &nbsp;&nbsp;&nbsp;
           <button className={style.btnCenter}>
             <Pencil size={18} />
             <label>&nbsp;수정</label>
