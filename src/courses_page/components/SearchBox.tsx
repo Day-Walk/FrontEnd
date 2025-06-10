@@ -15,21 +15,24 @@ const SearchBox = ({ onSearchResults }: SearchBoxProps) => {
   const token = localStorage.getItem("accessToken");
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && query.trim()) {
+    if (e.key === "Enter") {
       fetchSearchResults();
     }
   };
 
   const fetchSearchResults = async () => {
     try {
-      const response = await api.get(
-        `/course/search?searchStr=${encodeURIComponent(query)}&sort=like&userId=${userIdState}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const url =
+        query.length <= 0
+          ? `/course/all?sort=like&userId=${userIdState}`
+          : `/course/search?searchStr=${encodeURIComponent(query)}&sort=like&userId=${userIdState}`;
+
+      const response = await api.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
+
       const data = await response.data;
       onSearchResults(data);
       console.log("검색 결과:", data);
