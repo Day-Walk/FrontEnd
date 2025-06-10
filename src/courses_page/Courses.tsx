@@ -57,11 +57,19 @@ const Courses = () => {
     fetchCourses();
   }, []);
 
+  // 검색결과 저장
+  const handleSearchResults = (data: Interfaces.CourseListResponse) => {
+    setCoursePagesData(data);
+    setNowPage(1);
+    setCoursePage(data.courseList[0]);
+    console.log(coursePage);
+  };
+
   return (
     <div className={style.courseWrapper}>
       {/* <div>코스 보기</div> */}
       <div>
-        <SearchBox />
+        <SearchBox onSearchResults={handleSearchResults} />
       </div>
       {coursePage ? (
         <>
