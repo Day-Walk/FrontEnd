@@ -3,6 +3,7 @@ import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
 import { MapPin, Pencil } from "lucide-react";
 import { SquareCheck, Square } from "lucide-react";
+import NoImage from "../../assets/NoImage.png";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
@@ -37,14 +38,22 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
       <div className={style.coursePlaceList}>
         {course?.placeList.map((place, idx) => (
           <div key={place.placeId} className={style.placeBlock}>
-            <img
-              src={place.imgUrl}
-              alt={place.placeName}
-              className={style.placeImg}
-            />
+            {place.imgUrl ? (
+              <img
+                src={place.imgUrl}
+                alt={place.placeName}
+                className={style.placeImg}
+              />
+            ) : (
+              <img src={NoImage} className={style.placeImg} />
+            )}
             <div className={style.placeInfo}>
               <div className={style.idx}>{idx + 1}</div>
-              <div className={style.placeName}>{place.placeName}</div>
+              {place.placeName.length < 9 ? (
+                <div className={style.placeName}>{place.placeName}</div>
+              ) : (
+                <div className={style.placeNameEllipsis}>{place.placeName}</div>
+              )}
               <div className={style.address}>
                 <MapPin size={14} />
                 {place.address.split(" ").slice(0, 2).join(" ")}

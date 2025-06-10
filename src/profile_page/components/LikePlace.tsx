@@ -6,6 +6,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
+import NoImage from "../../assets/NoImage.png";
 
 const LikePlace = () => {
   const [likePlaceResponse, setLikePlaceResponse] =
@@ -55,11 +56,15 @@ const LikePlace = () => {
             {likePlaceResponse.placeList.map((p, index) => (
               <div key={index}>
                 <div className={style.pBlock}>
-                  <img
-                    src={p.imgUrl}
-                    alt="img"
-                    className={style.likePlaceImg}
-                  />
+                  {p.imgUrl ? (
+                    <img
+                      src={p.imgUrl}
+                      alt="img"
+                      className={style.likePlaceImg}
+                    />
+                  ) : (
+                    <img src={NoImage} className={style.likePlaceImg} />
+                  )}
                   <div className={style.pInfo}>
                     <div className={style.pHeader}>
                       <div className={style.pName}>{p.name}</div>

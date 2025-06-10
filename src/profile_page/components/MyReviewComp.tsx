@@ -4,6 +4,7 @@ import * as Interfaces from "../interfaces/Interfaces";
 import { MapPin } from "lucide-react";
 import { Star } from "lucide-react";
 import { Trash2 } from "lucide-react";
+import NoImage from "../../assets/NoImage.png";
 
 const MyReviewComp = (nowReview: Interfaces.Review) => {
   const [review, setReview] = useState<Interfaces.Review | null>(nowReview);
@@ -13,7 +14,11 @@ const MyReviewComp = (nowReview: Interfaces.Review) => {
       <div className={style.reviewBlock}>
         <div className={style.reviewTop}>
           <div className={style.reviewImg}>
-            <img src={review?.imgUrl} alt="img" className={style.reviewImg} />
+            {review?.imgUrl ? (
+              <img src={review?.imgUrl} alt="img" className={style.reviewImg} />
+            ) : (
+              <img src={NoImage} className={style.reviewImg} />
+            )}
           </div>
           <div className={style.reviewInfo}>
             <div className={style.rPlace}>{review?.placeName}</div>
