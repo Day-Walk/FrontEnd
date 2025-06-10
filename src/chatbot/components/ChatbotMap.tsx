@@ -29,7 +29,7 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
   }, []);
 
   const [mapCenter, setMapCenter] = useState<MapInfo>(
-    mapInfo.length < 1 ? { lat: 37.5714, lng: 126.9769 } : mapInfo[0],
+    mapInfo ? { lat: 37.5714, lng: 126.9769 } : mapInfo[0],
   );
 
   const handleClickMarker = (location: { lat: number; lng: number }) => {

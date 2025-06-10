@@ -211,3 +211,10 @@
 .focused {
   border: 2px solid var(--color-main);
 }
+
+.ask_to {
+  color: var(--color-main);
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+}

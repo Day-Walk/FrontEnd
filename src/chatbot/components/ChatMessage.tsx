@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "../Chatbot.module.css";
 import { BotMessageSquare, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 import { MainButton } from "./Buttons";
+import ChatBot from "../../assets/ChatBot.png";
 
 interface ChatMessageProps {
   message: any;
@@ -29,7 +30,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   };
   return (
     <div>
-      <BotMessageSquare size={40} color="#00B493" strokeWidth={2} />
+      <img
+        src={ChatBot}
+        alt="Chatbot"
+        className={styles.chatbot_image}
+        style={{ width: "60px" }}
+      />
+      {/* <BotMessageSquare size={40} color="#00B493" strokeWidth={2} /> */}
       <div className={`${styles.message} ${styles.chat_message}`}>
         <div>{message.header}</div>
         <div className={styles.place_wrapper}>
