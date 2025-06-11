@@ -5,22 +5,72 @@ import * as rInterfaces from "../interfaces/ReviewInterface";
 import { ChevronLeft, ChevronRight, Pen, Share2, Star } from "lucide-react";
 import { CircleChevronRight, Pencil, CircleUserRound } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useRecoilValue } from "recoil";
+import { userId } from "../../recoil/userInfo";
+import { api } from "../../utils/api";
+import { Stack, Pagination } from "@mui/material";
 
 const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [selectedPlace, setSelectedPlace] =
-    useState<Interfaces.PlaceDetail | null>(
-      Interfaces.dummyPlaceDetail.placeInfo,
-    );
-  const [reviewList, setReviewList] = useState<rInterfaces.ReviewPage>(
-    rInterfaces.dummyReviewList.reviewList[0],
-  );
+    useState<Interfaces.PlaceDetail | null>();
+  // Interfaces.dummyPlaceDetail.placeInfo,
+  const [reviews, setReviews] = useState<rInterfaces.ReviewListResponse>();
+  const [reviewList, setReviewList] = useState<rInterfaces.ReviewPage>();
+  // rInterfaces.dummyReviewList.reviewList[0],
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [reviewTotal, setReviewTotal] = useState<rInterfaces.ReviewTotal>(
     rInterfaces.dummyReviewTotal.reviewTotal,
   );
+  const [nowPage, setNowPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(true); // false = 모달을 왼쪽으로 숨김
-
   const [slideDirection, setSlideDirection] = useState("");
+  const token = localStorage.getItem("accessToken");
+  const currentUserId = useRecoilValue(userId);
+
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setNowPage(value);
+    setReviewList(reviews?.reviewList[value - 1]);
+  };
+
+  useEffect(() => {
+    const getPlace = async () => {
+      try {
+        const data = await api.get(
+          `/place?placeId=${placeId}&userId=${currentUserId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        setSelectedPlace(data.data.placeInfo);
+        console.log(data.data);
+      } catch (e) {
+        console.log(e);
+        alert("장소 상세조회 실패");
+      }
+    };
+    const getReview = async () => {
+      try {
+        const data = await api.get(`/review/all/place?placeId=${placeId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setReviews(data.data);
+        setReviewList(data.data.reviewList[0]);
+        console.log(data.data);
+      } catch (e) {
+        console.log(e);
+        alert("장소 리뷰 조회 실패");
+      }
+    };
+    getPlace();
+    getReview();
+  }, [placeId]);
 
   const handleNext = () => {
     setSlideDirection("slide-left");
@@ -53,7 +103,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         style={{ left: isModalOpen ? "0px" : "-400px" }}
       >
         <div className={style.placeModal}>
-          {selectedPlace?.imgUrlList.length > 0 && (
+          {selectedPlace && selectedPlace?.imgUrlList.length > 0 && (
             <div className={style.sliderWrapper}>
               <button className={style.arrowLeft} onClick={handlePrev}>
                 <ChevronLeft />
@@ -123,8 +173,8 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                 </span>
               ))}
             </div>
-            <div>
-              <p>{selectedPlace.content}</p>
+            <div style={{ lineHeight: "24px" }}>
+              <p>{selectedPlace?.content}</p>
             </div>
             <br />
             <br />
@@ -138,21 +188,19 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             </div>
             <div>
               <div className={style.modalSubTitle}>운영 시간</div>
-              <p>{selectedPlace.openTime}</p>
+              {selectedPlace?.openTime
+                ?.split("<br>")
+                .map((line, idx) => <p key={idx}>{line}</p>)}
             </div>
             <div>
               <div className={style.modalSubTitle}>전화번호</div>
               <p>
-                {selectedPlace.phoneNum.map((num) => (
+                {selectedPlace?.phoneNum.map((num) => (
                   <p key={num} className={style.phoneNum}>
                     {num}
                   </p>
                 ))}
               </p>
-            </div>
-            <div>
-              <div className={style.modalSubTitle}>매장 정보</div>
-              <p>{selectedPlace.detail}</p>
             </div>
 
             <div className={style.viewDetailButton}>
@@ -163,44 +211,66 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             </div>
             <div>
               <div>리뷰&nbsp;({reviewTotal.reviewNum})</div>
-              {reviewList.page.map((review, index) => (
-                <div key={index} className={style.reviewBlock}>
-                  <div className={style.reviewHeader}>
-                    <span className={style.reviewUserName}>
-                      <CircleUserRound size={24} />
-                      &nbsp;{review.userName}
-                    </span>
-                    <div className={style.stars}>
-                      <Star size={20} color="#FABD55" fill="#FABD55" /> &nbsp;
-                      {review.stars.toFixed(1)}
-                    </div>
-                  </div>
-                  <div className={style.reviewContentBlock}>
-                    {review.imgUrl && (
-                      <img
-                        src={review.imgUrl}
-                        alt={`Review Image ${index + 1}`}
-                        className={style.reviewImg}
-                      />
-                    )}
-                    <div>
-                      <span className={style.reviewDate}>
-                        작성일 : {review.createAt}
-                      </span>
-                      <div className={style.reviewContent}>
-                        {review.content}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                {reviewList &&
+                  reviewList.page &&
+                  reviewList.page.map((review, index) => (
+                    <>
+                      <div key={index} className={style.reviewBlock}>
+                        <div className={style.reviewHeader}>
+                          <span className={style.reviewUserName}>
+                            <CircleUserRound size={24} />
+                            &nbsp;{review.userName}
+                          </span>
+                          <div className={style.stars}>
+                            <Star size={20} color="#FABD55" fill="#FABD55" />{" "}
+                            &nbsp;
+                            {review.stars.toFixed(1)}
+                          </div>
+                        </div>
+                        <div className={style.reviewContentBlock}>
+                          {review.imgUrl && (
+                            <img
+                              src={review.imgUrl}
+                              alt={`Review Image ${index + 1}`}
+                              className={style.reviewImg}
+                            />
+                          )}
+                          <div>
+                            <span className={style.reviewDate}>
+                              작성일 : {review.createAt}
+                            </span>
+                            <div className={style.reviewContent}>
+                              {review.content}
+                            </div>
+                          </div>
+                        </div>
+                        <div className={style.reviewTags}>
+                          {review.tagList.map((tag, tagIndex) => (
+                            <span key={tagIndex} className={style.reviewTag}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className={style.reviewTags}>
-                    {review.tagList.map((tag, tagIndex) => (
-                      <span key={tagIndex} className={style.reviewTag}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                      <div className={style.paginationWrapper}>
+                        <Stack spacing={2}>
+                          <Pagination
+                            count={reviews?.reviewList.length}
+                            page={nowPage}
+                            onChange={handleChangePage}
+                          />
+                        </Stack>
+                      </div>
+                    </>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
