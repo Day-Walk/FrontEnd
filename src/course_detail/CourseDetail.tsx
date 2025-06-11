@@ -8,6 +8,9 @@ import { Star, Share2 } from "lucide-react";
 import PlaceModal from "./components/PlaceModal";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { CustomMarker } from "./components/CustomMarker";
+import { api } from "../utils/api";
+import { useRecoilValue } from "recoil";
+import { userId } from "../recoil/userInfo";
 declare global {
   interface Window {
     kakao: any;
@@ -16,35 +19,31 @@ declare global {
 
 const CourseDetail = () => {
   const { id } = useParams();
-  // if (!id) {
-  //   return <div>Error : 코스 ID가 없습니다.</div>;
-  // }
-  // const { data, loading, error } = GetCourseDetail(id);
+  const { data, loading, error } = GetCourseDetail(id);
 
   // if (loading) return <div>로딩 중...</div>;
   // if (error) return <div>{error}</div>;
 
   const [courseDetail, setCourseDetail] =
-    useState<Interfaces.CourseDetail | null>(
-      Interfaces.dummyCourseDetail.courseInfo,
-    );
+    useState<Interfaces.CourseDetail | null>();
+  // Interfaces.dummyCourseDetail.courseInfo,
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.CourseDetailPlace | null>(null);
+  const token = localStorage.getItem("accessToken");
+  const userIdState = useRecoilValue(userId);
+  const [like, setLike] = useState<boolean>(false);
 
   const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
     setSelectedPlaceId(p.placeId);
     setSelectedPlace(p);
   };
 
-  useEffect(() => {
-    console.log(selectedPlaceId);
-  }, [selectedPlaceId]);
-
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
 
   useEffect(() => {
+    if (!courseDetail) return;
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
@@ -58,12 +57,13 @@ const CourseDetail = () => {
 
           const options = {
             center,
-            level: 7,
+            level: 6,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
 
+          console.log("**", courseDetail);
           courseDetail?.placeList.forEach((place, index) => {
             CustomMarker(
               map,
@@ -90,6 +90,19 @@ const CourseDetail = () => {
 
     mapInstance.current.setCenter(newCenter);
   }, [selectedPlace]);
+
+  useEffect(() => {
+    setCourseDetail(data?.courseInfo);
+    setLike(data?.courseInfo.like || false);
+  }, [data]);
+
+  useEffect(() => {
+    setLike(courseDetail?.like || false);
+  }, [courseDetail]);
+
+  if (!id) {
+    return <div>Error : 코스 ID가 없습니다.</div>;
+  }
 
   return (
     <div className={style.courseDetailWrapper}>

@@ -1,19 +1,22 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { CourseDetailResponse } from "../interfaces/Interface";
+import { api } from "../../utils/api";
 
-const GetCourseDetail = (courseId: string) => {
+const GetCourseDetail = (courseId: string | undefined) => {
   const [data, setData] = useState<CourseDetailResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchCourseDetail = async () => {
       try {
         setLoading(true);
-        const response = await axios.get<CourseDetailResponse>(
-          `/api/course?courseId=${courseId}`,
-        );
+        const response = await api.get(`/course?courseId=${courseId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setData(response.data);
       } catch (err) {
         setError("코스 정보를 불러오지 못했습니다.");
