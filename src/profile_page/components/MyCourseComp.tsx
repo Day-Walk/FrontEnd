@@ -5,7 +5,7 @@ import { MapPin, Pencil } from "lucide-react";
 import { SquareCheck, Square } from "lucide-react";
 import NoImage from "../../assets/NoImage.png";
 import { api } from "../../utils/api";
-import EditCourseModal from "./EditCourseModal";
+import EditCourseModal from "./Modals/EditCourseModal";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);

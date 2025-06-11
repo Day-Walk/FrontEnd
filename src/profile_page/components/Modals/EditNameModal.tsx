@@ -1,36 +1,30 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userId, userName } from "../../recoil/userInfo";
-import style from "../Profile.module.css";
+import { userId, userName } from "../../../recoil/userInfo";
+import style from "../../Profile.module.css";
 import { useState } from "react";
 import { CircleAlert } from "lucide-react";
-import { api } from "../../utils/api";
+import { api } from "../../../utils/api";
 
 interface Props {
   onClose: () => void;
-  courseId: string;
-  courseTitle: string;
-  onUpdateTitle: (newTitle: string) => void;
 }
 
-const EditCourseModal = ({
-  onClose,
-  courseId,
-  courseTitle,
-  onUpdateTitle,
-}: Props) => {
-  const [newTitle, setNewTitle] = useState<string>(courseTitle); // 로컬 상태로 복사
+const EditNameModal = ({ onClose }: Props) => {
+  const [userNameState, setUserNameState] = useRecoilState(userName);
+  const [newName, setNewName] = useState(userNameState); // 로컬 상태로 복사
   const token = localStorage.getItem("accessToken");
+  const userIdState = useRecoilValue(userId);
 
   const handleSubmit = async () => {
-    if (newTitle.trim()) {
-      const titleTrim = newTitle.trim();
+    if (newName.trim()) {
+      const nameTrim = newName.trim();
 
       try {
         await api.put(
-          "/course/title",
+          "/user",
           {
-            courseId: courseId,
-            title: titleTrim,
+            id: userIdState,
+            name: nameTrim,
           },
           {
             headers: {
@@ -38,10 +32,12 @@ const EditCourseModal = ({
             },
           },
         );
-        onUpdateTitle(titleTrim);
+
+        setUserNameState(nameTrim);
+        localStorage.setItem("userName", nameTrim);
         onClose();
       } catch (error) {
-        alert("title error");
+        alert("name error");
         console.log(error);
       }
     }
@@ -58,14 +54,14 @@ const EditCourseModal = ({
           }}
         >
           <CircleAlert color="var(--color-main)" size={26} />
-          <div className={style.title}>&nbsp;코스 이름 수정</div>
+          <div className={style.title}>&nbsp;프로필 수정</div>
         </div>
         <div>
-          <p className={style.nameTitle}>코스 이름</p>
+          <p className={style.nameTitle}>닉네임</p>
           <input
             type="text"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
             className={style.inputName}
           />
         </div>
@@ -82,4 +78,4 @@ const EditCourseModal = ({
   );
 };
 
-export default EditCourseModal;
+export default EditNameModal;
