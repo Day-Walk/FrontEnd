@@ -253,11 +253,17 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                         </div>
                         <div className={style.reviewContentBlock}>
                           {review.imgUrl && (
-                            <img
-                              src={review.imgUrl}
-                              alt={`Review Image ${index + 1}`}
-                              className={style.reviewImg}
-                            />
+                            <a
+                              href={review.imgUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={review.imgUrl}
+                                alt={`Review Image ${index + 1}`}
+                                className={style.reviewImg}
+                              />
+                            </a>
                           )}
                           <div>
                             <span className={style.reviewDate}>
