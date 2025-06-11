@@ -18,9 +18,8 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [reviewList, setReviewList] = useState<rInterfaces.ReviewPage>();
   // rInterfaces.dummyReviewList.reviewList[0],
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
-  const [reviewTotal, setReviewTotal] = useState<rInterfaces.ReviewTotal>(
-    rInterfaces.dummyReviewTotal.reviewTotal,
-  );
+  const [reviewTotal, setReviewTotal] = useState<rInterfaces.ReviewTotal>();
+  // rInterfaces.dummyReviewTotal.reviewTotal,
   const [nowPage, setNowPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(true); // false = 모달을 왼쪽으로 숨김
   const [slideDirection, setSlideDirection] = useState("");
@@ -68,8 +67,23 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         alert("장소 리뷰 조회 실패");
       }
     };
+    const getReviewTotal = async () => {
+      try {
+        const data = await api.get(`/review/all/total?placeId=${placeId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setReviewTotal(data.data.reviewTotal);
+        console.log("***", data.data);
+      } catch (e) {
+        console.log(e);
+        alert("리뷰 통계 조회 실패");
+      }
+    };
     getPlace();
     getReview();
+    getReviewTotal();
   }, [placeId]);
 
   const handleNext = () => {
@@ -163,11 +177,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             <div className={style.modalReviewTitle}>
               <div className={style.stars}>
                 <Star size={20} color="#FABD55" fill="#FABD55" />
-                &nbsp;{reviewTotal.stars}
+                &nbsp;{reviewTotal?.stars}
               </div>
             </div>
             <div className={style.reviewTags} style={{ marginBottom: "24px" }}>
-              {reviewTotal.tagList.map((tag, index) => (
+              {reviewTotal?.tagList.map((tag, index) => (
                 <span key={index} className={style.reviewTotalTag}>
                   {tag}
                 </span>
@@ -210,7 +224,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
               </button>
             </div>
             <div>
-              <div>리뷰&nbsp;({reviewTotal.reviewNum})</div>
+              <div>리뷰&nbsp;({reviewTotal?.reviewNum})</div>
               <div
                 style={{
                   display: "flex",
