@@ -8,7 +8,7 @@ import { Settings } from "lucide-react";
 import * as Interfaces from "./interfaces/Interfaces";
 import { userName } from "../recoil/userInfo";
 import { useRecoilValue } from "recoil";
-import EditNameModal from "./components/EditNameModal";
+import EditNameModal from "./components/Modals/EditNameModal";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
