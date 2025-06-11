@@ -20,6 +20,12 @@ const MyReview = () => {
   const userIdState = useRecoilValue(userId);
   const token = localStorage.getItem("accessToken");
 
+  const [deleted, setDeleted] = useState<string>("");
+
+  const handleDelete = (deletedId: string) => {
+    setDeleted(deletedId);
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       console.log("userIdState", userIdState);
@@ -42,7 +48,7 @@ const MyReview = () => {
       }
     };
     fetchCourses();
-  }, []);
+  }, [deleted]);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -65,7 +71,11 @@ const MyReview = () => {
             {reviewPage &&
               reviewPage.page.map((r, i) => (
                 <div key={r.placeName}>
-                  <MyReviewComp {...r} />
+                  <MyReviewComp
+                    key={r.reviewId}
+                    nowReview={r}
+                    onDelete={handleDelete}
+                  />
                 </div>
               ))}
           </div>

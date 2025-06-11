@@ -1,8 +1,9 @@
-import { useRecoilState } from "recoil";
-import { userName } from "../../recoil/userInfo";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userId, userName } from "../../recoil/userInfo";
 import style from "../Profile.module.css";
 import { useState } from "react";
 import { CircleAlert } from "lucide-react";
+import { api } from "../../utils/api";
 
 interface Props {
   onClose: () => void;
@@ -11,11 +12,34 @@ interface Props {
 const EditNameModal = ({ onClose }: Props) => {
   const [userNameState, setUserNameState] = useRecoilState(userName);
   const [newName, setNewName] = useState(userNameState); // 로컬 상태로 복사
+  const token = localStorage.getItem("accessToken");
+  const userIdState = useRecoilValue(userId);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (newName.trim()) {
-      setUserNameState(newName.trim());
-      onClose();
+      const nameTrim = newName.trim();
+
+      try {
+        await api.put(
+          "/user",
+          {
+            id: userIdState,
+            name: nameTrim,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        setUserNameState(nameTrim);
+        localStorage.setItem("userName", nameTrim);
+        onClose();
+      } catch (error) {
+        alert("name error");
+        console.log(error);
+      }
     }
   };
 
