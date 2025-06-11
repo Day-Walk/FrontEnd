@@ -5,13 +5,13 @@ import { MapPin, Pencil } from "lucide-react";
 import { SquareCheck, Square } from "lucide-react";
 import NoImage from "../../assets/NoImage.png";
 import { api } from "../../utils/api";
+import EditCourseModal from "./EditCourseModal";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const token = localStorage.getItem("accessToken");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setIsOpen(course?.visible);
@@ -37,6 +37,12 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
     }
   };
 
+  const handleUpdateTitle = (newTitle: string) => {
+    if (course) {
+      setCourse({ ...course, title: newTitle });
+    }
+  };
+
   return (
     <div className={style.courseBlock}>
       <div className={style.header}>
@@ -54,10 +60,21 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
             <label>&nbsp;공개</label>
           </button>
           &nbsp;&nbsp;&nbsp;
-          <button className={style.btnCenter}>
+          <button
+            onClick={() => setModalOpen(true)}
+            className={style.btnCenter}
+          >
             <Pencil size={18} />
             <label>&nbsp;수정</label>
           </button>
+          {modalOpen && course && (
+            <EditCourseModal
+              onClose={() => setModalOpen(false)}
+              courseId={course.courseId}
+              courseTitle={course.title}
+              onUpdateTitle={handleUpdateTitle}
+            />
+          )}
         </div>
       </div>
       <div className={style.coursePlaceList}>
