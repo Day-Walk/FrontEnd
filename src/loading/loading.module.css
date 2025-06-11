@@ -1,0 +1,26 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bg_wrapper {
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.loading {
+  color: var(--color-main);
+  font-weight: bold;
+  font-size: 40px;
+}
+
+.spin_component {
+  animation: spin 2s linear infinite;
+}
