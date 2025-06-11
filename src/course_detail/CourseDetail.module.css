@@ -22,6 +22,7 @@
   padding: 16px 20px;
   border: 1px solid transparent;
   border-radius: 20px;
+  overflow: hidden;
 }
 .placeBlockClick {
   border: 2px solid var(--color-main);
