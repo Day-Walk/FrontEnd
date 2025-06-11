@@ -177,7 +177,8 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             <div className={style.modalReviewTitle}>
               <div className={style.stars}>
                 <Star size={20} color="#FABD55" fill="#FABD55" />
-                &nbsp;{reviewTotal?.stars}
+                &nbsp;
+                {reviewTotal?.reviewNum == 0 ? "리뷰 없음" : reviewTotal?.stars}
               </div>
             </div>
             <div className={style.reviewTags} style={{ marginBottom: "24px" }}>
@@ -198,7 +199,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
           <div className={style.modalContent}>
             <div>
               <div className={style.modalSubTitle}>주소</div>
-              <p>{selectedPlace?.address}</p>
+              {selectedPlace?.address
+                ?.split("<br>")
+                .map((line, idx) => <p key={idx}>{line}</p>)}
             </div>
             <div>
               <div className={style.modalSubTitle}>운영 시간</div>
@@ -273,17 +276,18 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                           ))}
                         </div>
                       </div>
-                      <div className={style.paginationWrapper}>
-                        <Stack spacing={2}>
-                          <Pagination
-                            count={reviews?.reviewList.length}
-                            page={nowPage}
-                            onChange={handleChangePage}
-                          />
-                        </Stack>
-                      </div>
                     </>
                   ))}
+
+                <div className={style.paginationWrapper}>
+                  <Stack spacing={2}>
+                    <Pagination
+                      count={reviews?.reviewList.length}
+                      page={nowPage}
+                      onChange={handleChangePage}
+                    />
+                  </Stack>
+                </div>
               </div>
             </div>
           </div>
