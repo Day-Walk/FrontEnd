@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./CourseDetail.module.css";
-import GetCourseDetail from "./components/GetCourseDetail";
 import * as Interfaces from "./interfaces/Interface";
 import { Star, Share2 } from "lucide-react";
 import PlaceModal from "./components/PlaceModal";
@@ -11,6 +10,7 @@ import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
+import NoImage from "../assets/NoImage.png";
 declare global {
   interface Window {
     kakao: any;
@@ -19,14 +19,12 @@ declare global {
 
 const CourseDetail = () => {
   const { id } = useParams();
-  const { data, loading, error } = GetCourseDetail(id);
 
   // if (loading) return <div>로딩 중...</div>;
   // if (error) return <div>{error}</div>;
 
   const [courseDetail, setCourseDetail] =
-    useState<Interfaces.CourseDetail | null>();
-  // Interfaces.dummyCourseDetail.courseInfo,
+    useState<Interfaces.CourseDetail | null>(null);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.CourseDetailPlace | null>(null);
@@ -38,6 +36,26 @@ const CourseDetail = () => {
     setSelectedPlaceId(p.placeId);
     setSelectedPlace(p);
   };
+
+  const fetchCourseDetail = async () => {
+    try {
+      const res = await api.get(
+        `/course?courseId=${id}&userId=${userIdState}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setCourseDetail(res.data.courseInfo);
+    } catch (error) {
+      console.error("course detail fetch error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourseDetail();
+  }, [id, like]);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -92,13 +110,47 @@ const CourseDetail = () => {
   }, [selectedPlace]);
 
   useEffect(() => {
-    setCourseDetail(data?.courseInfo);
-    setLike(data?.courseInfo.like || false);
-  }, [data]);
-
-  useEffect(() => {
     setLike(courseDetail?.like || false);
   }, [courseDetail]);
+
+  const LikeIcon = () => {
+    return like ? (
+      <AiFillHeart color="#E96563" size={26} />
+    ) : (
+      <AiOutlineHeart size={26} />
+    );
+  };
+
+  const handleLike = async () => {
+    const body = {
+      userId: userIdState,
+      courseId: id,
+    };
+
+    try {
+      if (!like) {
+        // 좋아요 등록
+        await api.post("/course-like", body, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        // 좋아요 취소
+        await api.delete("/course-like", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: body,
+        });
+      }
+      alert("찜 리스트에 추가 완료!");
+      setLike(!like);
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+      alert("좋아요 처리 중 오류가 발생했습니다.");
+    }
+  };
 
   if (!id) {
     return <div>Error : 코스 ID가 없습니다.</div>;
@@ -107,7 +159,6 @@ const CourseDetail = () => {
   return (
     <div className={style.courseDetailWrapper}>
       <div className={style.detailLeft}>
-        {/* <h1>Course Detail : {id}</h1> */}
         <div>
           <div className={style.courseTitle}>
             <div className={style.headTitle}>
@@ -115,15 +166,13 @@ const CourseDetail = () => {
                 <span className={style.userName}>{courseDetail?.userName}</span>
                 님의
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ fontSize: "16px" }}>
+              <div style={{ display: "flex" }}>
+                <div style={{ fontSize: "20px" }}>
                   {courseDetail?.courseLike}&nbsp;
                 </div>
-                {courseDetail?.like ? (
-                  <AiFillHeart size={26} color="#E96563" />
-                ) : (
-                  <AiOutlineHeart size={26} color="#E96563" />
-                )}
+                <button onClick={handleLike}>
+                  <LikeIcon />
+                </button>
 
                 <span>
                   <Share2 size={24} />
@@ -135,35 +184,43 @@ const CourseDetail = () => {
           <div>{courseDetail?.like}</div>
         </div>
         <div>
-          {courseDetail?.placeList.map((p, i) => (
-            <div
-              key={p.placeId}
-              onClick={() => handlePlaceClick(p)}
-              className={
-                selectedPlaceId == p.placeId
-                  ? style.placeBlockClick
-                  : style.placeBlock
-              }
-            >
-              <div className={style.idx}>{i + 1}</div>
-              <img
-                src={p.imgUrl}
-                alt={p.placeName}
-                className={style.placeImg}
-              />
-              <div className={style.placeInfo}>
-                <div className={style.placeCategory}>
-                  <div className={style.category}>{p.subCategory}</div>
-                  <div className={style.stars}>
-                    <Star size={20} fill="#fabd55" color="#fabd55" />
-                    <span>&nbsp;{p.stars}</span>
+          {courseDetail &&
+            courseDetail.placeList?.length > 0 &&
+            courseDetail.placeList.map((p, i) => {
+              return (
+                <div
+                  key={i}
+                  onClick={() => handlePlaceClick(p)}
+                  className={
+                    selectedPlaceId == p.placeId
+                      ? style.placeBlockClick
+                      : style.placeBlock
+                  }
+                >
+                  <div className={style.idx}>{i + 1}</div>
+                  {p.imgUrl ? (
+                    <img
+                      src={p.imgUrl}
+                      alt={p.placeName}
+                      className={style.placeImg}
+                    />
+                  ) : (
+                    <img src={NoImage} className={style.placeImg} />
+                  )}
+                  <div className={style.placeInfo}>
+                    <div className={style.placeCategory}>
+                      <div className={style.category}>{p.subCategory}</div>
+                      <div className={style.stars}>
+                        <Star size={20} fill="#fabd55" color="#fabd55" />
+                        <span>&nbsp;{p.stars}</span>
+                      </div>
+                    </div>
+                    <div className={style.placeName}>{p.placeName}</div>
+                    <div className={style.address}>{p.address}</div>
                   </div>
                 </div>
-                <div className={style.placeName}>{p.placeName}</div>
-                <div className={style.address}>{p.address}</div>
-              </div>
-            </div>
-          ))}
+              );
+            })}
         </div>
       </div>
       <div className={style.detailRight}>
