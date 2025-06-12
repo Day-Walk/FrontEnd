@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import style from "../CourseDetail.module.css";
 import * as Interfaces from "../interfaces/Interface";
 import * as rInterfaces from "../interfaces/ReviewInterface";
-import { ChevronLeft, ChevronRight, Pen, Share2, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2, Star } from "lucide-react";
 import { CircleChevronRight, Pencil, CircleUserRound } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [selectedPlace, setSelectedPlace] =
@@ -141,6 +142,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
     );
   };
 
+  const navigate = useNavigate();
+  const handleCreateReview = () => {
+    navigate(`/review/${placeId}`);
+  };
+
   useEffect(() => {
     if (slideDirection) {
       const timer = setTimeout(() => setSlideDirection(""), 400);
@@ -203,7 +209,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                 {selectedPlace?.category}({selectedPlace?.subCategory})
               </span>
               <div>
-                <Pencil size={26} />
+                <button onClick={handleCreateReview}>
+                  <Pencil size={26} />
+                </button>
                 &nbsp;
                 <button onClick={handleLike}>
                   <LikeIcon />
