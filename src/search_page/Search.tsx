@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import { loadKakaoMap } from "../KakaoMapLoader";
 import style from "./Search.module.css";
 import * as Interfaces from "./interfaces/Interface";
@@ -67,6 +66,36 @@ const Search = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
 
+  const getDuplicatePlaces = (
+    recommendedPlaces: Interfaces.SearchPlace[],
+    regularPlaces: Interfaces.SearchPlace[],
+  ): Interfaces.SearchPlace[] => {
+    const allPlaces = [...recommendedPlaces, ...regularPlaces];
+    const placeMap = new Map<string, Interfaces.SearchPlace[]>();
+    const duplicates: Interfaces.SearchPlace[] = [];
+
+    allPlaces.forEach((place) => {
+      const address = place.address.split(" ");
+      if (address.length < 4) return; // 주소가 너무 짧은 경우 무시
+
+      const placeKey =
+        address.slice(0, 3).join(" ") + address[3].replace(",", "");
+
+      const existing = placeMap.get(placeKey) ?? [];
+      existing.push(place);
+      placeMap.set(placeKey, existing);
+    });
+
+    // 중복만 필터링해서 합치기
+    for (const [, places] of placeMap) {
+      if (places.length > 1) {
+        duplicates.push(...places);
+      }
+    }
+
+    return duplicates;
+  };
+
   // 마커 렌더링 함수
   const renderMarkers = () => {
     if (!window.kakao || !mapInstance.current) return;
@@ -79,6 +108,12 @@ const Search = () => {
 
     const recomLength = recommendedPlaces?.length ?? 0;
 
+    const duplicates = getDuplicatePlaces(
+      recommendedPlaces || [],
+      regularPlaces || [],
+    );
+    console.log(duplicates);
+
     if (recommendedPlaces) {
       recommendedPlaces.forEach((place, index) => {
         const overlay = CustomMarker(
@@ -89,6 +124,9 @@ const Search = () => {
           () => handlePlaceClick(place),
           style.mapMarker,
           style.selectedMarker,
+          duplicates.some((d) => d.placeId === place.placeId)
+            ? style.duplicateMarker
+            : "",
         );
         markerOverlaysRef.current.push(overlay);
       });
@@ -104,6 +142,9 @@ const Search = () => {
           () => handlePlaceClick(place),
           style.mapMarker,
           style.selectedMarker,
+          duplicates.some((d) => d.placeId === place.placeId)
+            ? style.duplicateMarker
+            : "",
         );
         markerOverlaysRef.current.push(overlay);
       });
