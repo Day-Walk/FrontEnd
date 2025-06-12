@@ -227,8 +227,17 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                 </span>
               ))}
             </div>
-            <div style={{ lineHeight: "24px" }}>
-              <p>{selectedPlace?.content}</p>
+            <div>
+              <p style={{ lineHeight: "24px", fontSize: "14px" }}>
+                {selectedPlace?.content &&
+                  selectedPlace.content
+                    .replaceAll("<br>", ".") // <br>을 마침표로 대체
+                    .split(".")
+                    .map((line, idx) => {
+                      const trimmed = line.trim();
+                      return trimmed ? <p key={idx}>{trimmed}.</p> : null;
+                    })}
+              </p>
             </div>
             <br />
             <br />
@@ -238,21 +247,29 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
           <div className={style.modalContent}>
             <div>
               <div className={style.modalSubTitle}>주소</div>
-              {selectedPlace?.address
-                ?.split("<br>")
-                .map((line, idx) => <p key={idx}>{line}</p>)}
+              {selectedPlace?.address?.split("<br>").map((line, idx) => (
+                <p style={{ lineHeight: "20px" }} key={idx}>
+                  {line}
+                </p>
+              ))}
             </div>
             <div>
               <div className={style.modalSubTitle}>운영 시간</div>
-              {selectedPlace?.openTime
-                ?.split("<br>")
-                .map((line, idx) => <p key={idx}>{line}</p>)}
+              {selectedPlace?.openTime?.split("<br>").map((line, idx) => (
+                <p style={{ lineHeight: "20px" }} key={idx}>
+                  {line}
+                </p>
+              ))}
             </div>
             <div>
               <div className={style.modalSubTitle}>전화번호</div>
               <p>
                 {selectedPlace?.phoneNum.map((num) => (
-                  <p key={num} className={style.phoneNum}>
+                  <p
+                    key={num}
+                    className={style.phoneNum}
+                    style={{ lineHeight: "20px" }}
+                  >
                     {num}
                   </p>
                 ))}
@@ -334,6 +351,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                   </Stack>
                 </div>
               </div>
+              <div style={{ marginBottom: "20px" }}></div>
             </div>
           </div>
         </div>
