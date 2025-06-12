@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
 import Logo from "../../assets/DayWalkLogo.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   BotMessageSquare,
@@ -9,7 +9,7 @@ import {
   Radio,
   Search,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -19,15 +19,35 @@ const Header = () => {
     setSelectedItem(index);
 
     // 페이지 이동
-    const routes = [
-      "/courses",
-      "/search",
-      "/chatbot",
-      "/congestion",
-      "/profile",
-    ];
+    const routes = ["/", "/search", "/chatbot", "/congestion", "/profile"];
     navigate(routes[index]);
   };
+
+  const pathname = useLocation().pathname;
+  useEffect(() => {
+    console.log("pathname:", pathname);
+
+    switch (pathname) {
+      case "/":
+        setSelectedItem(0);
+        break;
+      case "/search":
+        setSelectedItem(1);
+        break;
+      case "/chatbot":
+        setSelectedItem(2);
+        break;
+      case "/congestion":
+        setSelectedItem(3);
+        break;
+      case "/profile":
+        setSelectedItem(4);
+        break;
+      default:
+        setSelectedItem(0);
+        break;
+    }
+  }, [pathname]);
 
   return (
     <div className={styles.header_wrapper}>
