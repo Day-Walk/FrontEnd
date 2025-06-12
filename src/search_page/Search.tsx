@@ -10,7 +10,8 @@ import PlaceList from "./components/PlaceList";
 import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
-import { userId } from "../recoil/userInfo";
+import { userId, userName } from "../recoil/userInfo";
+import RobotImage from "../assets/goodVersion.png";
 
 declare global {
   interface Window {
@@ -23,11 +24,11 @@ const Search = () => {
     useState<Interfaces.GroupedPlaceList[0]>();
   const [regularPlaces, setRegularPlaces] =
     useState<Interfaces.GroupedPlaceList[1]>();
-
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.SearchPlace | null>(null);
   const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
+  const userNameState = useRecoilValue(userName);
 
   const handlePlaceClick = (p: Interfaces.SearchPlace) => {
     setSelectedPlaceId(p.placeId);
@@ -66,6 +67,7 @@ const Search = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
 
+  // 마커 렌더링 함수
   const renderMarkers = () => {
     if (!window.kakao || !mapInstance.current) return;
 
@@ -152,16 +154,36 @@ const Search = () => {
       <div className={style.detailLeft}>
         {/* <h1>Course Detail : {id}</h1> */}
         <div>
-          <div className={style.courseTitle}>
-            <div>
-              name님이 좋아하실만한{" "}
-              <span style={{ color: "var(--color-main)" }}>Pick!</span>
+          {!recommendedPlaces && (
+            <div className={style.courseTitleNone}>
+              <img src={RobotImage} width={150} />
+              <div>
+                <span style={{ color: "var(--color-main)" }}>
+                  {userNameState}
+                </span>
+                님!
+                <br />
+                관심있는 장소를
+                <br />
+                검색해보세요.
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div>
-          {recommendedPlaces && (
+          {recommendedPlaces && recommendedPlaces.length > 0 && (
             <>
+              <div>
+                <div className={style.courseTitle}>
+                  <div>
+                    <span style={{ color: "var(--color-main)" }}>
+                      {userNameState}
+                    </span>
+                    님이 좋아하실만한{" "}
+                    <span style={{ color: "var(--color-main)" }}>Pick!</span>
+                  </div>
+                </div>
+              </div>
               <RecommendList
                 places={recommendedPlaces}
                 selectedPlaceId={selectedPlaceId}
