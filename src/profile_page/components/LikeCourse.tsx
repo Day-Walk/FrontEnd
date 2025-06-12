@@ -52,10 +52,6 @@ const LikeCourse = () => {
     setCoursePage(coursePagesData?.courseList[value - 1]);
   };
 
-  useEffect(() => {
-    console.log(nowPage, "coursePage", coursePage);
-  }, [nowPage, coursePage]);
-
   return (
     <div className={style.courseWrapper}>
       <div className={style.subTitle}>찜한 코스</div>

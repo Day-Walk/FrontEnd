@@ -27,10 +27,6 @@ const Courses = () => {
     setCoursePage(coursePagesData?.courseList[value - 1]);
   };
 
-  useEffect(() => {
-    console.log(nowPage, "coursePage", coursePage);
-  }, [nowPage, coursePage]);
-
   const userIdState = useRecoilValue(userId);
   const token = localStorage.getItem("accessToken");
 
@@ -62,7 +58,6 @@ const Courses = () => {
     setCoursePagesData(data);
     setNowPage(1);
     setCoursePage(data.courseList[0]);
-    console.log(coursePage);
   };
 
   return (
