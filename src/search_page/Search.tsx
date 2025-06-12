@@ -21,14 +21,13 @@ declare global {
 const Search = () => {
   const [recommendedPlaces, setRecommendedPlaces] =
     useState<Interfaces.GroupedPlaceList[0]>();
-  // Interfaces.dummySearchPlaceResponse.placeList["추천픽"]
   const [regularPlaces, setRegularPlaces] =
     useState<Interfaces.GroupedPlaceList[1]>();
-  // Interfaces.dummySearchPlaceResponse.placeList["장소"]
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.SearchPlace | null>(null);
+  const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
 
   const handlePlaceClick = (p: Interfaces.SearchPlace) => {
     setSelectedPlaceId(p.placeId);
@@ -67,6 +66,48 @@ const Search = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
 
+  const renderMarkers = () => {
+    if (!window.kakao || !mapInstance.current) return;
+
+    const map = mapInstance.current;
+
+    // 기존 마커 제거
+    markerOverlaysRef.current.forEach((overlay) => overlay.setMap(null));
+    markerOverlaysRef.current = [];
+
+    const recomLength = recommendedPlaces?.length ?? 0;
+
+    if (recommendedPlaces) {
+      recommendedPlaces.forEach((place, index) => {
+        const overlay = CustomMarker(
+          map,
+          place,
+          index,
+          selectedPlaceId,
+          () => handlePlaceClick(place),
+          style.mapMarker,
+          style.selectedMarker,
+        );
+        markerOverlaysRef.current.push(overlay);
+      });
+    }
+
+    if (regularPlaces) {
+      regularPlaces.forEach((place, index) => {
+        const overlay = CustomMarker(
+          map,
+          place,
+          index + recomLength,
+          selectedPlaceId,
+          () => handlePlaceClick(place),
+          style.mapMarker,
+          style.selectedMarker,
+        );
+        markerOverlaysRef.current.push(overlay);
+      });
+    }
+  };
+
   useEffect(() => {
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
@@ -86,38 +127,10 @@ const Search = () => {
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
-          const recomLength = recommendedPlaces?.length;
-
-          if (recommendedPlaces) {
-            recommendedPlaces.forEach((place, index) => {
-              CustomMarker(
-                map,
-                place,
-                index,
-                selectedPlaceId,
-                () => handlePlaceClick(place),
-                style.mapMarker,
-                style.selectedMarker,
-              );
-            });
-          }
-          if (regularPlaces) {
-            regularPlaces.forEach((place, index) => {
-              CustomMarker(
-                map,
-                place,
-                index + recomLength,
-                selectedPlaceId,
-                () => handlePlaceClick(place),
-                style.mapMarker,
-                style.selectedMarker,
-              );
-            });
-          }
         }
       })
       .catch(console.error);
-  }, [recommendedPlaces, selectedPlaceId]);
+  }, []);
 
   useEffect(() => {
     if (!window.kakao || !selectedPlace || !mapInstance.current) return;
@@ -129,6 +142,10 @@ const Search = () => {
 
     mapInstance.current.setCenter(newCenter);
   }, [selectedPlace]);
+
+  useEffect(() => {
+    renderMarkers();
+  }, [recommendedPlaces, selectedPlaceId]);
 
   return (
     <div className={style.courseDetailWrapper}>

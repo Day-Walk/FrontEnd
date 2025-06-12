@@ -6,7 +6,7 @@ export function CustomMarker(
   onClick: () => void,
   markerClass: string,
   selectedMarkerClass: string,
-) {
+): kakao.maps.CustomOverlay {
   const position = new window.kakao.maps.LatLng(
     place.location.lat,
     place.location.lng,
@@ -24,4 +24,5 @@ export function CustomMarker(
   });
 
   overlay.setMap(map);
+  return overlay;
 }
