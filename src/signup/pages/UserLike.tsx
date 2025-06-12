@@ -135,7 +135,7 @@ const UserLike = () => {
           tagList: item.tagList,
         })),
       });
-      navigate("/courses");
+      navigate("/");
     } catch (error) {
       console.error("사용자 선호 카테고리 저장 오류:", error);
     }
