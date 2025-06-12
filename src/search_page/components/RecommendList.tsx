@@ -38,7 +38,7 @@ const RecommendedList: React.FC<Props> = ({
                 <span>추천&nbsp;</span>
                 <ThumbsUp size={14} color="var(--color-main)" />
               </span>
-              <div className={style.placeName}>&nbsp;{p.placeName}</div>
+              <div className={style.placeNameRecom}>&nbsp;{p.placeName}</div>
             </div>
             <div className={style.address}>
               <MapPin size={14} />
