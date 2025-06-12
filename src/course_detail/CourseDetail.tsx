@@ -198,15 +198,17 @@ const CourseDetail = () => {
                   }
                 >
                   <div className={style.idx}>{i + 1}</div>
-                  {p.imgUrl ? (
-                    <img
-                      src={p.imgUrl}
-                      alt={p.placeName}
-                      className={style.placeImg}
-                    />
-                  ) : (
-                    <img src={NoImage} className={style.placeImg} />
-                  )}
+                  <div>
+                    {p.imgUrl ? (
+                      <img
+                        src={p.imgUrl}
+                        alt={p.placeName}
+                        className={style.placeImg}
+                      />
+                    ) : (
+                      <img src={NoImage} className={style.placeImg} />
+                    )}
+                  </div>
                   <div className={style.placeInfo}>
                     <div className={style.placeCategory}>
                       <div className={style.category}>{p.subCategory}</div>
