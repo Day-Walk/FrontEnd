@@ -88,6 +88,10 @@
   font-size: 18px;
   font-weight: bold;
   margin: 10px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 20px;
 }
 .address {
   font-size: 14px;
@@ -374,6 +378,8 @@
   font-size: 14px;
   padding: 4px 10px;
   width: 65px;
+  white-space: nowrap;
+  overflow: hidden;
   color: var(--color-main);
   display: flex;
   align-items: center;
