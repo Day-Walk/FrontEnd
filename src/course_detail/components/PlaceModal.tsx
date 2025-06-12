@@ -333,7 +333,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                           )}
                           <div>
                             <span className={style.reviewDate}>
-                              작성일 : {review.createAt}
+                              작성일 : {review.createAt.split("T")[0]}
                             </span>
                             <div className={style.reviewContent}>
                               {review.content}
