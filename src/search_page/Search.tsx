@@ -111,6 +111,19 @@ const Search = () => {
   };
 
   useEffect(() => {
+    if (!window.kakao || !mapInstance.current || !recommendedPlaces?.length)
+      return;
+
+    const firstPlace = recommendedPlaces[0];
+    const center = new window.kakao.maps.LatLng(
+      firstPlace.location.lat,
+      firstPlace.location.lng,
+    );
+
+    mapInstance.current.setCenter(center);
+  }, [recommendedPlaces]);
+
+  useEffect(() => {
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
