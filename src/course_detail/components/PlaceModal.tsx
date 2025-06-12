@@ -59,7 +59,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         });
         setReviews(data.data);
         setReviewList(data.data.reviewList[0]);
-        console.log(data.data);
+        // console.log(data.data);
       } catch (e) {
         console.log(e);
         alert("장소 리뷰 조회 실패");
@@ -73,7 +73,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
           },
         });
         setReviewTotal(data.data.reviewTotal);
-        console.log("***", data.data);
+        // console.log("***", data.data);
       } catch (e) {
         console.log(e);
         alert("리뷰 통계 조회 실패");
@@ -160,10 +160,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         <div className={style.placeModal}>
           {selectedPlace && selectedPlace?.imgUrlList.length > 0 && (
             <div className={style.sliderWrapper}>
-              <button className={style.arrowLeft} onClick={handlePrev}>
-                <ChevronLeft />
-              </button>
-
+              {selectedPlace.imgUrlList.length > 1 && (
+                <button className={style.arrowLeft} onClick={handlePrev}>
+                  <ChevronLeft />
+                </button>
+              )}
               <div className={style.slideViewport}>
                 <div
                   className={style.slideTrack}
@@ -181,10 +182,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                   ))}
                 </div>
               </div>
-
-              <button className={style.arrowRight} onClick={handleNext}>
-                <ChevronRight />
-              </button>
+              {selectedPlace.imgUrlList.length > 1 && (
+                <button className={style.arrowRight} onClick={handleNext}>
+                  <ChevronRight />
+                </button>
+              )}
             </div>
           )}
 

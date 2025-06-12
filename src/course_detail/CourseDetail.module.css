@@ -323,6 +323,9 @@
   align-items: center;
   font-size: 14px;
 }
+.stars {
+  color: #666;
+}
 .reviewUserName {
   font-weight: bold;
 }
