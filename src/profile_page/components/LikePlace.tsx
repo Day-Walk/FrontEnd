@@ -7,14 +7,16 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import NoImage from "../../assets/NoImage.png";
+import { Stack, Pagination } from "@mui/material";
 
 const LikePlace = () => {
-  const [likePlaceResponse, setLikePlaceResponse] =
-    useState<Interfaces.FavoritePlaceListResponse>();
+  const [likePlaces, setLikePlaces] = useState<Interfaces.FavoritePlacePage[]>(
+    [],
+  );
   const [likedList, setLikedList] = useState<boolean[]>();
-
+  const [nowPage, setNowPage] = useState<number>(1);
   const toggleLike = (index: number) => {
-    setLikedList((prev) =>
+    setLikedList((prev = []) =>
       prev.map((liked, i) => (i === index ? !liked : liked)),
     );
   };
@@ -35,8 +37,9 @@ const LikePlace = () => {
             },
           },
         );
-        setLikePlaceResponse(response.data);
-        setLikedList(likePlaceResponse?.placeList.map(() => true));
+        const pageList = response.data.placeList;
+        setLikePlaces(pageList);
+        setLikedList(pageList[0]?.page.map(() => true) ?? []);
         setLoading(false);
         console.log("like place:", response.data);
       } catch (error) {
@@ -47,13 +50,24 @@ const LikePlace = () => {
     fetchCourses();
   }, []);
 
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setNowPage(value);
+    const nextPage = likePlaces?.[value - 1];
+    setLikedList(nextPage?.page ? nextPage.page.map(() => true) : []);
+  };
+
+  const currentPagePlaces = likePlaces[nowPage - 1]?.page ?? [];
+
   return (
     <div className={style.courseWrapper}>
       <div className={style.subTitle}>찜한 장소</div>
-      {likePlaceResponse && likePlaceResponse?.placeList.length > 0 ? (
+      {currentPagePlaces.length > 0 ? (
         <>
           <div className={style.likePlaceGrid}>
-            {likePlaceResponse.placeList.map((p, index) => (
+            {currentPagePlaces.map((p, index) => (
               <div key={index}>
                 <div className={style.pBlock}>
                   {p.imgUrl ? (
@@ -81,16 +95,25 @@ const LikePlace = () => {
                     </div>
                     <div className={style.pAddress}>
                       <MapPin size={14} />
-                      {p?.address.split(" ").slice(0, 2).join(" ")}
+                      {p.address?.split(" ").slice(0, 2).join(" ")}
                     </div>
                     <div className={style.pStar}>
                       <Star size={20} fill="#FFEA00" color="#FFEA00" />
-                      <span>&nbsp;{p.star.toFixed(1)}</span>
+                      <span>&nbsp;{p.stars.toFixed(1)}</span>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+          <div className={style.paginationWrapper}>
+            <Stack spacing={2}>
+              <Pagination
+                count={likePlaces.length}
+                page={nowPage}
+                onChange={handleChangePage}
+              />
+            </Stack>
           </div>
         </>
       ) : (

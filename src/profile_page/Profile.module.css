@@ -243,7 +243,7 @@
 .pBlock {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   border: #e5e5e5 1px solid;
   border-radius: 20px;
   padding: 10px;
@@ -264,7 +264,7 @@
 .likePlaceGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 한 줄에 2개 */
-  gap: 16px; /* 카드 사이 간격 */
+  gap: 20px; /* 카드 사이 간격 */
   margin-top: 30px;
 }
 .pName {
