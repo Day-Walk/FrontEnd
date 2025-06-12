@@ -58,10 +58,6 @@ const MyReview = () => {
     setReviewPage(ReviewListResponse?.reviewList[value - 1]);
   };
 
-  useEffect(() => {
-    console.log(nowPage, "coursePage", reviewPage);
-  }, [nowPage, reviewPage]);
-
   return (
     <div className={style.courseWrapper}>
       <div className={style.subTitle}>내가 쓴 리뷰</div>

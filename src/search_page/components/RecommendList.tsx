@@ -3,7 +3,7 @@ import React from "react";
 import style from "../Search.module.css";
 import { MapPin, Star, ThumbsUp } from "lucide-react";
 import * as Interfaces from "../interfaces/Interface";
-
+import NoImage from "../../assets/NoImage.png";
 interface Props {
   places: Interfaces.SearchPlace[];
   selectedPlaceId: string;
@@ -27,26 +27,28 @@ const RecommendedList: React.FC<Props> = ({
               : style.placeBlock
           }
         >
-          <img src={p.imgUrl} alt={p.placeName} className={style.placeImg} />
+          {p.imgUrl ? (
+            <img src={p.imgUrl} alt={p.placeName} className={style.placeImg} />
+          ) : (
+            <img src={NoImage} className={style.placeImg} />
+          )}
           <div className={style.placeInfo}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <span className={style.placeRecommend}>
                 <span>추천&nbsp;</span>
                 <ThumbsUp size={14} color="var(--color-main)" />
               </span>
-              <div className={style.placeName}>&nbsp;{p.placeName}</div>
+              <div className={style.placeNameRecom}>&nbsp;{p.placeName}</div>
             </div>
             <div className={style.address}>
               <MapPin size={14} />
               {p.address}
             </div>
             <div className={style.placeCategory}>
-              <div className={style.category}>
-                {p.category}({p.subCategory})
-              </div>
+              <div className={style.category}>{p.subCategory}</div>
               <div className={style.stars}>
                 <Star size={20} fill="#fabd55" color="#fabd55" />
-                <span>&nbsp;{p.stars.toFixed(1)}</span>
+                <span>&nbsp;{p.stars}</span>
               </div>
             </div>
           </div>

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import style from "../CourseDetail.module.css";
 import * as Interfaces from "../interfaces/Interface";
 import * as rInterfaces from "../interfaces/ReviewInterface";
-import { ChevronLeft, ChevronRight, Pen, Share2, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2, Star } from "lucide-react";
 import { CircleChevronRight, Pencil, CircleUserRound } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [selectedPlace, setSelectedPlace] =
@@ -59,7 +60,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         });
         setReviews(data.data);
         setReviewList(data.data.reviewList[0]);
-        console.log(data.data);
+        // console.log(data.data);
       } catch (e) {
         console.log(e);
         alert("장소 리뷰 조회 실패");
@@ -73,7 +74,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
           },
         });
         setReviewTotal(data.data.reviewTotal);
-        console.log("***", data.data);
+        // console.log("***", data.data);
       } catch (e) {
         console.log(e);
         alert("리뷰 통계 조회 실패");
@@ -141,6 +142,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
     );
   };
 
+  const navigate = useNavigate();
+  const handleCreateReview = () => {
+    navigate(`/review/${placeId}`);
+  };
+
   useEffect(() => {
     if (slideDirection) {
       const timer = setTimeout(() => setSlideDirection(""), 400);
@@ -160,10 +166,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
         <div className={style.placeModal}>
           {selectedPlace && selectedPlace?.imgUrlList.length > 0 && (
             <div className={style.sliderWrapper}>
-              <button className={style.arrowLeft} onClick={handlePrev}>
-                <ChevronLeft />
-              </button>
-
+              {selectedPlace.imgUrlList.length > 1 && (
+                <button className={style.arrowLeft} onClick={handlePrev}>
+                  <ChevronLeft />
+                </button>
+              )}
               <div className={style.slideViewport}>
                 <div
                   className={style.slideTrack}
@@ -181,10 +188,11 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                   ))}
                 </div>
               </div>
-
-              <button className={style.arrowRight} onClick={handleNext}>
-                <ChevronRight />
-              </button>
+              {selectedPlace.imgUrlList.length > 1 && (
+                <button className={style.arrowRight} onClick={handleNext}>
+                  <ChevronRight />
+                </button>
+              )}
             </div>
           )}
 
@@ -201,7 +209,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                 {selectedPlace?.category}({selectedPlace?.subCategory})
               </span>
               <div>
-                <Pencil size={26} />
+                <button onClick={handleCreateReview}>
+                  <Pencil size={26} />
+                </button>
                 &nbsp;
                 <button onClick={handleLike}>
                   <LikeIcon />
@@ -227,8 +237,17 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                 </span>
               ))}
             </div>
-            <div style={{ lineHeight: "24px" }}>
-              <p>{selectedPlace?.content}</p>
+            <div>
+              <p style={{ lineHeight: "24px", fontSize: "14px" }}>
+                {selectedPlace?.content &&
+                  selectedPlace.content
+                    .replaceAll("<br>", ".") // <br>을 마침표로 대체
+                    .split(".")
+                    .map((line, idx) => {
+                      const trimmed = line.trim();
+                      return trimmed ? <p key={idx}>{trimmed}.</p> : null;
+                    })}
+              </p>
             </div>
             <br />
             <br />
@@ -238,21 +257,29 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
           <div className={style.modalContent}>
             <div>
               <div className={style.modalSubTitle}>주소</div>
-              {selectedPlace?.address
-                ?.split("<br>")
-                .map((line, idx) => <p key={idx}>{line}</p>)}
+              {selectedPlace?.address?.split("<br>").map((line, idx) => (
+                <p style={{ lineHeight: "20px" }} key={idx}>
+                  {line}
+                </p>
+              ))}
             </div>
             <div>
               <div className={style.modalSubTitle}>운영 시간</div>
-              {selectedPlace?.openTime
-                ?.split("<br>")
-                .map((line, idx) => <p key={idx}>{line}</p>)}
+              {selectedPlace?.openTime?.split("<br>").map((line, idx) => (
+                <p style={{ lineHeight: "20px" }} key={idx}>
+                  {line}
+                </p>
+              ))}
             </div>
             <div>
               <div className={style.modalSubTitle}>전화번호</div>
               <p>
                 {selectedPlace?.phoneNum.map((num) => (
-                  <p key={num} className={style.phoneNum}>
+                  <p
+                    key={num}
+                    className={style.phoneNum}
+                    style={{ lineHeight: "20px" }}
+                  >
                     {num}
                   </p>
                 ))}
@@ -306,7 +333,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                           )}
                           <div>
                             <span className={style.reviewDate}>
-                              작성일 : {review.createAt}
+                              작성일 : {review.createAt.split("T")[0]}
                             </span>
                             <div className={style.reviewContent}>
                               {review.content}
@@ -334,6 +361,7 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
                   </Stack>
                 </div>
               </div>
+              <div style={{ marginBottom: "20px" }}></div>
             </div>
           </div>
         </div>

@@ -84,10 +84,19 @@
   -ms-border-radius: 14px;
   -o-border-radius: 14px;
 }
-.placeName {
+.placeName,
+.placeNameRecom {
   font-size: 18px;
   font-weight: bold;
   margin: 10px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 20px;
+}
+
+.placeNameRecom {
+  max-width: 120px;
 }
 .address {
   font-size: 14px;
@@ -235,7 +244,8 @@
   font-weight: bold;
   font-size: 24px;
 }
-.courseTitle {
+.courseTitle,
+.courseTitleNone {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -243,6 +253,10 @@
   font-weight: bold;
   line-height: 1.5;
   margin: 24px;
+}
+.courseTitleNone {
+  margin-left: -10px;
+  margin-top: 100px;
 }
 .modalHeader {
   margin-bottom: 20px;
@@ -371,9 +385,10 @@
   pointer-events: none; /* 아이콘이 클릭을 막지 않게 */
 }
 .placeRecommend {
-  font-size: 14px;
-  padding: 4px 10px;
-  width: 65px;
+  font-size: 12px;
+  padding: 4px 8px;
+  white-space: nowrap;
+  overflow: hidden;
   color: var(--color-main);
   display: flex;
   align-items: center;

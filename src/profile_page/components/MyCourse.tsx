@@ -51,10 +51,6 @@ const MyCourse = () => {
     setCoursePage(coursePagesData?.courseList[value - 1]);
   };
 
-  useEffect(() => {
-    console.log(nowPage, "coursePage", coursePage);
-  }, [nowPage, coursePage]);
-
   return (
     <div className={style.courseWrapper}>
       <div className={style.subTitle}>나의 코스</div>
