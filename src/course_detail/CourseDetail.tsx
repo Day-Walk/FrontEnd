@@ -212,7 +212,7 @@ const CourseDetail = () => {
                       <div className={style.category}>{p.subCategory}</div>
                       <div className={style.stars}>
                         <Star size={20} fill="#fabd55" color="#fabd55" />
-                        <span>&nbsp;{p.stars}</span>
+                        <span>&nbsp;{p.stars.toFixed(1)}</span>
                       </div>
                     </div>
                     <div className={style.placeName}>{p.placeName}</div>
