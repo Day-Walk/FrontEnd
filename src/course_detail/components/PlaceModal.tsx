@@ -13,18 +13,16 @@ import { Stack, Pagination } from "@mui/material";
 const PlaceModal = ({ placeId }: { placeId: string }) => {
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.PlaceDetail | null>();
-  // Interfaces.dummyPlaceDetail.placeInfo,
   const [reviews, setReviews] = useState<rInterfaces.ReviewListResponse>();
   const [reviewList, setReviewList] = useState<rInterfaces.ReviewPage>();
-  // rInterfaces.dummyReviewList.reviewList[0],
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [reviewTotal, setReviewTotal] = useState<rInterfaces.ReviewTotal>();
-  // rInterfaces.dummyReviewTotal.reviewTotal,
   const [nowPage, setNowPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(true); // false = 모달을 왼쪽으로 숨김
   const [slideDirection, setSlideDirection] = useState("");
   const token = localStorage.getItem("accessToken");
   const currentUserId = useRecoilValue(userId);
+  const [like, setLike] = useState<boolean>(false);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -85,6 +83,49 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
     getReview();
     getReviewTotal();
   }, [placeId]);
+
+  useEffect(() => {
+    setLike(selectedPlace?.like || false);
+  }, [selectedPlace]);
+
+  const LikeIcon = () => {
+    return like ? (
+      <AiFillHeart color="#E96563" size={26} />
+    ) : (
+      <AiOutlineHeart size={26} />
+    );
+  };
+
+  const handleLike = async () => {
+    const body = {
+      userId: currentUserId,
+      placeId: placeId,
+    };
+
+    try {
+      if (!like) {
+        // 좋아요 등록
+        await api.post("/place-like", body, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        // 좋아요 취소
+        await api.delete("/place-like", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: body,
+        });
+      }
+      alert("찜 리스트에 추가 완료!");
+      setLike(!like);
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+      alert("좋아요 처리 중 오류가 발생했습니다.");
+    }
+  };
 
   const handleNext = () => {
     setSlideDirection("slide-left");
@@ -162,11 +203,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
               <div>
                 <Pencil size={26} />
                 &nbsp;
-                {selectedPlace?.like ? (
-                  <AiFillHeart size={26} color="#E96563" />
-                ) : (
-                  <AiOutlineHeart size={26} color="#E96563" />
-                )}
+                <button onClick={handleLike}>
+                  <LikeIcon />
+                </button>
                 &nbsp;
                 <Share2 size={26} />
               </div>
