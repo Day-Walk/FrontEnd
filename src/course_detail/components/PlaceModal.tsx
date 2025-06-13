@@ -10,6 +10,7 @@ import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getPlaceUrl } from "./getPlaceUrl";
 
 const PlaceModal = ({
   placeId,
@@ -165,6 +166,18 @@ const PlaceModal = ({
     }
   }, [slideDirection]);
 
+  const [naverUrl, setNaverUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPlaceUrl = async () => {
+      if (!selectedPlace) return;
+      const url = await getPlaceUrl(selectedPlace?.name);
+      setNaverUrl(url);
+    };
+
+    fetchPlaceUrl();
+  }, [selectedPlace]);
+
   if (selectedPlace === null) {
     return <div>장소 정보를 불러오는 중...</div>;
   }
@@ -302,10 +315,14 @@ const PlaceModal = ({
             </div>
 
             <div className={style.viewDetailButton}>
-              <button style={{ display: "flex", alignItems: "center" }}>
-                <span>상세 정보 보기&nbsp;</span>
-                <CircleChevronRight size={24} />
-              </button>
+              {naverUrl && (
+                <a href={naverUrl} target="_blank" rel="noopener noreferrer">
+                  <button style={{ display: "flex", alignItems: "center" }}>
+                    <span>상세 정보 보기&nbsp;</span>
+                    <CircleChevronRight size={24} />
+                  </button>
+                </a>
+              )}
             </div>
             <div>
               <div>리뷰&nbsp;({reviewTotal?.reviewNum})</div>
