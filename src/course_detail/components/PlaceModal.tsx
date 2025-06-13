@@ -14,9 +14,11 @@ import { useNavigate } from "react-router-dom";
 const PlaceModal = ({
   placeId,
   isPlaceOnly,
+  onSelectLocation,
 }: {
   placeId: string;
   isPlaceOnly: boolean | null;
+  onSelectLocation?: (location: { lat: number; lng: number }) => void | null;
 }) => {
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.PlaceDetail | null>();
@@ -51,6 +53,9 @@ const PlaceModal = ({
           },
         );
         setSelectedPlace(data.data.placeInfo);
+        if (isPlaceOnly && data.data.placeInfo.location && onSelectLocation) {
+          onSelectLocation(data.data.placeInfo.location);
+        }
         console.log(data.data);
       } catch (e) {
         console.log(e);
