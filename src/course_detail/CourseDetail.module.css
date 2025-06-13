@@ -90,6 +90,8 @@
   height: 100%;
   top: -100%;
 }
+.placeModalWrapperOnly {
+}
 .slideGroup {
   position: absolute;
   top: 0;
@@ -110,6 +112,17 @@
   width: 400px;
   height: 100%;
   overflow-y: auto;
+}
+.placeModalOnly {
+  position: absolute;
+  left: 0;
+  z-index: 5;
+  background: white;
+  box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
+  width: 400px;
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  top: 80px;
 }
 
 .sliderWrapper {

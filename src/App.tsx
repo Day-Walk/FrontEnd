@@ -14,6 +14,7 @@ import CongestionMap from "./congestion/CongestionMap";
 import ReviewForm from "./review_form/ReviewForm";
 import Login from "./signup/pages/Login";
 import KakaoCallback from "./signup/pages/KakaoCallback";
+import PlaceDetail from "./place_page/PlaceDetail";
 
 const App = () => (
   <Routes>
@@ -25,6 +26,7 @@ const App = () => (
       <Route path="/search" element={<Search />} />
       <Route path="/congestion" element={<CongestionMap />} />
       <Route path="/review/:placeId" element={<ReviewForm />} />
+      <Route path="/place/:placeId" element={<PlaceDetail />} />
     </Route>
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />

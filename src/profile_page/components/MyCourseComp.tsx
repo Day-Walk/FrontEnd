@@ -6,6 +6,7 @@ import { SquareCheck, Square } from "lucide-react";
 import NoImage from "../../assets/NoImage.png";
 import { api } from "../../utils/api";
 import EditCourseModal from "./Modals/EditCourseModal";
+import { useNavigate } from "react-router-dom";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
@@ -42,11 +43,15 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
       setCourse({ ...course, title: newTitle });
     }
   };
+  const navigate = useNavigate();
+  const handleCourseClick = () => {
+    navigate(`/course/${course?.courseId}`);
+  };
 
   return (
     <div className={style.courseBlock}>
       <div className={style.header}>
-        <div className={style.title}>
+        <div onClick={handleCourseClick} className={style.title}>
           <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
           코스
         </div>
@@ -77,7 +82,7 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
           )}
         </div>
       </div>
-      <div className={style.coursePlaceList}>
+      <div onClick={handleCourseClick} className={style.coursePlaceList}>
         {course?.placeList.map((place, idx) => (
           <div key={place.placeId} className={style.placeBlock}>
             {place.imgUrl ? (

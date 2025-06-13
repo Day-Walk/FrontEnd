@@ -8,6 +8,7 @@ import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import NoImage from "../../assets/NoImage.png";
 import { Stack, Pagination } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const LikePlace = () => {
   const [likePlaces, setLikePlaces] = useState<Interfaces.FavoritePlacePage[]>(
@@ -60,6 +61,10 @@ const LikePlace = () => {
   };
 
   const currentPagePlaces = likePlaces[nowPage - 1]?.page ?? [];
+  const navigate = useNavigate();
+  const handleSelectPlace = (placeId: string) => {
+    navigate(`/place/${placeId}`);
+  };
 
   return (
     <div className={style.courseWrapper}>
@@ -68,7 +73,7 @@ const LikePlace = () => {
         <>
           <div className={style.likePlaceGrid}>
             {currentPagePlaces.map((p, index) => (
-              <div key={index}>
+              <div key={index} onClick={() => handleSelectPlace(p.placeId)}>
                 <div className={style.pBlock}>
                   {p.imgUrl ? (
                     <img

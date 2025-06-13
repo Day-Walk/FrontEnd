@@ -6,6 +6,7 @@ import { Star } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import NoImage from "../../assets/NoImage.png";
 import { api } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   nowReview: Interfaces.Review;
@@ -15,6 +16,10 @@ interface Props {
 const MyReviewComp = ({ nowReview, onDelete }: Props) => {
   const [review, setReview] = useState<Interfaces.Review | null>(nowReview);
   const token = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
+  const handleSelectPlace = () => {
+    navigate(`/place/${review.placeId}`);
+  };
 
   const handleDeleteReview = async () => {
     try {
@@ -34,7 +39,7 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
 
   return (
     <div>
-      <div className={style.reviewBlock}>
+      <div onClick={handleSelectPlace} className={style.reviewBlock}>
         <div className={style.reviewTop}>
           <div className={style.reviewImg}>
             {review?.imgUrl ? (

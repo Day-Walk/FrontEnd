@@ -10,8 +10,17 @@ import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getPlaceUrl } from "./getPlaceUrl";
 
-const PlaceModal = ({ placeId }: { placeId: string }) => {
+const PlaceModal = ({
+  placeId,
+  isPlaceOnly,
+  onSelectLocation,
+}: {
+  placeId: string;
+  isPlaceOnly: boolean | null;
+  onSelectLocation?: (location: { lat: number; lng: number }) => void | null;
+}) => {
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.PlaceDetail | null>();
   const [reviews, setReviews] = useState<rInterfaces.ReviewListResponse>();
@@ -45,6 +54,9 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
           },
         );
         setSelectedPlace(data.data.placeInfo);
+        if (isPlaceOnly && data.data.placeInfo.location && onSelectLocation) {
+          onSelectLocation(data.data.placeInfo.location);
+        }
         console.log(data.data);
       } catch (e) {
         console.log(e);
@@ -154,16 +166,32 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
     }
   }, [slideDirection]);
 
+  const [naverUrl, setNaverUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPlaceUrl = async () => {
+      if (!selectedPlace) return;
+      const url = await getPlaceUrl(selectedPlace?.name);
+      setNaverUrl(url);
+    };
+
+    fetchPlaceUrl();
+  }, [selectedPlace]);
+
   if (selectedPlace === null) {
     return <div>장소 정보를 불러오는 중...</div>;
   }
   return (
-    <div className={style.placeModalWrapper}>
+    <div
+      className={
+        isPlaceOnly ? style.placeModalWrapperOnly : style.placeModalWrapper
+      }
+    >
       <div
         className={style.slideGroup}
         style={{ left: isModalOpen ? "0px" : "-400px" }}
       >
-        <div className={style.placeModal}>
+        <div className={isPlaceOnly ? style.placeModalOnly : style.placeModal}>
           {selectedPlace && selectedPlace?.imgUrlList.length > 0 && (
             <div className={style.sliderWrapper}>
               {selectedPlace.imgUrlList.length > 1 && (
@@ -287,10 +315,14 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
             </div>
 
             <div className={style.viewDetailButton}>
-              <button style={{ display: "flex", alignItems: "center" }}>
-                <span>상세 정보 보기&nbsp;</span>
-                <CircleChevronRight size={24} />
-              </button>
+              {naverUrl && (
+                <a href={naverUrl} target="_blank" rel="noopener noreferrer">
+                  <button style={{ display: "flex", alignItems: "center" }}>
+                    <span>상세 정보 보기&nbsp;</span>
+                    <CircleChevronRight size={24} />
+                  </button>
+                </a>
+              )}
             </div>
             <div>
               <div>리뷰&nbsp;({reviewTotal?.reviewNum})</div>
