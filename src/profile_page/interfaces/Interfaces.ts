@@ -33,6 +33,7 @@ export interface Review {
   tagList: string[];
   createAt: string;
   reviewId: string;
+  placeId: string;
 }
 
 export interface ReviewPage {
