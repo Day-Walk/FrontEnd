@@ -11,7 +11,13 @@ import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const PlaceModal = ({ placeId }: { placeId: string }) => {
+const PlaceModal = ({
+  placeId,
+  isPlaceOnly,
+}: {
+  placeId: string;
+  isPlaceOnly: boolean | null;
+}) => {
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.PlaceDetail | null>();
   const [reviews, setReviews] = useState<rInterfaces.ReviewListResponse>();
@@ -158,12 +164,16 @@ const PlaceModal = ({ placeId }: { placeId: string }) => {
     return <div>장소 정보를 불러오는 중...</div>;
   }
   return (
-    <div className={style.placeModalWrapper}>
+    <div
+      className={
+        isPlaceOnly ? style.placeModalWrapperOnly : style.placeModalWrapper
+      }
+    >
       <div
         className={style.slideGroup}
         style={{ left: isModalOpen ? "0px" : "-400px" }}
       >
-        <div className={style.placeModal}>
+        <div className={isPlaceOnly ? style.placeModalOnly : style.placeModal}>
           {selectedPlace && selectedPlace?.imgUrlList.length > 0 && (
             <div className={style.sliderWrapper}>
               {selectedPlace.imgUrlList.length > 1 && (
