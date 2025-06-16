@@ -225,27 +225,33 @@ const Search = () => {
           )}
         </div>
         <div>
-          {recommendedPlaces && recommendedPlaces.length > 0 && (
-            <>
-              <div>
-                <div className={style.courseTitle}>
-                  <div>
-                    <span style={{ color: "var(--color-main)" }}>
-                      {userNameState}
-                    </span>
-                    님이 좋아하실만한{" "}
-                    <span style={{ color: "var(--color-main)" }}>Pick!</span>
+          {recommendedPlaces &&
+            (recommendedPlaces.length > 0 ? (
+              <>
+                <div>
+                  <div className={style.courseTitle}>
+                    <div>
+                      <span style={{ color: "var(--color-main)" }}>
+                        {userNameState}
+                      </span>
+                      님이 좋아하실만한{" "}
+                      <span style={{ color: "var(--color-main)" }}>Pick!</span>
+                    </div>
                   </div>
                 </div>
+                <RecommendList
+                  places={recommendedPlaces}
+                  selectedPlaceId={selectedPlaceId}
+                  onPlaceClick={handlePlaceClick}
+                />
+                <hr color="#e5e5e5" style={{ margin: "20px" }} />
+              </>
+            ) : (
+              <div className={style.courseTitleNone}>
+                <img src={RobotImage} width={150} />
+                <div>검색 결과가 없어요.</div>
               </div>
-              <RecommendList
-                places={recommendedPlaces}
-                selectedPlaceId={selectedPlaceId}
-                onPlaceClick={handlePlaceClick}
-              />
-              <hr color="#e5e5e5" style={{ margin: "20px" }} />
-            </>
-          )}
+            ))}
 
           {regularPlaces && (
             <PlaceList
@@ -262,7 +268,10 @@ const Search = () => {
           <SearchBox onSearch={onSearch} />
         </div>
         {selectedPlaceId && selectedPlaceId.length > 0 && (
-          <PlaceModal placeId={selectedPlaceId ? selectedPlaceId : ""} />
+          <PlaceModal
+            placeId={selectedPlaceId ? selectedPlaceId : ""}
+            isPlaceOnly={false}
+          />
         )}
       </div>
     </div>

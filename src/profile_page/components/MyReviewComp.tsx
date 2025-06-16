@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
 import { MapPin } from "lucide-react";
@@ -18,7 +18,7 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const handleSelectPlace = () => {
-    navigate(`/place/${review.placeId}`);
+    navigate(`/place/${review?.placeId}`);
   };
 
   const handleDeleteReview = async () => {

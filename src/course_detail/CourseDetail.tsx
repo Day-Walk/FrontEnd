@@ -228,7 +228,10 @@ const CourseDetail = () => {
       <div className={style.detailRight}>
         <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
         {selectedPlaceId && selectedPlaceId.length > 0 && (
-          <PlaceModal placeId={selectedPlaceId ? selectedPlaceId : ""} />
+          <PlaceModal
+            placeId={selectedPlaceId ? selectedPlaceId : ""}
+            isPlaceOnly={false}
+          />
         )}
       </div>
     </div>

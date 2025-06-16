@@ -97,7 +97,7 @@ const Courses = () => {
           <div className={style.paginationWrapper}>
             <Stack spacing={2}>
               <Pagination
-                count={coursePagesData.courseList.length}
+                count={coursePagesData?.courseList.length}
                 page={nowPage}
                 onChange={handleChangePage}
               />

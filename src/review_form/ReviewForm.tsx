@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import style from "./ReviewForm.module.css";
 import { ImageUp, Star } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+// // @ts-expect-error
+// const Rating = require("react-rating");
 import Rating from "react-rating";
 import * as Interfaces from "./interfaces/Interface";
-import axios from "axios";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
@@ -148,7 +149,7 @@ const ReviewForm = () => {
               <Rating
                 initialRating={rating}
                 fractions={2}
-                onChange={(value) => setRating(value)}
+                onChange={(value: number) => setRating(value)}
                 emptySymbol={<Star size={32} color="#e0e0e0" fill="none" />}
                 fullSymbol={<Star size={32} color="#ffc700" fill="#ffc700" />}
               />
