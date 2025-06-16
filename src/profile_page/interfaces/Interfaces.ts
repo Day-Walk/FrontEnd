@@ -13,6 +13,7 @@ export interface Course {
   courseLike: number;
   placeList: Place[];
   like: boolean;
+  visible: boolean;
 }
 
 export interface Place {

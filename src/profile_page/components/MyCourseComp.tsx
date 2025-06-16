@@ -15,7 +15,7 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsOpen(course?.visible);
+    setIsOpen(course?.visible || true);
   }, []);
 
   const handleToggleVisibility = async () => {
