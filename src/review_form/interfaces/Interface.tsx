@@ -22,9 +22,9 @@ export const dummyPlaceTagResponse: PlaceTagResponse = {
   message: "장소 태그 조회 성공!",
   placeInfo: {
     placeId: "11111111-1111-1111-1111-111111111111",
-    placeName: "배불러 음식점",
-    categoryName: "음식점",
-    subCategoryName: "한식",
+    placeName: "잘못된 접근입니다.",
+    categoryName: "예시",
+    subCategoryName: "예시",
     tagList: [
       { tagId: "1", fullName: "깨끗하다" },
       { tagId: "2", fullName: "맛있다" },
