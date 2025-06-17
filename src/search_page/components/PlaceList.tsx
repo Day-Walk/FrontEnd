@@ -38,7 +38,7 @@ const RecommendedList: React.FC<Props> = ({
             </div>
             <div className={style.address}>
               <MapPin size={14} />
-              {p.address}
+              {p.address?.split(" ").slice(0, 2).join(" ")}
             </div>
             <div className={style.placeCategory}>
               <div className={style.category}>{p.subCategory}</div>
