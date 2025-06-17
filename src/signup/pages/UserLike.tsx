@@ -3,6 +3,7 @@ import styles from "../Signup.module.css";
 import { Check } from "lucide-react";
 import { api } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 type TagInfoProps = {
   checked: boolean;
@@ -60,6 +61,8 @@ const UserLike = () => {
   const tagList = data.map((category) => category.tagList);
   const [selected, setSelected] = useState<number[]>([]);
   const [selectedTagList, setSelectedTagList] = useState<SelectedTagList[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleClickCategory = (index: number) => {
     setSelected((prev) => {
@@ -76,7 +79,8 @@ const UserLike = () => {
         return prev.filter((item) => item !== index);
       } else {
         if (prev.length >= 3) {
-          alert("카테고리는 최대 3개까지만 선택이 가능합니다.");
+          setShowModal(true);
+          setMessage("카테고리는 최대 3개까지만 선택이 가능합니다.");
           return prev;
         } else return [...prev, index];
       }
@@ -84,17 +88,27 @@ const UserLike = () => {
   };
 
   const handleClickTag = (categoryId: string, tagId: string) => {
+    let exceeded = false;
+
     setSelectedTagList((prev) => {
       const existing = prev.find((item) => item.categoryId === categoryId);
 
       if (existing) {
-        const updatedTagList = existing.tagList.includes(tagId)
-          ? existing.tagList.filter((tag) => tag !== tagId)
-          : existing.tagList.length < 5
-            ? [...existing.tagList, tagId]
-            : (alert("태그는 최대 5개까지만 선택할 수 있습니다."),
-              existing.tagList);
+        let updatedTagList: string[];
 
+        if (existing.tagList.includes(tagId)) {
+          // 태그 해제
+          updatedTagList = existing.tagList.filter((tag) => tag !== tagId);
+        } else if (existing.tagList.length < 5) {
+          // 새 태그 추가
+          updatedTagList = [...existing.tagList, tagId];
+        } else {
+          // 태그 5개 초과 시
+          exceeded = true;
+          return prev; // 상태 변경 없음
+        }
+
+        // 태그 모두 제거 시 해당 카테고리 제거
         if (updatedTagList.length === 0) {
           return prev.filter((item) => item.categoryId !== categoryId);
         }
@@ -105,9 +119,16 @@ const UserLike = () => {
             : item,
         );
       } else {
+        // 새로운 카테고리 추가
         return [...prev, { categoryId, tagList: [tagId] }];
       }
     });
+
+    // 모달 실행
+    if (exceeded) {
+      setShowModal(true);
+      setMessage("태그는 최대 5개까지만 선택할 수 있습니다.");
+    }
   };
 
   const isFinished = () => {
@@ -216,6 +237,9 @@ const UserLike = () => {
           완료 !
         </button>
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

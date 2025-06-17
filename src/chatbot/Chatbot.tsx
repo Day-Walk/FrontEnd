@@ -7,8 +7,11 @@ import { MainButton } from "./components/Buttons";
 import { Modal } from "@mui/material";
 import AddCourseModal from "./components/AddCourseModal";
 import ChatBot from "../assets/ChatBot.png";
+import AlertModal from "../global_components/AlertModal/AlertModal";
 
 const Chatbot = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
   const placeholderText =
     "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
 
@@ -89,7 +92,8 @@ const Chatbot = () => {
   const [value, setValue] = useState<string>("");
   const handleClickSendBtn = () => {
     if (value.trim() === "") {
-      alert("메시지를 입력해주세요.");
+      setShowModal(true);
+      setMessage("메시지를 입력해주세요.");
       return;
     }
     // todo : api 호출
@@ -164,6 +168,9 @@ const Chatbot = () => {
           setSelectedMarker={setSelectedMarker}
         />
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </>
   );
 };

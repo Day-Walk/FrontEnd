@@ -3,6 +3,7 @@ import styles from "./Modal.module.css";
 import placeStyle from "../Chatbot.module.css";
 import { Check, MapPin, X } from "lucide-react";
 import { MainButton } from "./Buttons";
+import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 interface AddCourse {
   courseInfo: [placeInfo: any];
@@ -31,10 +32,14 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
       placeList: courseInfo,
     });
 
+    const [showModal, setShowModal] = useState(false);
+    const [message, setMessage] = useState("");
+
     const handleClickCompleteBtn = () => {
       console.log(addCourseInfo);
       if (!addCourseInfo.title.trim()) {
-        alert("코스 이름을 입력해주세요.");
+        setShowModal(true);
+        setMessage("코스 이름을 입력해주세요.");
         return;
       }
     };
@@ -119,6 +124,9 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
           </MainButton>
           <MainButton onClick={handleClickCompleteBtn}>완료</MainButton>
         </div>
+        {showModal && (
+          <AlertModal message={message} onClose={() => setShowModal(false)} />
+        )}
       </div>
     );
   },
