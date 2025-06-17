@@ -106,26 +106,26 @@ const ReviewForm = () => {
       setMessage("이미지 업로드 중 오류가 발생했습니다.");
     }
   };
+  const [onModalClose, setOnModalClose] = useState<() => void>(() => () => {});
 
   const handleSubmitReview = async () => {
     if (!rating || selectedTags.length === 0 || !content) {
       setShowModal(true);
       setMessage("별점, 태그, 리뷰 내용을 모두 입력해주세요.");
+      setOnModalClose(() => () => {}); // 아무 것도 하지 않음
       return;
     }
 
     try {
-      console.log("accessToken", token);
-      console.log("userIdState", userIdState);
       const response = await api.post(
         "/review",
         {
           userId: userIdState,
-          placeId: placeId,
+          placeId,
           tagList: selectedTags,
           stars: rating,
           imgUrl: uploadImgUrl || null,
-          content: content, // 리뷰 텍스트
+          content,
         },
         {
           headers: {
@@ -135,13 +135,14 @@ const ReviewForm = () => {
       );
 
       console.log("리뷰 등록 성공:", response.data);
-      setShowModal(true);
       setMessage("리뷰가 등록되었습니다!");
-      navigate(-1);
+      setShowModal(true);
+      setOnModalClose(() => () => navigate(-1)); // 모달 닫힐 때 뒤로가기
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
-      setShowModal(true);
       setMessage("리뷰 등록 중 오류가 발생했습니다.");
+      setShowModal(true);
+      setOnModalClose(() => () => {}); // 아무 동작 없음
     }
   };
 
@@ -243,7 +244,13 @@ const ReviewForm = () => {
         </div>
       </div>
       {showModal && (
-        <AlertModal message={message} onClose={() => setShowModal(false)} />
+        <AlertModal
+          message={message}
+          onClose={() => {
+            setShowModal(false);
+            onModalClose(); // navigate(-1) 실행
+          }}
+        />
       )}
     </div>
   );
