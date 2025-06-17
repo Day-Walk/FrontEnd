@@ -1,9 +1,10 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userId, userName } from "../../../recoil/userInfo";
 import style from "../../Profile.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { api } from "../../../utils/api";
+import AlertModal from "../../../global_components/AlertModal/AlertModal";
 
 interface Props {
   onClose: () => void;
@@ -14,6 +15,8 @@ const EditNameModal = ({ onClose }: Props) => {
   const [newName, setNewName] = useState(userNameState); // 로컬 상태로 복사
   const token = localStorage.getItem("accessToken");
   const userIdState = useRecoilValue(userId);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async () => {
     if (newName.trim()) {
@@ -32,12 +35,17 @@ const EditNameModal = ({ onClose }: Props) => {
             },
           },
         );
-
+        setShowModal(true);
+        setMessage("닉네임 변경 완료!");
         setUserNameState(nameTrim);
         localStorage.setItem("userName", nameTrim);
-        onClose();
+        setTimeout(() => {
+          setShowModal(false);
+          onClose();
+        }, 700);
       } catch (error) {
-        alert("name error");
+        setShowModal(true);
+        setMessage("닉네임 변경 중 오류가 발생했습니다.");
         console.log(error);
       }
     }
@@ -74,6 +82,9 @@ const EditNameModal = ({ onClose }: Props) => {
           </button>
         </div>
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

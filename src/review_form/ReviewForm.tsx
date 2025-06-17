@@ -9,12 +9,17 @@ import * as Interfaces from "./interfaces/Interface";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
+import AlertModal from "../global_components/AlertModal/AlertModal";
 
 const ReviewForm = () => {
   const { placeId } = useParams();
   // const placeId = "15741ea9-bea3-48e5-a1e0-f678774c4b91";
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
+
   if (!placeId) {
-    alert("잘못된 접근입니다. 장소 ID가 없습니다.");
+    setShowModal(true);
+    setMessage("잘못된 접근입니다. 장소 ID가 없습니다.");
   }
   const userIdState = useRecoilValue(userId);
   const [rating, setRating] = useState(5);
@@ -70,13 +75,15 @@ const ReviewForm = () => {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (!files || files.length === 0) {
-      alert("파일을 선택해주세요.");
+      setShowModal(true);
+      setMessage("파일을 선택해주세요.");
       return;
     }
 
     const file = files[0];
     if (file.type !== "image/png" && file.type !== "image/jpeg") {
-      alert("JPG / JPEG / PNG 형식의 파일 업로드만 가능합니다.");
+      setShowModal(true);
+      setMessage("JPG / JPEG / PNG 형식의 파일 업로드만 가능합니다.");
       return;
     }
 
@@ -95,13 +102,15 @@ const ReviewForm = () => {
       setUploadImgUrl(imageUrl);
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
-      alert("이미지 업로드 중 오류가 발생했습니다.");
+      setShowModal(true);
+      setMessage("이미지 업로드 중 오류가 발생했습니다.");
     }
   };
 
   const handleSubmitReview = async () => {
     if (!rating || selectedTags.length === 0 || !content) {
-      alert("별점, 태그, 리뷰 내용을 모두 입력해주세요.");
+      setShowModal(true);
+      setMessage("별점, 태그, 리뷰 내용을 모두 입력해주세요.");
       return;
     }
 
@@ -126,11 +135,13 @@ const ReviewForm = () => {
       );
 
       console.log("리뷰 등록 성공:", response.data);
-      alert("리뷰가 등록되었습니다!");
+      setShowModal(true);
+      setMessage("리뷰가 등록되었습니다!");
       navigate(-1);
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
-      alert("리뷰 등록 중 오류가 발생했습니다.");
+      setShowModal(true);
+      setMessage("리뷰 등록 중 오류가 발생했습니다.");
     }
   };
 
@@ -231,6 +242,9 @@ const ReviewForm = () => {
           </button>
         </div>
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

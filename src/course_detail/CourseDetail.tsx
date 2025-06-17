@@ -11,6 +11,7 @@ import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import NoImage from "../assets/NoImage.png";
+import AlertModal from "../global_components/AlertModal/AlertModal";
 declare global {
   interface Window {
     kakao: any;
@@ -31,6 +32,8 @@ const CourseDetail = () => {
   const token = localStorage.getItem("accessToken");
   const userIdState = useRecoilValue(userId);
   const [like, setLike] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
     setSelectedPlaceId(p.placeId);
@@ -144,11 +147,13 @@ const CourseDetail = () => {
           data: body,
         });
       }
-      alert("찜 리스트에 추가 완료!");
+      setMessage("코스 찜 리스트에 추가 완료!");
+      setShowModal(true);
       setLike(!like);
     } catch (error) {
+      setMessage("좋아요 처리 중 오류가 발생했습니다.");
       console.error("좋아요 처리 실패:", error);
-      alert("좋아요 처리 중 오류가 발생했습니다.");
+      setShowModal(true);
     }
   };
 
@@ -234,6 +239,9 @@ const CourseDetail = () => {
           />
         )}
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

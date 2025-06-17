@@ -4,6 +4,7 @@ import style from "../../Profile.module.css";
 import { useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { api } from "../../../utils/api";
+import AlertModal from "../../../global_components/AlertModal/AlertModal";
 
 interface Props {
   onClose: () => void;
@@ -20,6 +21,8 @@ const EditCourseModal = ({
 }: Props) => {
   const [newTitle, setNewTitle] = useState<string>(courseTitle); // 로컬 상태로 복사
   const token = localStorage.getItem("accessToken");
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async () => {
     if (newTitle.trim()) {
@@ -40,8 +43,11 @@ const EditCourseModal = ({
         );
         onUpdateTitle(titleTrim);
         onClose();
+        setShowModal(true);
+        setMessage("코스 이름 변경 완료!");
       } catch (error) {
-        alert("title error");
+        setShowModal(true);
+        setMessage("코스 이름 변경 중 오류가 발생했습니다.");
         console.log(error);
       }
     }
@@ -78,6 +84,9 @@ const EditCourseModal = ({
           </button>
         </div>
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import NoImage from "../../assets/NoImage.png";
+import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 const Course = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
@@ -16,6 +17,8 @@ const Course = (nowCourse: Interfaces.Course) => {
   const navigate = useNavigate();
   const userIdState = useRecoilValue(userId);
   const token = localStorage.getItem("accessToken");
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     setLike(course?.like || false);
@@ -43,6 +46,7 @@ const Course = (nowCourse: Interfaces.Course) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        setMessage("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/course-like", {
@@ -51,12 +55,14 @@ const Course = (nowCourse: Interfaces.Course) => {
           },
           data: body,
         });
+        setMessage("코스 찜이 취소되었습니다.");
       }
-
+      setShowModal(true);
       setLike(!like);
     } catch (error) {
       console.error("좋아요 처리 실패:", error);
-      alert("좋아요 처리 중 오류가 발생했습니다.");
+      setMessage("좋아요 처리 중 오류가 발생했습니다.");
+      setShowModal(true);
     }
   };
 
@@ -108,6 +114,9 @@ const Course = (nowCourse: Interfaces.Course) => {
           </div>
         ))}
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

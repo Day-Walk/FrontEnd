@@ -7,12 +7,15 @@ import NoImage from "../../assets/NoImage.png";
 import { api } from "../../utils/api";
 import EditCourseModal from "./Modals/EditCourseModal";
 import { useNavigate } from "react-router-dom";
+import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const token = localStorage.getItem("accessToken");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     setIsOpen(course?.visible || true);
@@ -32,9 +35,12 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
         },
       );
       setIsOpen(!isOpen);
+      setShowModal(true);
+      setMessage("코스 공개설정 변경 완료!");
     } catch (error) {
-      console.error("공개 설정 변경 실패:", error);
-      alert("공개 설정 변경 중 오류가 발생했습니다.");
+      console.error("공개설정 변경 실패:", error);
+      setShowModal(true);
+      setMessage("코스 공개설정 변경 중 오류가 발생했습니다.");
     }
   };
 
@@ -109,6 +115,9 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
           </div>
         ))}
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };

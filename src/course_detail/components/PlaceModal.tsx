@@ -11,6 +11,7 @@ import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getPlaceUrl } from "./getPlaceUrl";
+import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 const PlaceModal = ({
   placeId,
@@ -33,6 +34,8 @@ const PlaceModal = ({
   const token = localStorage.getItem("accessToken");
   const currentUserId = useRecoilValue(userId);
   const [like, setLike] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -60,7 +63,8 @@ const PlaceModal = ({
         console.log(data.data);
       } catch (e) {
         console.log(e);
-        alert("장소 상세조회 실패");
+        setShowModal(true);
+        setMessage("장소 상세 조회 중 오류가 발생했습니다.");
       }
     };
     const getReview = async () => {
@@ -75,7 +79,8 @@ const PlaceModal = ({
         // console.log(data.data);
       } catch (e) {
         console.log(e);
-        alert("장소 리뷰 조회 실패");
+        setShowModal(true);
+        setMessage("장소 리뷰 조회 중 오류가 발생했습니다.");
       }
     };
     const getReviewTotal = async () => {
@@ -89,7 +94,8 @@ const PlaceModal = ({
         // console.log("***", data.data);
       } catch (e) {
         console.log(e);
-        alert("리뷰 통계 조회 실패");
+        setShowModal(true);
+        setMessage("리뷰 통계 조회 중 오류가 발생했습니다.");
       }
     };
     getPlace();
@@ -123,6 +129,7 @@ const PlaceModal = ({
             Authorization: `Bearer ${token}`,
           },
         });
+        setMessage("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/place-like", {
@@ -131,12 +138,14 @@ const PlaceModal = ({
           },
           data: body,
         });
+        setMessage("코스 찜이 취소되었습니다.");
       }
-      alert("찜 리스트에 추가 완료!");
+      setShowModal(true);
       setLike(!like);
     } catch (error) {
+      setMessage("좋아요 처리 중 오류가 발생했습니다.");
+      setShowModal(true);
       console.error("좋아요 처리 실패:", error);
-      alert("좋아요 처리 중 오류가 발생했습니다.");
     }
   };
 
@@ -415,6 +424,9 @@ const PlaceModal = ({
           </button>
         )}
       </div>
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };
