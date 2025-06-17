@@ -35,7 +35,9 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
       });
       setShowModal(true);
       setMessage("리뷰 삭제 완료!");
-      if (review?.reviewId) onDelete(review.reviewId);
+      setTimeout(() => {
+        if (review?.reviewId) onDelete(review.reviewId);
+      }, 700);
     } catch (error) {
       console.error("리뷰 삭제 실패:", error);
       setShowModal(true);
@@ -45,8 +47,8 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
 
   return (
     <div>
-      <div onClick={handleSelectPlace} className={style.reviewBlock}>
-        <div className={style.reviewTop}>
+      <div className={style.reviewBlock}>
+        <div onClick={handleSelectPlace} className={style.reviewTop}>
           <div className={style.reviewImg}>
             {review?.imgUrl ? (
               <img src={review?.imgUrl} alt="img" className={style.reviewImg} />
@@ -56,7 +58,9 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
           </div>
           <div className={style.reviewInfo}>
             <div className={style.rPlace}>{review?.placeName}</div>
-            <div className={style.rDate}>작성일 : {review?.createAt}</div>
+            <div className={style.rDate}>
+              작성일 : {review?.createAt.split("T")[0]}
+            </div>
             <div className={style.rAddress}>
               <MapPin size={14} />
               {review?.address.split(" ").slice(0, 2).join(" ")}
@@ -69,7 +73,7 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
           </div>
         </div>
         <div className={style.reviewBottom}>
-          <div className={style.reviewTagList}>
+          <div onClick={handleSelectPlace} className={style.reviewTagList}>
             {review?.tagList.map((tag, index) => (
               <span key={index} className={style.tag}>
                 {tag}
