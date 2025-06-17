@@ -17,7 +17,7 @@ const SearchBox = ({ onSearch }: Props) => {
     <div className={style.searchWrapper}>
       <input
         type="text"
-        placeholder="지역과 장소를 검색해주세요 (ex - 홍대 맛집)"
+        placeholder="지역과 장소를 검색해주세요 (ex - 홍대)"
         className={style.searchInput}
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
