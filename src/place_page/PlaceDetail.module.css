@@ -8,8 +8,20 @@
   position: relative;
 }
 
+@keyframes boing {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
 .mapMarker {
-  width: 40px;
+  width: 32px;
   aspect-ratio: 1/1;
   background-color: var(--color-main);
   border-radius: 999px;
@@ -19,6 +31,7 @@
   justify-content: center;
   color: #fff;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   z-index: 10;
+  animation: boing 1s ease-in-out infinite;
 }
