@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Chatbot.module.css";
 import ChatMessage from "./components/ChatMessage";
 import UserMessage from "./components/UserMessage";
@@ -43,6 +43,17 @@ const Chatbot = () => {
 
   const [event, setEvent] = useState<EventSourcePolyfill | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const hanldePressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+
+      setTimeout(() => {
+        handleClickSendBtn();
+        inputRef.current?.blur();
+      }, 0);
+    }
+  };
 
   const handleClickSendBtn = async () => {
     if (value.trim() === "") {
@@ -193,6 +204,7 @@ const Chatbot = () => {
               ref={inputRef}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              onKeyDown={hanldePressEnter}
             />
             <MainButton onClick={handleClickSendBtn} paddingY={10}>
               전송
