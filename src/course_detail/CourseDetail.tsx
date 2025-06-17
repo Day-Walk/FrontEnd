@@ -223,7 +223,9 @@ const CourseDetail = () => {
                       </div>
                     </div>
                     <div className={style.placeName}>{p.placeName}</div>
-                    <div className={style.address}>{p.address}</div>
+                    <div className={style.address}>
+                      {p.address?.split(" ").slice(0, 2).join(" ")}
+                    </div>
                   </div>
                 </div>
               );
