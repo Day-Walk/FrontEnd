@@ -5,12 +5,18 @@ import { MainButton } from "./Buttons";
 import ChatBot from "../../assets/ChatBot.png";
 
 interface ChatMessageProps {
-  message: any;
+  message: MessageType;
   selectedMarker: { lat: number; lng: number } | null;
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
   handleModalOpen: () => void;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
 }
+
+type MessageType = {
+  title: string;
+  placeList: any[];
+  detail: string;
+};
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
   message,
@@ -38,9 +44,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       />
       {/* <BotMessageSquare size={40} color="#00B493" strokeWidth={2} /> */}
       <div className={`${styles.message} ${styles.chat_message}`}>
-        <div>{message.header}</div>
+        <div>{message.title}</div>
         <div className={styles.place_wrapper}>
-          {message?.placeList.map((place: any, idx: number) => (
+          {message?.placeList?.map((place: any, idx: number) => (
             <div
               onClick={() => setSelectedMarker(place.location)}
               key={place.placeId}
@@ -67,20 +73,21 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             </div>
           ))}
         </div>
-        {message.footer && toggleDetail ? (
-          <>
+        {message.detail &&
+          (toggleDetail ? (
+            <>
+              <div className={styles.toggle} onClick={handleToggleDetail}>
+                <ChevronUp size={20} />
+                코스 설명 접기
+              </div>
+              <div>{message.detail}</div>
+            </>
+          ) : (
             <div className={styles.toggle} onClick={handleToggleDetail}>
-              <ChevronUp size={20} />
-              코스 설명 접기
+              <ChevronDown size={20} />
+              코스 설명 더보기
             </div>
-            <div>{message.footer}</div>
-          </>
-        ) : (
-          <div className={styles.toggle} onClick={handleToggleDetail}>
-            <ChevronDown size={20} />
-            코스 설명 더보기
-          </div>
-        )}
+          ))}
 
         <div className={styles.button_wrapper}>
           <MainButton
