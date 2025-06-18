@@ -8,6 +8,10 @@ import { Modal } from "@mui/material";
 import AddCourseModal from "./components/AddCourseModal";
 import ChatBot from "../assets/ChatBot.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
+import { useRecoilValue } from "recoil";
+import { userId } from "../recoil/userInfo";
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { api } from "../utils/api";
 
 const Chatbot = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,92 +19,16 @@ const Chatbot = () => {
   const placeholderText =
     "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
 
-  const [chatLog, setChatLog] = useState<any[]>([
-    // {
-    //   isUser: true,
-    //   message:
-    //     "비오는날인데 데이트해야돼 어디로 놀러갈 지 추천 해줘 강남 주변이면 좋겠어!",
-    // },
-    // {
-    //   isUser: false,
-    //   message: {
-    //     header: "추천 장소 리스트",
-    //     footer: "Powered by ChatGPT",
-    //     placeList: [
-    //       {
-    //         placeId: "12345678-1234-5678-1234-123456789123",
-    //         imgUrl: "https://picsum.photos/200",
-    //         name: "공화춘",
-    //         address: "서울시 중구 충정로 1가 123-45",
-    //         category: "음식점",
-    //         subCategory: "중식",
-    //         stars: 4.8,
-    //         location: { lat: 37.5714, lng: 126.9769 },
-    //       },
-    //       {
-    //         placeId: "22345678-1234-5678-1234-123456789124",
-    //         imgUrl: "https://picsum.photos/200",
-    //         name: "이태원 브루어리",
-    //         address: "서울시 용산구 이태원로 88",
-    //         category: "술집",
-    //         subCategory: "맥주집",
-    //         stars: 4.5,
-    //         location: { lat: 37.572, lng: 126.9802 },
-    //       },
-    //       {
-    //         placeId: "32345678-1234-5678-1234-123456789125",
-    //         imgUrl: "https://picsum.photos/200",
-    //         name: "스윗카페",
-    //         address: "서울시 강남구 역삼로 22",
-    //         category: "카페",
-    //         subCategory: "디저트카페",
-    //         stars: 4.2,
-    //         location: { lat: 37.5698, lng: 126.9827 },
-    //       },
-    //       {
-    //         placeId: "42345678-1234-5678-1234-123456789126",
-    //         imgUrl: "https://picsum.photos/200",
-    //         name: "피자굽는남자",
-    //         address: "서울시 마포구 합정동 123",
-    //         category: "음식점",
-    //         subCategory: "양식",
-    //         stars: 4.6,
-    //         location: { lat: 37.5733, lng: 126.9812 },
-    //       },
-    //       {
-    //         placeId: "52345678-1234-5678-1234-123456789127",
-    //         imgUrl: "https://picsum.photos/200",
-    //         name: "해피마사지",
-    //         address: "서울시 송파구 가락동 456",
-    //         category: "서비스",
-    //         subCategory: "마사지",
-    //         stars: 4.9,
-    //         location: { lat: 37.5718, lng: 126.9785 },
-    //       },
-    //     ],
-    //   },
-    // },
-  ]);
+  const [chatLog, setChatLog] = useState<any[]>([]);
 
-  // const mapInfo = chatLog[1].message.placeList.map(
-  //   (place: any) => place.location,
-  // );
   const mapInfo =
     chatLog.length > 1 && chatLog[1].message?.placeList
       ? chatLog[1].message.placeList.map((place: any) => place.location)
       : [];
   const [value, setValue] = useState<string>("");
-  const handleClickSendBtn = () => {
-    if (value.trim() === "") {
-      setShowModal(true);
-      setMessage("메시지를 입력해주세요.");
-      return;
-    }
-    // todo : api 호출
-    console.log(value);
-    setChatLog((prev) => [...prev, { isUser: true, message: value }]);
-    setValue("");
-  };
+  const userIdState = useRecoilValue(userId);
+  const token = localStorage.getItem("accessToken");
+
   const [selectedMarker, setSelectedMarker] = useState<{
     lat: number;
     lng: number;
@@ -113,6 +41,131 @@ const Chatbot = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
+  const [event, setEvent] = useState<EventSourcePolyfill | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const hanldePressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+
+      setTimeout(() => {
+        handleClickSendBtn();
+        inputRef.current?.blur();
+      }, 0);
+    }
+  };
+
+  const handleClickSendBtn = async () => {
+    if (loading) return;
+    if (value.trim() === "") {
+      setShowModal(true);
+      setMessage("메시지를 입력해주세요.");
+      return;
+    }
+
+    if (event) {
+      event.close();
+      setEvent(null);
+    }
+
+    setLoading(true);
+
+    try {
+      await connectSSE();
+      await sendChat();
+    } catch (error) {
+      console.error("SSE 연결 또는 채팅 전송 중 오류 발생:", error);
+      setShowModal(true);
+      setMessage("채팅 전송 중 오류가 발생했습니다. 다시 시도해주세요.");
+      setLoading(false);
+    }
+  };
+  const connectSSE = (): Promise<EventSourcePolyfill> => {
+    return new Promise((resolve, reject) => {
+      const EventSource = EventSourcePolyfill || NativeEventSource;
+      const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+      const newEventSource = new EventSource(
+        `${SERVER_URL}/api/chat/connect?userId=${userIdState}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      newEventSource.onopen = () => {
+        console.log("SSE 연결 완료");
+        setEvent(newEventSource);
+        resolve(newEventSource);
+      };
+
+      newEventSource.onmessage = (e: any) => {
+        console.log("메시지 : ", e.data);
+      };
+
+      newEventSource.addEventListener("chatbot", (e: any) => {
+        try {
+          if (e.data !== "[DONE]") {
+            const parsed = JSON.parse(e.data);
+            console.log("chatbot 이벤트 수신:", parsed, e);
+
+            setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
+          }
+
+          newEventSource.close();
+          setEvent(null);
+        } catch (error) {
+          setChatLog((prev) => [
+            ...prev,
+            {
+              isUser: false,
+              message: {
+                title:
+                  "오류가 발생했습니다. 잠시 후에 다시 이용해주세요. 서비스 이용에 불편을 드려 죄송합니다.",
+              },
+              error: true,
+            },
+          ]);
+          console.error("chatbot 이벤트 파싱 실패", error);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      newEventSource.onerror = (err: any) => {
+        console.error("SSE 연결 에러:", err);
+
+        reject(err);
+        setLoading(false);
+      };
+    });
+  };
+
+  const sendChat = async () => {
+    try {
+      const res = await api.get("/chat", {
+        params: {
+          userId: userIdState,
+          question: value,
+        },
+      });
+
+      console.log(res.data);
+
+      setChatLog((prev) => [...prev, { isUser: true, message: value }]);
+      setValue("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [chatLog, loading]);
+
   return (
     <>
       <Modal open={open} onClose={handleClose}>
@@ -121,7 +174,21 @@ const Chatbot = () => {
           handleClose={handleClose}
         />
       </Modal>
+
       <div className={styles.chatbot_container}>
+        {loading && (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: 20,
+            }}
+          ></div>
+        )}
         <div className={styles.chat_wrapper}>
           {chatLog.length === 0 ? (
             <div className={styles.empty_chat}>
@@ -144,6 +211,7 @@ const Chatbot = () => {
                   />
                 ),
               )}
+              <div ref={contentRef} />
             </div>
           )}
 
@@ -158,8 +226,11 @@ const Chatbot = () => {
               ref={inputRef}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              onKeyDown={hanldePressEnter}
             />
-            <MainButton paddingY={10}>전송</MainButton>
+            <MainButton onClick={handleClickSendBtn} paddingY={10}>
+              전송
+            </MainButton>
           </div>
         </div>
         <ChatbotMap

@@ -7,12 +7,7 @@ interface UserMessageProps {
 
 const UserMessage: React.FC<UserMessageProps> = ({ message }) => {
   return (
-    <div
-      className={`${styles.message} ${styles.user_message}`}
-      // style={index === 0 ? { marginTop: "20px" } : {}}
-    >
-      {message}
-    </div>
+    <div className={`${styles.message} ${styles.user_message}`}>{message}</div>
   );
 };
 

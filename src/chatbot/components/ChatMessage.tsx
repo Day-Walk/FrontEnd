@@ -5,12 +5,19 @@ import { MainButton } from "./Buttons";
 import ChatBot from "../../assets/ChatBot.png";
 
 interface ChatMessageProps {
-  message: any;
+  message: MessageType;
   selectedMarker: { lat: number; lng: number } | null;
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
   handleModalOpen: () => void;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
 }
+
+type MessageType = {
+  title: string;
+  placeList?: any[];
+  detail?: string;
+  error?: boolean;
+};
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
   message,
@@ -29,18 +36,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     inputRef.current?.focus();
   };
   return (
-    <div>
-      <img
-        src={ChatBot}
-        alt="Chatbot"
-        className={styles.chatbot_image}
-        style={{ width: "60px" }}
-      />
-      {/* <BotMessageSquare size={40} color="#00B493" strokeWidth={2} /> */}
-      <div className={`${styles.message} ${styles.chat_message}`}>
-        <div>{message.header}</div>
+    <div className={`${styles.message} ${styles.chat_message}`}>
+      <img src={ChatBot} alt="Chatbot" className={styles.chatbot_image} />
+      <div>{message.title}</div>
+      {message.placeList && message.placeList.length > 0 && (
         <div className={styles.place_wrapper}>
-          {message?.placeList.map((place: any, idx: number) => (
+          {message?.placeList?.map((place: any, idx: number) => (
             <div
               onClick={() => setSelectedMarker(place.location)}
               key={place.placeId}
@@ -67,21 +68,24 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             </div>
           ))}
         </div>
-        {message.footer && toggleDetail ? (
+      )}
+      {message.detail &&
+        (toggleDetail ? (
           <>
             <div className={styles.toggle} onClick={handleToggleDetail}>
               <ChevronUp size={20} />
               코스 설명 접기
             </div>
-            <div>{message.footer}</div>
+            <div>{message.detail}</div>
           </>
         ) : (
           <div className={styles.toggle} onClick={handleToggleDetail}>
             <ChevronDown size={20} />
             코스 설명 더보기
           </div>
-        )}
+        ))}
 
+      {message.error && (
         <div className={styles.button_wrapper}>
           <MainButton
             fontSize={14}
@@ -103,7 +107,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             지도에 표시하기
           </MainButton>
         </div>
-      </div>
+      )}
     </div>
   );
 };
