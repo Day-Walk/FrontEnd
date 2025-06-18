@@ -49,80 +49,32 @@ const Chatbot = () => {
   const clickRef = useRef(false);
   const [loading, setLoading] = useState(false);
 
-  const handleClickSendBtn = async () => {
-    if (clickRef.current || loading) return;
-    clickRef.current = true;
-    setLoading(true);
-
-    if (value.trim() === "") {
-      setShowModal(true);
-      setMessage("메시지를 입력해주세요.");
-      clickRef.current = false;
-      setLoading(false);
-      return;
-    }
-
-    if (event) {
-      event.close();
-      setEvent(null);
-    }
-
-    setLoading(true);
-
-    try {
-      await connectSSE();
-      await sendChat();
-    } catch (error) {
-      console.error("SSE 연결 또는 채팅 전송 중 오류 발생:", error);
-      setShowModal(true);
-      setMessage("채팅 전송 중 오류가 발생했습니다. 다시 시도해주세요.");
-      setLoading(false);
-    }
-  };
-
-  const hanldePressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleClickSendBtn();
-      inputRef.current?.blur();
-    }
-  };
-
-  const connectSSE = (): Promise<EventSourcePolyfill> => {
+  const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       const EventSource = EventSourcePolyfill || NativeEventSource;
       const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-
       const newEventSource = new EventSource(
         `${SERVER_URL}/api/chat/connect?userId=${userIdState}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
 
       newEventSource.onopen = () => {
         console.log("SSE 연결 완료");
-        setEvent(newEventSource);
-        resolve(newEventSource);
-      };
-
-      newEventSource.onmessage = (e: any) => {
-        console.log("메시지 : ", e.data);
       };
 
       newEventSource.addEventListener("chatbot", (e: any) => {
-        try {
-          if (e.data !== "[DONE]") {
-            const parsed = JSON.parse(e.data);
-            console.log("chatbot 이벤트 수신:", parsed, e);
-
-            setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
-          }
-
+        if (e.data === "[DONE]") {
           newEventSource.close();
-          setEvent(null);
+          resolve();
+          return;
+        }
+
+        try {
+          const parsed = JSON.parse(e.data);
+          console.log("chatbot 이벤트 수신:", parsed);
+          setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
         } catch (error) {
           setChatLog((prev) => [
             ...prev,
@@ -136,21 +88,20 @@ const Chatbot = () => {
             },
           ]);
           console.error("chatbot 이벤트 파싱 실패", error);
-        } finally {
-          setLoading(false);
+          newEventSource.close();
+          reject(error);
         }
       });
 
       newEventSource.onerror = (err: any) => {
         console.error("SSE 연결 에러:", err);
-
+        newEventSource.close();
         reject(err);
-        setLoading(false);
       };
     });
   };
 
-  const sendChat = async () => {
+  const getChat = async () => {
     try {
       const res = await api.get("/chat", {
         params: {
@@ -165,7 +116,56 @@ const Chatbot = () => {
       setValue("");
     } catch (error) {
       console.error(error);
+      setShowModal(true);
+      setMessage("메시지 전송 중 오류가 발생했습니다.");
     }
+  };
+
+  const sendChat = async () => {
+    if (clickRef.current || loading) return;
+    if (value.trim() === "") {
+      setShowModal(true);
+      setMessage("메시지를 입력해주세요.");
+      return;
+    }
+
+    clickRef.current = true;
+    setLoading(true);
+
+    try {
+      await connectSSE();
+      await getChat();
+    } catch (error) {
+      setChatLog((prev) => [
+        ...prev,
+        {
+          isUser: false,
+          message: {
+            title: "오류가 발생했습니다. 잠시 후에 다시 이용해주세요.",
+          },
+          error: true,
+        },
+      ]);
+
+      console.error("sendChat 실패", error);
+    } finally {
+      clickRef.current = false;
+      setLoading(false);
+    }
+  };
+
+  const handlePressEnter = async (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      await sendChat();
+    }
+  };
+
+  const handleClickSendBtn = async () => {
+    console.log("click");
+    await sendChat();
   };
 
   useEffect(() => {
@@ -234,7 +234,7 @@ const Chatbot = () => {
               ref={inputRef}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              onKeyDown={hanldePressEnter}
+              onKeyDown={handlePressEnter}
             />
             <MainButton
               onClick={handleClickSendBtn}
