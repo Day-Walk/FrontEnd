@@ -19,7 +19,44 @@ const Chatbot = () => {
   const placeholderText =
     "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
 
-  const [chatLog, setChatLog] = useState<any[]>([]);
+  // const [chatLog, setChatLog] = useState<any[]>([]);
+  const [chatLog, setChatLog] = useState<any[]>([
+    {
+      message: {
+        title:
+          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
+      },
+      isUser: false,
+    },
+    {
+      message: {
+        title:
+          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
+      },
+      isUser: false,
+    },
+    {
+      message: {
+        title:
+          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
+      },
+      isUser: false,
+    },
+    {
+      message: {
+        title:
+          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
+      },
+      isUser: false,
+    },
+    {
+      message: {
+        title:
+          "aaaaaaaaasasassssssjfa;siojdflaksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
+      },
+      isUser: false,
+    },
+  ]);
 
   const mapInfo =
     chatLog.length > 1 && chatLog[1].message?.placeList
@@ -44,6 +81,8 @@ const Chatbot = () => {
   const [event, setEvent] = useState<EventSourcePolyfill | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+
   const hanldePressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -56,17 +95,19 @@ const Chatbot = () => {
   };
 
   const handleClickSendBtn = async () => {
+    if (loading) return;
     if (value.trim() === "") {
       setShowModal(true);
       setMessage("메시지를 입력해주세요.");
       return;
     }
 
-    setLoading(true);
     if (event) {
       event.close();
       setEvent(null);
     }
+
+    setLoading(true);
 
     try {
       await connectSSE();
@@ -104,13 +145,25 @@ const Chatbot = () => {
 
       newEventSource.addEventListener("chatbot", (e: any) => {
         try {
-          const parsed = JSON.parse(e.data);
-          console.log("chatbot 이벤트 수신:", parsed, e);
+          if (e.data !== "[DONE]") {
+            const parsed = JSON.parse(e.data);
+            console.log("chatbot 이벤트 수신:", parsed, e);
 
-          setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
+            setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
+          }
+
           newEventSource.close();
           setEvent(null);
         } catch (error) {
+          setChatLog((prev) => [
+            ...prev,
+            {
+              isUser: false,
+              message:
+                "오류가 발생했습니다. 잠시 후에 다시 이용해주세요. 죄송합니다.",
+              error: true,
+            },
+          ]);
           console.error("chatbot 이벤트 파싱 실패", error);
         } finally {
           setLoading(false);
@@ -119,8 +172,7 @@ const Chatbot = () => {
 
       newEventSource.onerror = (err: any) => {
         console.error("SSE 연결 에러:", err);
-        newEventSource.close();
-        setEvent(null);
+
         reject(err);
         setLoading(false);
       };
@@ -144,6 +196,10 @@ const Chatbot = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [chatLog, loading]);
 
   return (
     <>
@@ -190,6 +246,7 @@ const Chatbot = () => {
                   />
                 ),
               )}
+              <div ref={contentRef} />
             </div>
           )}
 
