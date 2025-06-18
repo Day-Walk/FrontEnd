@@ -32,22 +32,15 @@ const ReviewForm = () => {
     Interfaces.dummyPlaceTagResponse.placeInfo,
   );
   const MAX_TAGS = 5;
-  const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlaceInfo = async () => {
       try {
-        console.log("accessToken", token);
         console.log("userIdState", userIdState);
         const placeResponse = await api.get<Interfaces.PlaceTagResponse>(
           `/tag/all/place?placeId=${placeId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         if (placeResponse.status === 200) {
           setPlaceInfo(placeResponse.data.placeInfo);
@@ -95,11 +88,7 @@ const ReviewForm = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await api.post("/image", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.post("/image", formData);
       console.log("***", response.data);
       const imageUrl = response.data.imageUrl;
       setImage(file);
@@ -121,22 +110,14 @@ const ReviewForm = () => {
     }
 
     try {
-      const response = await api.post(
-        "/review",
-        {
-          userId: userIdState,
-          placeId,
-          tagList: selectedTags,
-          stars: rating,
-          imgUrl: uploadImgUrl || null,
-          content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const response = await api.post("/review", {
+        userId: userIdState,
+        placeId,
+        tagList: selectedTags,
+        stars: rating,
+        imgUrl: uploadImgUrl || null,
+        content,
+      });
 
       console.log("리뷰 등록 성공:", response.data);
       setMessage("리뷰가 등록되었습니다!");

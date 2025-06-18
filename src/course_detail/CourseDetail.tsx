@@ -30,7 +30,6 @@ const CourseDetail = () => {
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.CourseDetailPlace | null>(null);
-  const token = localStorage.getItem("accessToken");
   const userIdState = useRecoilValue(userId);
   const [like, setLike] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
@@ -44,14 +43,7 @@ const CourseDetail = () => {
 
   const fetchCourseDetail = async () => {
     try {
-      const res = await api.get(
-        `/course?courseId=${id}&userId=${userIdState}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const res = await api.get(`/course?courseId=${id}&userId=${userIdState}`);
       setCourseDetail(res.data.courseInfo);
       setLoading(false);
     } catch (error) {
@@ -137,17 +129,10 @@ const CourseDetail = () => {
     try {
       if (!like) {
         // 좋아요 등록
-        await api.post("/course-like", body, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.post("/course-like", body);
       } else {
         // 좋아요 취소
         await api.delete("/course-like", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           data: body,
         });
       }

@@ -19,7 +19,6 @@ const MyReview = () => {
   // ReviewListResponse.reviewList[nowPage - 1],
 
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   const [deleted, setDeleted] = useState<string>("");
 
@@ -33,11 +32,6 @@ const MyReview = () => {
       try {
         const response = await api.get<Interfaces.ReviewListResponse>(
           `/review/all/user?userId=${userIdState}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setReviewListResponse(response.data);
         setReviewPage(response.data.reviewList[nowPage - 1]);

@@ -18,7 +18,6 @@ const MyCourse = () => {
   const [coursePage, setCoursePage] = useState<Interfaces.CoursePage>();
   // coursePagesData.courseList[nowPage - 1],
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -26,11 +25,6 @@ const MyCourse = () => {
       try {
         const response = await api.get<Interfaces.CourseListResponse>(
           `/course/all/user?userId=${userIdState}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setCoursePagesData(response.data);
         setCoursePage(response.data.courseList[nowPage - 1]);

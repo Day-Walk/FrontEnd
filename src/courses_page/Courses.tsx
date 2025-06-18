@@ -16,10 +16,9 @@ const Courses = () => {
     useState<Interfaces.CourseListResponse>();
   const navigate = useNavigate();
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
-  // if (!token || !userIdState || userIdState.length == 0 || token.length == 0) {
-  //   navigate("/login");
-  // }
+  if (!userIdState || userIdState.length == 0) {
+    navigate("/login");
+  }
   const [loading, setLoading] = useState<boolean>(true);
   const [nowPage, setNowPage] = useState<number>(1);
   const [sort, setSort] = useState<string>("like"); // like or latest
@@ -39,11 +38,6 @@ const Courses = () => {
       try {
         const response = await api.get<Interfaces.CourseListResponse>(
           `/course/all?sort=${sort}&userId=${userIdState}`,
-          // {
-          //   headers: {
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // },
         );
         setCoursePagesData(response.data);
         setCoursePage(response.data.courseList[nowPage - 1]);

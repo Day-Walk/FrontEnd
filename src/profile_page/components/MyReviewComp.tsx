@@ -16,7 +16,7 @@ interface Props {
 
 const MyReviewComp = ({ nowReview, onDelete }: Props) => {
   const [review, setReview] = useState<Interfaces.Review | null>(nowReview);
-  const token = localStorage.getItem("accessToken");
+
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -29,9 +29,6 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
     try {
       await api.delete("/review", {
         data: { reviewId: review?.reviewId },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
       setShowModal(true);
       setMessage("리뷰 삭제 완료!");

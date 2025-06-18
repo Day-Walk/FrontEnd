@@ -25,7 +25,6 @@ const LikePlace = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -33,11 +32,6 @@ const LikePlace = () => {
       try {
         const response = await api.get<Interfaces.FavoritePlaceListResponse>(
           `/place-like/user?userId=${userIdState}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         const pageList = response.data.placeList;
         setLikePlaces(pageList);

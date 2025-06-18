@@ -31,7 +31,6 @@ const PlaceModal = ({
   const [nowPage, setNowPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(true); // false = 모달을 왼쪽으로 숨김
   const [slideDirection, setSlideDirection] = useState("");
-  const token = localStorage.getItem("accessToken");
   const currentUserId = useRecoilValue(userId);
   const [like, setLike] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
@@ -51,11 +50,6 @@ const PlaceModal = ({
       try {
         const data = await api.get(
           `/place?placeId=${placeId}&userId=${currentUserId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setSelectedPlace(data.data.placeInfo);
         if (isPlaceOnly && data.data.placeInfo.location && onSelectLocation) {
@@ -73,11 +67,7 @@ const PlaceModal = ({
 
     const getReview = async () => {
       try {
-        const data = await api.get(`/review/all/place?placeId=${placeId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const data = await api.get(`/review/all/place?placeId=${placeId}`);
         setReviews(data.data);
         setReviewList(data.data.reviewList[0]);
         // console.log(data.data);
@@ -89,11 +79,7 @@ const PlaceModal = ({
     };
     const getReviewTotal = async () => {
       try {
-        const data = await api.get(`/review/all/total?placeId=${placeId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const data = await api.get(`/review/all/total?placeId=${placeId}`);
         setReviewTotal(data.data.reviewTotal);
         // console.log("***", data.data);
       } catch (e) {
@@ -128,18 +114,11 @@ const PlaceModal = ({
     try {
       if (!like) {
         // 좋아요 등록
-        await api.post("/place-like", body, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.post("/place-like", body);
         setMessage("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/place-like", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           data: body,
         });
         setMessage("코스 찜이 취소되었습니다.");
