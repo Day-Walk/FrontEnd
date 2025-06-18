@@ -19,13 +19,6 @@ const KakaoCallback = () => {
       });
       let nextPage = res.data.userInfo.nextPage;
 
-      const authHeader = res.headers["authorization"];
-      const token = authHeader.startsWith("Bearer ")
-        ? authHeader.slice(7)
-        : authHeader;
-
-      localStorage.setItem("accessToken", token);
-
       const { userId, name } = res.data.userInfo;
 
       setUserId(userId);
