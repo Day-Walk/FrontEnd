@@ -19,44 +19,7 @@ const Chatbot = () => {
   const placeholderText =
     "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
 
-  // const [chatLog, setChatLog] = useState<any[]>([]);
-  const [chatLog, setChatLog] = useState<any[]>([
-    {
-      message: {
-        title:
-          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
-      },
-      isUser: false,
-    },
-    {
-      message: {
-        title:
-          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
-      },
-      isUser: false,
-    },
-    {
-      message: {
-        title:
-          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
-      },
-      isUser: false,
-    },
-    {
-      message: {
-        title:
-          "aaaaaaaaasasassssssjfa;siojdf;laksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
-      },
-      isUser: false,
-    },
-    {
-      message: {
-        title:
-          "aaaaaaaaasasassssssjfa;siojdflaksjd;lfkaslfkaslfkaslfkaslfkaslfkaslfkas",
-      },
-      isUser: false,
-    },
-  ]);
+  const [chatLog, setChatLog] = useState<any[]>([]);
 
   const mapInfo =
     chatLog.length > 1 && chatLog[1].message?.placeList
@@ -159,8 +122,10 @@ const Chatbot = () => {
             ...prev,
             {
               isUser: false,
-              message:
-                "오류가 발생했습니다. 잠시 후에 다시 이용해주세요. 죄송합니다.",
+              message: {
+                title:
+                  "오류가 발생했습니다. 잠시 후에 다시 이용해주세요. 서비스 이용에 불편을 드려 죄송합니다.",
+              },
               error: true,
             },
           ]);

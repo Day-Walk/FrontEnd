@@ -39,7 +39,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     <div className={`${styles.message} ${styles.chat_message}`}>
       <img src={ChatBot} alt="Chatbot" className={styles.chatbot_image} />
       <div>{message.title}</div>
-      {message.placeList && (
+      {message.placeList && message.placeList.length > 0 && (
         <div className={styles.place_wrapper}>
           {message?.placeList?.map((place: any, idx: number) => (
             <div
