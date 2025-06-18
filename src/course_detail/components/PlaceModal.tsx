@@ -12,6 +12,7 @@ import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getPlaceUrl } from "./getPlaceUrl";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import { Loading1 } from "../../loading/Loading";
 
 const PlaceModal = ({
   placeId,
