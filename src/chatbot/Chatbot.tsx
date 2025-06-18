@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 import { api } from "../utils/api";
+import { Loading1 } from "../loading/Loading";
 
 const Chatbot = () => {
   const [showModal, setShowModal] = useState(false);
@@ -42,26 +43,22 @@ const Chatbot = () => {
   const [isFocused, setIsFocused] = useState(false);
 
   const [event, setEvent] = useState<EventSourcePolyfill | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
-
-  const hanldePressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-
-      setTimeout(() => {
-        handleClickSendBtn();
-        inputRef.current?.blur();
-      }, 0);
-    }
-  };
+  // 중복 요청 차단용
+  const clickRef = useRef(false);
+  const [loading, setLoading] = useState(false);
 
   const handleClickSendBtn = async () => {
-    if (loading) return;
+    if (clickRef.current || loading) return;
+    clickRef.current = true;
+    setLoading(true);
+
     if (value.trim() === "") {
       setShowModal(true);
       setMessage("메시지를 입력해주세요.");
+      clickRef.current = false;
+      setLoading(false);
       return;
     }
 
@@ -82,6 +79,15 @@ const Chatbot = () => {
       setLoading(false);
     }
   };
+
+  const hanldePressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleClickSendBtn();
+      inputRef.current?.blur();
+    }
+  };
+
   const connectSSE = (): Promise<EventSourcePolyfill> => {
     return new Promise((resolve, reject) => {
       const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -187,7 +193,9 @@ const Chatbot = () => {
               left: 0,
               zIndex: 20,
             }}
-          ></div>
+          >
+            <Loading1 />
+          </div>
         )}
         <div className={styles.chat_wrapper}>
           {chatLog.length === 0 ? (
@@ -228,7 +236,11 @@ const Chatbot = () => {
               onBlur={() => setIsFocused(false)}
               onKeyDown={hanldePressEnter}
             />
-            <MainButton onClick={handleClickSendBtn} paddingY={10}>
+            <MainButton
+              onClick={handleClickSendBtn}
+              paddingY={10}
+              disabled={loading}
+            >
               전송
             </MainButton>
           </div>
