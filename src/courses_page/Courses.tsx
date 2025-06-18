@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { Loading1 } from "../loading/Loading";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -62,6 +63,23 @@ const Courses = () => {
     setNowPage(1);
     setCoursePage(data.courseList[0]);
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseWrapper}>

@@ -9,6 +9,7 @@ import { api } from "../../utils/api";
 import NoImage from "../../assets/NoImage.png";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Loading1 } from "../../loading/Loading";
 
 const LikePlace = () => {
   const [likePlaces, setLikePlaces] = useState<Interfaces.FavoritePlacePage[]>(
@@ -65,6 +66,23 @@ const LikePlace = () => {
   const handleSelectPlace = (placeId: string) => {
     navigate(`/place/${placeId}`);
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseWrapper}>

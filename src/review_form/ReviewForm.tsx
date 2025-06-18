@@ -10,6 +10,7 @@ import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import AlertModal from "../global_components/AlertModal/AlertModal";
+import { Loading1 } from "../loading/Loading";
 
 const ReviewForm = () => {
   const { placeId } = useParams();
@@ -33,6 +34,7 @@ const ReviewForm = () => {
   const MAX_TAGS = 5;
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlaceInfo = async () => {
@@ -54,9 +56,11 @@ const ReviewForm = () => {
           console.error("장소 정보를 불러오는 데 실패했습니다.");
           console.log("placeId", placeId);
         }
+        setLoading(false);
       } catch (error) {
         console.error("장소 정보를 불러오는 중 오류 발생:", error);
         console.log("placeId", placeId);
+        setLoading(false);
       }
     };
     fetchPlaceInfo();
@@ -145,6 +149,23 @@ const ReviewForm = () => {
       setOnModalClose(() => () => {}); // 아무 동작 없음
     }
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.pageWrapper}>

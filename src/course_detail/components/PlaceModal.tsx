@@ -36,6 +36,7 @@ const PlaceModal = ({
   const [like, setLike] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -61,12 +62,15 @@ const PlaceModal = ({
           onSelectLocation(data.data.placeInfo.location);
         }
         console.log(data.data);
+        setLoading(false);
       } catch (e) {
         console.log(e);
         setShowModal(true);
         setMessage("장소 상세 조회 중 오류가 발생했습니다.");
+        setLoading(false);
       }
     };
+
     const getReview = async () => {
       try {
         const data = await api.get(`/review/all/place?placeId=${placeId}`, {
@@ -190,6 +194,24 @@ const PlaceModal = ({
   if (selectedPlace === null) {
     return <div>장소 정보를 불러오는 중...</div>;
   }
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
+
   return (
     <div
       className={

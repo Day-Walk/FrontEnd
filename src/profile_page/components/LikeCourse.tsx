@@ -7,6 +7,7 @@ import Pagination from "@mui/material/Pagination";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
+import { Loading1 } from "../../loading/Loading";
 
 const LikeCourse = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -51,6 +52,23 @@ const LikeCourse = () => {
     setNowPage(value);
     setCoursePage(coursePagesData?.courseList[value - 1]);
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseWrapper}>
