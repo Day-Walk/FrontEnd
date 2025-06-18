@@ -9,18 +9,21 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
-  const noTokenUrls = ["/user/login"];
-  const requestPath = new URL(config.url ?? "", config.baseURL).pathname;
+  const requestPath = config.url?.split("?")[0] ?? "";
 
-  if (noTokenUrls.includes(requestPath)) {
+  console.log(
+    `[API Request] url: ${config.url}, baseURL: ${config.baseURL}, requestPath: ${requestPath}`,
+  );
+
+  if (requestPath.endsWith("/user/login")) {
     return config;
   }
 
-  if (token && config.headers) {
-    if (!config.headers.Authorization) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (token && config.headers && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
+
+  console.log(`[API Request] final headers:`, config.headers);
 
   return config;
 });
