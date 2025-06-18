@@ -12,7 +12,6 @@ interface SearchBoxProps {
 const SearchBox = ({ onSearchResults }: SearchBoxProps) => {
   const [query, setQuery] = useState("");
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -27,11 +26,7 @@ const SearchBox = ({ onSearchResults }: SearchBoxProps) => {
           ? `/course/all?sort=like&userId=${userIdState}`
           : `/course/search?searchStr=${encodeURIComponent(query)}&sort=like&userId=${userIdState}`;
 
-      const response = await api.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get(url);
 
       const data = await response.data;
       onSearchResults(data);

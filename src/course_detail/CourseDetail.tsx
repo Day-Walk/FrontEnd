@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import NoImage from "../assets/NoImage.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
+import { Loading1 } from "../loading/Loading";
 declare global {
   interface Window {
     kakao: any;
@@ -29,11 +30,11 @@ const CourseDetail = () => {
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.CourseDetailPlace | null>(null);
-  const token = localStorage.getItem("accessToken");
   const userIdState = useRecoilValue(userId);
   const [like, setLike] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
     setSelectedPlaceId(p.placeId);
@@ -42,17 +43,12 @@ const CourseDetail = () => {
 
   const fetchCourseDetail = async () => {
     try {
-      const res = await api.get(
-        `/course?courseId=${id}&userId=${userIdState}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const res = await api.get(`/course?courseId=${id}&userId=${userIdState}`);
       setCourseDetail(res.data.courseInfo);
+      setLoading(false);
     } catch (error) {
       console.error("course detail fetch error", error);
+      setLoading(false);
     }
   };
 
@@ -133,17 +129,10 @@ const CourseDetail = () => {
     try {
       if (!like) {
         // 좋아요 등록
-        await api.post("/course-like", body, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.post("/course-like", body);
       } else {
         // 좋아요 취소
         await api.delete("/course-like", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           data: body,
         });
       }
@@ -159,6 +148,23 @@ const CourseDetail = () => {
 
   if (!id) {
     return <div>Error : 코스 ID가 없습니다.</div>;
+  }
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
   }
 
   return (

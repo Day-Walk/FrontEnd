@@ -12,7 +12,7 @@ import AlertModal from "../../global_components/AlertModal/AlertModal";
 const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const token = localStorage.getItem("accessToken");
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
@@ -25,15 +25,7 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
     if (!course) return;
 
     try {
-      await api.put(
-        "/course/visible",
-        { courseId: course.courseId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await api.put("/course/visible", { courseId: course.courseId });
       setIsOpen(!isOpen);
       setShowModal(true);
       setMessage("코스 공개설정 변경 완료!");

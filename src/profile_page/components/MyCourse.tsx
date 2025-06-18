@@ -7,6 +7,7 @@ import Pagination from "@mui/material/Pagination";
 import { api } from "../../utils/api";
 import { userId } from "../../recoil/userInfo";
 import { useRecoilValue } from "recoil";
+import { Loading1 } from "../../loading/Loading";
 
 const MyCourse = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -17,7 +18,6 @@ const MyCourse = () => {
   const [coursePage, setCoursePage] = useState<Interfaces.CoursePage>();
   // coursePagesData.courseList[nowPage - 1],
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -25,11 +25,6 @@ const MyCourse = () => {
       try {
         const response = await api.get<Interfaces.CourseListResponse>(
           `/course/all/user?userId=${userIdState}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setCoursePagesData(response.data);
         setCoursePage(response.data.courseList[nowPage - 1]);
@@ -50,6 +45,23 @@ const MyCourse = () => {
     setNowPage(value);
     setCoursePage(coursePagesData?.courseList[value - 1]);
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseWrapper}>

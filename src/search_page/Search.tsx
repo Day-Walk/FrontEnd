@@ -11,6 +11,7 @@ import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId, userName } from "../recoil/userInfo";
 import RobotImage from "../assets/goodVersion.png";
+import { Loading1 } from "../loading/Loading";
 
 declare global {
   interface Window {
@@ -41,6 +42,8 @@ const Search = () => {
   };
 
   const userIdState = useRecoilValue(userId);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (searchKeyword.length == 0) return;
     const getResults = async () => {
@@ -52,8 +55,10 @@ const Search = () => {
         setRecommendedPlaces(data["recommendList"]);
         setRegularPlaces(data["placeList"]);
         console.log(data);
+        // setLoading(false);
       } catch (e) {
         console.log(e);
+        // setLoading(false);
       }
     };
     getResults();
@@ -186,6 +191,7 @@ const Search = () => {
         }
       })
       .catch(console.error);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -202,6 +208,23 @@ const Search = () => {
   useEffect(() => {
     renderMarkers();
   }, [recommendedPlaces, selectedPlaceId]);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseDetailWrapper}>

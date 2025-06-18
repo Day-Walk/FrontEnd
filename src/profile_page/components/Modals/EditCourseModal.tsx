@@ -20,7 +20,7 @@ const EditCourseModal = ({
   onUpdateTitle,
 }: Props) => {
   const [newTitle, setNewTitle] = useState<string>(courseTitle); // 로컬 상태로 복사
-  const token = localStorage.getItem("accessToken");
+
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -29,18 +29,10 @@ const EditCourseModal = ({
       const titleTrim = newTitle.trim();
 
       try {
-        await api.put(
-          "/course/title",
-          {
-            courseId: courseId,
-            title: titleTrim,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        await api.put("/course/title", {
+          courseId: courseId,
+          title: titleTrim,
+        });
         onUpdateTitle(titleTrim);
         onClose();
         setShowModal(true);
