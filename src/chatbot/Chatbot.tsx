@@ -18,7 +18,7 @@ const Chatbot = () => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const placeholderText =
-    "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
+    "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
 
   const [chatLog, setChatLog] = useState<any[]>([]);
 
@@ -111,9 +111,6 @@ const Chatbot = () => {
       });
 
       console.log(res.data);
-
-      setChatLog((prev) => [...prev, { isUser: true, message: value }]);
-      setValue("");
     } catch (error) {
       console.error(error);
       setShowModal(true);
@@ -128,6 +125,8 @@ const Chatbot = () => {
       setMessage("메시지를 입력해주세요.");
       return;
     }
+
+    setChatLog((prev) => [...prev, { isUser: true, message: value }]);
 
     clickRef.current = true;
     setLoading(true);
@@ -149,6 +148,7 @@ const Chatbot = () => {
 
       console.error("sendChat 실패", error);
     } finally {
+      setValue("");
       clickRef.current = false;
       setLoading(false);
     }
@@ -164,7 +164,6 @@ const Chatbot = () => {
   };
 
   const handleClickSendBtn = async () => {
-    console.log("click");
     await sendChat();
   };
 
