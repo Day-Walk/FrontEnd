@@ -3,17 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { api } from "../../utils/api";
 import { useSetRecoilState } from "recoil";
-import { userId } from "../../recoil/userInfo";
+import { userId, userName } from "../../recoil/userInfo";
 
 const KakaoCallback = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const setUserId = useSetRecoilState(userId);
+  const setUserName = useSetRecoilState(userName);
 
-  const postLogin = async (kakaoId: number, name: string) => {
+  const postLogin = async (kakaoId: number, kakaoName: string) => {
     try {
       const res = await api.post("/user/login", {
-        name,
+        kakaoName,
         kakaoId: kakaoId,
       });
       let nextPage = res.data.userInfo.nextPage;
@@ -25,9 +26,11 @@ const KakaoCallback = () => {
 
       localStorage.setItem("accessToken", token);
 
-      const { userId, userName } = res.data.userInfo;
+      const { userId, name } = res.data.userInfo;
 
       setUserId(userId);
+      setUserName(name);
+
       localStorage.setItem("userId", userId);
 
       // 신규유저
@@ -41,7 +44,7 @@ const KakaoCallback = () => {
       }
       // 기존유저
       if (nextPage === "home") {
-        localStorage.setItem("userName", userName);
+        localStorage.setItem("userName", name);
         navigate("/");
       }
     } catch (error) {
