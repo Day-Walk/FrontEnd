@@ -58,13 +58,18 @@ const KakaoCallback = () => {
       return;
     }
 
+    const REDIRECT_URI =
+      import.meta.env.MODE === "production"
+        ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
+        : "http://localhost:5173/auth/kakao-callback";
+
     try {
       const tokenRes = await axios.post(
         "https://kauth.kakao.com/oauth/token",
         new URLSearchParams({
           grant_type: "authorization_code",
           client_id: import.meta.env.VITE_KAKAO_REST_API_KEY,
-          redirect_uri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+          redirect_uri: REDIRECT_URI,
           code,
         }),
         {
