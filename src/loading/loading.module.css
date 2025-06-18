@@ -12,13 +12,13 @@
   width: 100vw;
   height: 100vh;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(151, 151, 151, 0.1);
 }
 
 .loading {
   color: var(--color-main);
   font-weight: bold;
-  font-size: 40px;
+  font-size: 30px;
 }
 
 .spin_component {

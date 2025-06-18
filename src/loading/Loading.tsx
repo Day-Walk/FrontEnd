@@ -29,7 +29,7 @@ const LoadingWrapper: React.FC<{ children: React.ReactNode }> = ({
 };
 
 // 머리만 회전
-const Loading1: React.FC<LoadingProps> = ({ width = "300px", style = {} }) => {
+const Loading1: React.FC<LoadingProps> = ({ width = "200px", style = {} }) => {
   return (
     <LoadingWrapper>
       <img
