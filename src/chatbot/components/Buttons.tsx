@@ -10,6 +10,7 @@ type ButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
   style?: React.CSSProperties;
+  disabled?: boolean;
 };
 
 export const MainButton: React.FC<ButtonProps> = ({
@@ -22,10 +23,12 @@ export const MainButton: React.FC<ButtonProps> = ({
   children,
   onClick,
   style = {},
+  disabled = false,
 }) => {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       style={{
         fontSize: `${fontSize}px`,
         color: fontColor,
