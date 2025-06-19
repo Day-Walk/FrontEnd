@@ -45,6 +45,7 @@ const KakaoCallback = () => {
     }
   };
 
+  const pathname = useLocation().pathname;
   const fetchKakaoUser = async () => {
     const query = new URLSearchParams(location.search);
     const code = query.get("code");
@@ -54,10 +55,9 @@ const KakaoCallback = () => {
       return;
     }
 
-    const REDIRECT_URI =
-      import.meta.env.MODE === "production"
-        ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
-        : "http://localhost:5173/auth/kakao-callback";
+    const REDIRECT_URI = pathname.includes("final")
+      ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
+      : "https://day-walk.vercel.app/auth/kakao-callback";
 
     try {
       const tokenRes = await axios.post(

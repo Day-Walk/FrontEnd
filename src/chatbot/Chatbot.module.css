@@ -13,6 +13,7 @@
   height: 100%;
   flex-shrink: 0;
   box-shadow: 4px 0 4px rgba(85, 85, 85, 0.1);
+  position: relative;
   z-index: 10;
 }
 
@@ -227,4 +228,22 @@
   position: absolute;
   top: -25px;
   left: 5px;
+}
+
+.popup_container {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+
+  border-radius: 10px;
+  left: 50%;
+  translate: -50% 0;
+  top: 20px;
+  width: 70%;
+  padding: 10px;
+  box-shadow: 3px 3px rgba(85, 85, 85, 0.1);
+}
+
+.popup {
+  line-height: 22px;
+  margin-bottom: 10px;
 }

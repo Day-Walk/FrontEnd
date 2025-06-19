@@ -1,13 +1,14 @@
 import styles from "../Login.module.css";
 import Logo from "../../assets/DayWalkLogo.png";
+import { useLocation } from "react-router-dom";
 
 const Login = () => {
   const handleClickLogin = () => {
     const REST_API_KEY = "e3325f522736f4e123141deaf49845ae";
-    const REDIRECT_URI =
-      import.meta.env.MODE === "production"
-        ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
-        : "http://localhost:5173/auth/kakao-callback";
+    const pathname = useLocation().pathname;
+    const REDIRECT_URI = pathname.includes("final")
+      ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
+      : "https://day-walk.vercel.app/auth/kakao-callback";
 
     const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
     window.location.href = url;

@@ -13,12 +13,14 @@ import { userId } from "../recoil/userInfo";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 import { api } from "../utils/api";
 import { Loading1 } from "../loading/Loading";
+import checkboxStyles from "../signup/Signup.module.css";
+import { Check } from "lucide-react";
 
 const Chatbot = () => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const placeholderText =
-    "ex - 가족이 서울에 놀러오는데, \n날씨 좋을 때 투어 코스 알려줘.";
+    "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
 
   const [chatLog, setChatLog] = useState<any[]>([]);
 
@@ -28,7 +30,6 @@ const Chatbot = () => {
       : [];
   const [value, setValue] = useState<string>("");
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   const [selectedMarker, setSelectedMarker] = useState<{
     lat: number;
@@ -42,8 +43,6 @@ const Chatbot = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
-  const [event, setEvent] = useState<EventSourcePolyfill | null>(null);
-
   const contentRef = useRef<HTMLDivElement>(null);
   // 중복 요청 차단용
   const clickRef = useRef(false);
@@ -55,9 +54,6 @@ const Chatbot = () => {
       const SERVER_URL = import.meta.env.VITE_SERVER_URL;
       const newEventSource = new EventSource(
         `${SERVER_URL}/api/chat/connect?userId=${userIdState}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
       );
 
       newEventSource.onopen = () => {
@@ -76,17 +72,8 @@ const Chatbot = () => {
           console.log("chatbot 이벤트 수신:", parsed);
           setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
         } catch (error) {
-          setChatLog((prev) => [
-            ...prev,
-            {
-              isUser: false,
-              message: {
-                title:
-                  "오류가 발생했습니다. 잠시 후에 다시 이용해주세요. 서비스 이용에 불편을 드려 죄송합니다.",
-              },
-              error: true,
-            },
-          ]);
+          setShowModal(true);
+          setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
           console.error("chatbot 이벤트 파싱 실패", error);
           newEventSource.close();
           reject(error);
@@ -111,9 +98,6 @@ const Chatbot = () => {
       });
 
       console.log(res.data);
-
-      setChatLog((prev) => [...prev, { isUser: true, message: value }]);
-      setValue("");
     } catch (error) {
       console.error(error);
       setShowModal(true);
@@ -135,20 +119,14 @@ const Chatbot = () => {
     try {
       await connectSSE();
       await getChat();
+      setChatLog((prev) => [...prev, { isUser: true, message: value }]);
     } catch (error) {
-      setChatLog((prev) => [
-        ...prev,
-        {
-          isUser: false,
-          message: {
-            title: "오류가 발생했습니다. 잠시 후에 다시 이용해주세요.",
-          },
-          error: true,
-        },
-      ]);
+      setShowModal(true);
+      setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
 
       console.error("sendChat 실패", error);
     } finally {
+      setValue("");
       clickRef.current = false;
       setLoading(false);
     }
@@ -164,13 +142,55 @@ const Chatbot = () => {
   };
 
   const handleClickSendBtn = async () => {
-    console.log("click");
     await sendChat();
   };
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+
+  const handleClickClosePopup = () => {
+    setOpenPopup(false);
+    if (isChecked) {
+      localStorage.setItem(
+        "popup",
+        (new Date().getTime() + 24 * 60 * 60 * 1000).toString(),
+      );
+    }
+  };
+
+  const getChatLog = async () => {
+    try {
+      const res = await api.get("/chat/log", {
+        params: {
+          userId: userIdState,
+        },
+      });
+      setChatLog(res.data.chatLog);
+      console.log(res.data.chatLog);
+    } catch (error) {
+      console.error("채팅 로그 가져오기 실패", error);
+    }
+  };
+  useEffect(() => {
+    const popupTime = localStorage.getItem("popup");
+    if (!popupTime) {
+      setOpenPopup(true);
+    } else {
+      const popupTimeNum = parseInt(popupTime, 10);
+      const currentTime = new Date().getTime();
+      if (currentTime > popupTimeNum) {
+        setOpenPopup(true);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     contentRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [chatLog, loading]);
+
+  useEffect(() => {
+    getChatLog();
+  }, []);
 
   return (
     <>
@@ -198,6 +218,59 @@ const Chatbot = () => {
           </div>
         )}
         <div className={styles.chat_wrapper}>
+          {openPopup && (
+            <div className={styles.popup_container}>
+              <div className={styles.popup}>
+                채팅은 기록은 7일동안 저장됩니다.
+                <br />
+                이후 기록은
+                <span style={{ color: "#EF4444", fontWeight: 600 }}>삭제</span>
+                됩니다.
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    position: "relative",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    id="popupCheckbox"
+                    className={checkboxStyles.checkbox}
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                    checked={isChecked}
+                    style={{ marginRight: "5px" }}
+                  />
+                  <label htmlFor="popupCheckbox">오늘 하루 보지 않기</label>
+                  <Check
+                    color="#FFF"
+                    size={14}
+                    strokeWidth={3}
+                    style={{
+                      position: "absolute",
+                      left: "3px",
+                      top: "3px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={handleClickClosePopup}
+                  style={{ fontWeight: "600", textDecoration: "underline" }}
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          )}
           {chatLog.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
@@ -206,11 +279,11 @@ const Chatbot = () => {
           ) : (
             <div className={styles.content}>
               {chatLog.map((chat, index) =>
-                chat.isUser ? (
-                  <UserMessage message={chat.message} key={index} />
+                chat.question ? (
+                  <UserMessage message={chat.question} key={index} />
                 ) : (
                   <ChatMessage
-                    message={chat.message}
+                    message={chat.answer}
                     key={index}
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
