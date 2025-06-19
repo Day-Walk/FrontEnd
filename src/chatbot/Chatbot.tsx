@@ -51,9 +51,9 @@ const Chatbot = () => {
   const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       const EventSource = EventSourcePolyfill || NativeEventSource;
-      const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
       const newEventSource = new EventSource(
-        `${SERVER_URL}/api/chat/connect?userId=${userIdState}`,
+        `/api/chat/connect?userId=${userIdState}`,
       );
 
       newEventSource.onopen = () => {
