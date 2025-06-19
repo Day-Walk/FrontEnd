@@ -9,16 +9,16 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { Loading1 } from "../loading/Loading";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
     useState<Interfaces.CourseListResponse>();
   const navigate = useNavigate();
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
-  // if (!token || !userIdState || userIdState.length == 0 || token.length == 0) {
-  //   navigate("/login");
-  // }
+  if (!userIdState || userIdState.length == 0) {
+    navigate("/login");
+  }
   const [loading, setLoading] = useState<boolean>(true);
   const [nowPage, setNowPage] = useState<number>(1);
   const [sort, setSort] = useState<string>("like"); // like or latest
@@ -38,11 +38,6 @@ const Courses = () => {
       try {
         const response = await api.get<Interfaces.CourseListResponse>(
           `/course/all?sort=${sort}&userId=${userIdState}`,
-          // {
-          //   headers: {
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // },
         );
         setCoursePagesData(response.data);
         setCoursePage(response.data.courseList[nowPage - 1]);
@@ -62,6 +57,23 @@ const Courses = () => {
     setNowPage(1);
     setCoursePage(data.courseList[0]);
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseWrapper}>

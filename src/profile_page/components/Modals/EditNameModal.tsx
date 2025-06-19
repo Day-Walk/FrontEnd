@@ -13,7 +13,6 @@ interface Props {
 const EditNameModal = ({ onClose }: Props) => {
   const [userNameState, setUserNameState] = useRecoilState(userName);
   const [newName, setNewName] = useState(userNameState); // 로컬 상태로 복사
-  const token = localStorage.getItem("accessToken");
   const userIdState = useRecoilValue(userId);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
@@ -23,18 +22,10 @@ const EditNameModal = ({ onClose }: Props) => {
       const nameTrim = newName.trim();
 
       try {
-        await api.put(
-          "/user",
-          {
-            id: userIdState,
-            name: nameTrim,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        await api.put("/user", {
+          id: userIdState,
+          name: nameTrim,
+        });
         setShowModal(true);
         setMessage("닉네임 변경 완료!");
         setUserNameState(nameTrim);

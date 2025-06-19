@@ -16,7 +16,6 @@ const Course = (nowCourse: Interfaces.Course) => {
   const courseId = nowCourse.courseId;
   const navigate = useNavigate();
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -41,18 +40,11 @@ const Course = (nowCourse: Interfaces.Course) => {
     try {
       if (!like) {
         // 좋아요 등록
-        await api.post("/course-like", body, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.post("/course-like", body);
         setMessage("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/course-like", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           data: body,
         });
         setMessage("코스 찜이 취소되었습니다.");

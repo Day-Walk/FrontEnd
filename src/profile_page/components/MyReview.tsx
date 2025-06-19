@@ -7,6 +7,7 @@ import MyReviewComp from "./MyReviewComp";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
+import { Loading1 } from "../../loading/Loading";
 
 const MyReview = () => {
   const [ReviewListResponse, setReviewListResponse] =
@@ -18,7 +19,6 @@ const MyReview = () => {
   // ReviewListResponse.reviewList[nowPage - 1],
 
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   const [deleted, setDeleted] = useState<string>("");
 
@@ -32,11 +32,6 @@ const MyReview = () => {
       try {
         const response = await api.get<Interfaces.ReviewListResponse>(
           `/review/all/user?userId=${userIdState}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setReviewListResponse(response.data);
         setReviewPage(response.data.reviewList[nowPage - 1]);
@@ -57,6 +52,23 @@ const MyReview = () => {
     setNowPage(value);
     setReviewPage(ReviewListResponse?.reviewList[value - 1]);
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 20,
+        }}
+      >
+        <Loading1 />
+      </div>
+    );
+  }
 
   return (
     <div className={style.courseWrapper}>
