@@ -13,6 +13,8 @@ import { userId } from "../recoil/userInfo";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 import { api } from "../utils/api";
 import { Loading1 } from "../loading/Loading";
+import checkboxStyles from "../signup/Signup.module.css";
+import { Check } from "lucide-react";
 
 const Chatbot = () => {
   const [showModal, setShowModal] = useState(false);
@@ -167,6 +169,31 @@ const Chatbot = () => {
     await sendChat();
   };
 
+  const [isChecked, setIsChecked] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+
+  const handleClickClosePopup = () => {
+    setOpenPopup(false);
+    if (isChecked) {
+      localStorage.setItem(
+        "popup",
+        (new Date().getTime() + 24 * 60 * 60 * 1000).toString(),
+      );
+    }
+  };
+  useEffect(() => {
+    const popupTime = localStorage.getItem("popup");
+    if (!popupTime) {
+      setOpenPopup(true);
+    } else {
+      const popupTimeNum = parseInt(popupTime, 10);
+      const currentTime = new Date().getTime();
+      if (currentTime > popupTimeNum) {
+        setOpenPopup(true);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     contentRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [chatLog, loading]);
@@ -197,6 +224,59 @@ const Chatbot = () => {
           </div>
         )}
         <div className={styles.chat_wrapper}>
+          {openPopup && (
+            <div className={styles.popup_container}>
+              <div className={styles.popup}>
+                채팅은 기록은 7일동안 저장됩니다.
+                <br />
+                이후 기록은
+                <span style={{ color: "#EF4444", fontWeight: 600 }}>삭제</span>
+                됩니다.
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    position: "relative",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    id="popupCheckbox"
+                    className={checkboxStyles.checkbox}
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                    checked={isChecked}
+                    style={{ marginRight: "5px" }}
+                  />
+                  <label htmlFor="popupCheckbox">오늘 하루 보지 않기</label>
+                  <Check
+                    color="#FFF"
+                    size={14}
+                    strokeWidth={3}
+                    style={{
+                      position: "absolute",
+                      left: "3px",
+                      top: "3px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={handleClickClosePopup}
+                  style={{ fontWeight: "600", textDecoration: "underline" }}
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          )}
           {chatLog.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
