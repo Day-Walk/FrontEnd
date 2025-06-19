@@ -13,10 +13,8 @@ interface ChatMessageProps {
 }
 
 type MessageType = {
-  title: string;
   placeList?: any[];
   detail?: string;
-  error?: boolean;
 };
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
@@ -26,19 +24,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   handleModalOpen,
   inputRef,
 }) => {
-  const [toggleDetail, setToggleDetail] = useState<boolean>(false);
-
-  const handleToggleDetail = () => {
-    setToggleDetail((prev) => !prev);
-  };
-
   const handleClickUpdateBtn = () => {
     inputRef.current?.focus();
   };
   return (
     <div className={`${styles.message} ${styles.chat_message}`}>
       <img src={ChatBot} alt="Chatbot" className={styles.chatbot_image} />
-      <div>{message.title}</div>
       {message.placeList && message.placeList.length > 0 && (
         <div className={styles.place_wrapper}>
           {message?.placeList?.map((place: any, idx: number) => (
@@ -69,23 +60,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           ))}
         </div>
       )}
-      {message.detail &&
-        (toggleDetail ? (
-          <>
-            <div className={styles.toggle} onClick={handleToggleDetail}>
-              <ChevronUp size={20} />
-              코스 설명 접기
-            </div>
-            <div>{message.detail}</div>
-          </>
-        ) : (
-          <div className={styles.toggle} onClick={handleToggleDetail}>
-            <ChevronDown size={20} />
-            코스 설명 더보기
-          </div>
-        ))}
-
-      {message.error && (
+      <div>{message.detail}</div>
+      {message.placeList && message.placeList.length > 0 && (
         <div className={styles.button_wrapper}>
           <MainButton
             fontSize={14}

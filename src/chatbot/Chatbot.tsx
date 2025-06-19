@@ -30,7 +30,6 @@ const Chatbot = () => {
       : [];
   const [value, setValue] = useState<string>("");
   const userIdState = useRecoilValue(userId);
-  const token = localStorage.getItem("accessToken");
 
   const [selectedMarker, setSelectedMarker] = useState<{
     lat: number;
@@ -44,8 +43,6 @@ const Chatbot = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
-  const [event, setEvent] = useState<EventSourcePolyfill | null>(null);
-
   const contentRef = useRef<HTMLDivElement>(null);
   // 중복 요청 차단용
   const clickRef = useRef(false);
@@ -57,9 +54,6 @@ const Chatbot = () => {
       const SERVER_URL = import.meta.env.VITE_SERVER_URL;
       const newEventSource = new EventSource(
         `${SERVER_URL}/api/chat/connect?userId=${userIdState}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
       );
 
       newEventSource.onopen = () => {
@@ -78,17 +72,8 @@ const Chatbot = () => {
           console.log("chatbot 이벤트 수신:", parsed);
           setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
         } catch (error) {
-          setChatLog((prev) => [
-            ...prev,
-            {
-              isUser: false,
-              message: {
-                title:
-                  "오류가 발생했습니다. 잠시 후에 다시 이용해주세요. 서비스 이용에 불편을 드려 죄송합니다.",
-              },
-              error: true,
-            },
-          ]);
+          setShowModal(true);
+          setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
           console.error("chatbot 이벤트 파싱 실패", error);
           newEventSource.close();
           reject(error);
@@ -128,25 +113,16 @@ const Chatbot = () => {
       return;
     }
 
-    setChatLog((prev) => [...prev, { isUser: true, message: value }]);
-
     clickRef.current = true;
     setLoading(true);
 
     try {
       await connectSSE();
       await getChat();
+      setChatLog((prev) => [...prev, { isUser: true, message: value }]);
     } catch (error) {
-      setChatLog((prev) => [
-        ...prev,
-        {
-          isUser: false,
-          message: {
-            title: "오류가 발생했습니다. 잠시 후에 다시 이용해주세요.",
-          },
-          error: true,
-        },
-      ]);
+      setShowModal(true);
+      setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
 
       console.error("sendChat 실패", error);
     } finally {
@@ -181,6 +157,20 @@ const Chatbot = () => {
       );
     }
   };
+
+  const getChatLog = async () => {
+    try {
+      const res = await api.get("/chat/log", {
+        params: {
+          userId: userIdState,
+        },
+      });
+      setChatLog(res.data.chatLog);
+      console.log(res.data.chatLog);
+    } catch (error) {
+      console.error("채팅 로그 가져오기 실패", error);
+    }
+  };
   useEffect(() => {
     const popupTime = localStorage.getItem("popup");
     if (!popupTime) {
@@ -197,6 +187,10 @@ const Chatbot = () => {
   useEffect(() => {
     contentRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [chatLog, loading]);
+
+  useEffect(() => {
+    getChatLog();
+  }, []);
 
   return (
     <>
@@ -285,11 +279,11 @@ const Chatbot = () => {
           ) : (
             <div className={styles.content}>
               {chatLog.map((chat, index) =>
-                chat.isUser ? (
-                  <UserMessage message={chat.message} key={index} />
+                chat.question ? (
+                  <UserMessage message={chat.question} key={index} />
                 ) : (
                   <ChatMessage
-                    message={chat.message}
+                    message={chat.answer}
                     key={index}
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
