@@ -221,9 +221,13 @@ const Chatbot = () => {
           {openPopup && (
             <div className={styles.popup_container}>
               <div className={styles.popup}>
-                채팅은 기록은 7일동안 저장됩니다.
+                채팅은 기록은{" "}
+                <span style={{ color: "#00b493", fontWeight: 600 }}>
+                  7일동안{" "}
+                </span>
+                저장됩니다.
                 <br />
-                이후 기록은
+                이후 기록은&nbsp;
                 <span style={{ color: "#EF4444", fontWeight: 600 }}>삭제</span>
                 됩니다.
               </div>
@@ -247,28 +251,37 @@ const Chatbot = () => {
                     className={checkboxStyles.checkbox}
                     onChange={(e) => setIsChecked(e.target.checked)}
                     checked={isChecked}
-                    style={{ marginRight: "5px" }}
+                    style={{
+                      marginRight: "5px",
+                      width: "15px",
+                      height: "15px",
+                    }}
                   />
-                  <label htmlFor="popupCheckbox">오늘 하루 보지 않기</label>
+                  <label
+                    htmlFor="popupCheckbox"
+                    style={{ fontSize: "12px", color: "#b0b0b0" }}
+                  >
+                    오늘 하루 보지 않기
+                  </label>
                   <Check
                     color="#FFF"
-                    size={14}
+                    size={12}
                     strokeWidth={3}
                     style={{
                       position: "absolute",
-                      left: "3px",
-                      top: "3px",
+                      left: "1px",
+                      top: "1px",
                       pointerEvents: "none",
                     }}
                   />
                 </div>
-                <button
-                  onClick={handleClickClosePopup}
-                  style={{ fontWeight: "600", textDecoration: "underline" }}
-                >
-                  닫기
-                </button>
               </div>
+              <button
+                onClick={handleClickClosePopup}
+                className={styles.close_btn}
+              >
+                닫기
+              </button>
             </div>
           )}
           {chatLog.length === 0 ? (
