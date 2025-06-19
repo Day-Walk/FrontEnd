@@ -232,8 +232,8 @@
 
 .popup_container {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
-
+  background-color: white;
+  z-index: 30;
   border-radius: 10px;
   left: 50%;
   translate: -50% 0;
