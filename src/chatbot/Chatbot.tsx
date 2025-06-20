@@ -50,8 +50,11 @@ const Chatbot = () => {
 
   const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
+      // local test용
+      // `http://43.201.71.249:8080/api/chat/connect?userId=${userIdState}`,
+
       const newEventSource = new EventSource(
-        `http://43.201.71.249:8080/api/chat/connect?userId=${userIdState}`,
+        `/api/chat/connect?userId=${userIdState}`,
       );
 
       // newEventSource.onopen = () => {
