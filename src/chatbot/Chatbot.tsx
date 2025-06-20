@@ -10,7 +10,7 @@ import ChatBot from "../assets/ChatBot.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
-import { EventSource, NativeEventSource } from "event-source-polyfill";
+
 import { api } from "../utils/api";
 import { Loading1 } from "../loading/Loading";
 import checkboxStyles from "../signup/Signup.module.css";
@@ -24,10 +24,10 @@ const Chatbot = () => {
 
   const [chatLog, setChatLog] = useState<any[]>([]);
 
-  const mapInfo =
-    chatLog.length > 1 && chatLog[1].message?.placeList
-      ? chatLog[1].message.placeList.map((place: any) => place.location)
-      : [];
+  // const mapInfo =
+  //   chatLog.length > 1 && chatLog[1].message?.placeList
+  //     ? chatLog[1].message.placeList.map((place: any) => place.location)
+  //     : [];
   const [value, setValue] = useState<string>("");
   const userIdState = useRecoilValue(userId);
 
@@ -50,15 +50,16 @@ const Chatbot = () => {
 
   const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
-      const EventSource = NativeEventSource;
+      // local test용
+      // `http://43.201.71.249:8080/api/chat/connect?userId=${userIdState}`,
 
       const newEventSource = new EventSource(
         `/api/chat/connect?userId=${userIdState}`,
       );
 
-      newEventSource.onopen = () => {
-        console.log("SSE 연결 완료");
-      };
+      // newEventSource.onopen = () => {
+      //   console.log("SSE 연결 완료");
+      // };
 
       newEventSource.addEventListener("connect", (e: any) => {
         console.log("연결 이벤트 수신:", e.data);
@@ -123,7 +124,9 @@ const Chatbot = () => {
 
     try {
       await connectSSE();
+      console.log("1. SSE 연결 완료 : ", new Date().toISOString());
       await getChat();
+      console.log("2. getChat API 호출 완료 : ", new Date().toISOString());
       setChatLog((prev) => [...prev, { isUser: true, message: value }]);
     } catch (error) {
       setShowModal(true);
@@ -199,12 +202,12 @@ const Chatbot = () => {
 
   return (
     <>
-      <Modal open={open} onClose={handleClose}>
+      {/* <Modal open={open} onClose={handleClose}>
         <AddCourseModal
           courseInfo={chatLog[1]?.message?.placeList}
           handleClose={handleClose}
         />
-      </Modal>
+      </Modal> */}
 
       <div className={styles.chatbot_container}>
         {loading && (
@@ -289,7 +292,7 @@ const Chatbot = () => {
               </button>
             </div>
           )}
-          {chatLog.length === 0 ? (
+          {/* {chatLog.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
               <div className={styles.ask_to}>챗봇에게 물어보세요!</div>
@@ -312,7 +315,7 @@ const Chatbot = () => {
               )}
               <div ref={contentRef} />
             </div>
-          )}
+          )} */}
 
           <div
             className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
@@ -337,7 +340,6 @@ const Chatbot = () => {
           </div>
         </div>
         <ChatbotMap
-          mapInfo={mapInfo}
           selectedMarker={selectedMarker}
           setSelectedMarker={setSelectedMarker}
         />
