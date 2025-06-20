@@ -191,8 +191,9 @@
 }
 
 .map_marker {
+  height: 40px;
   width: 40px;
-  aspect-ratio: 1/1;
+  /* aspect-ratio: 1/1; */
   background-color: var(--color-main);
   border-radius: 999px;
   text-align: center;
@@ -202,6 +203,7 @@
   color: #fff;
   font-weight: bold;
   font-size: 18px;
+  z-index: 10;
 }
 
 .selected_marker {
@@ -211,6 +213,7 @@
 .selected_img {
   outline: 3px solid var(--color-main);
 }
+
 .button_wrapper {
   display: flex;
   flex-direction: row;

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "../Chatbot.module.css";
-import { BotMessageSquare, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { MainButton } from "./Buttons";
 import ChatBot from "../../assets/ChatBot.png";
 
@@ -10,6 +10,7 @@ interface ChatMessageProps {
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
   handleModalOpen: (placeList: any) => void;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
+  handleClick: () => void;
 }
 
 type MessageType = {
@@ -23,15 +24,17 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   setSelectedMarker,
   handleModalOpen,
   inputRef,
+  handleClick,
 }) => {
   const handleClickUpdateBtn = () => {
     inputRef.current?.focus();
   };
+
   return (
     <div className={`${styles.message} ${styles.chat_message}`}>
       <img src={ChatBot} alt="Chatbot" className={styles.chatbot_image} />
       {message.placeList && message.placeList.length > 0 && (
-        <div className={styles.place_wrapper}>
+        <div onClick={handleClick} className={styles.place_wrapper}>
           {message?.placeList?.map((place: any, idx: number) => (
             <div
               onClick={() => setSelectedMarker(place.location)}
@@ -81,7 +84,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           >
             수정하기
           </MainButton>
-          <MainButton fontSize={14} bgColor="#333" style={{ flexShrink: 0 }}>
+          <MainButton
+            onClick={() => {
+              handleClick();
+              if (message.placeList && message.placeList.length > 0) {
+                setSelectedMarker({
+                  lat: message.placeList[0].location.lat,
+                  lng: message.placeList[0].location.lng,
+                });
+              }
+            }}
+            fontSize={14}
+            bgColor="#333"
+            style={{ flexShrink: 0 }}
+          >
             지도에 표시하기
           </MainButton>
         </div>

@@ -35,10 +35,6 @@ type MessageType = {
     detail: string;
   };
   createAt: string;
-  message?: {
-    placeList?: PlaceType[];
-    detail?: string;
-  };
 };
 
 const Chatbot = () => {
@@ -252,10 +248,6 @@ const Chatbot = () => {
       const newEventSource = new EventSource(
         `http://43.201.71.249:8080/api/chat/connect?userId=${userIdState}`,
       );
-
-      // newEventSource.onopen = () => {
-      //   console.log("SSE 연결 완료");
-      // };
 
       newEventSource.addEventListener("connect", (e: any) => {
         console.log("연결 이벤트 수신:", e.data);
@@ -509,6 +501,9 @@ const Chatbot = () => {
                     setSelectedMarker={setSelectedMarker}
                     handleModalOpen={handleOpen}
                     inputRef={inputRef}
+                    handleClick={() => {
+                      setSelectedPlaceList(chat.answer.placeList);
+                    }}
                   />
                 ),
               ])}
@@ -540,6 +535,7 @@ const Chatbot = () => {
           </div>
         </div>
         <ChatbotMap
+          mapInfo={selectedPlaceList}
           selectedMarker={selectedMarker}
           setSelectedMarker={setSelectedMarker}
         />
