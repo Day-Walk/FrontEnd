@@ -45,7 +45,6 @@ const KakaoCallback = () => {
     }
   };
 
-  const pathname = useLocation().pathname;
   const fetchKakaoUser = async () => {
     const query = new URLSearchParams(location.search);
     const code = query.get("code");
@@ -54,8 +53,8 @@ const KakaoCallback = () => {
       console.error("Kakao login failed");
       return;
     }
-
-    const REDIRECT_URI = pathname.includes("final")
+    const hostname = window.location.hostname;
+    const REDIRECT_URI = hostname.includes("final")
       ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
       : "https://day-walk.vercel.app/auth/kakao-callback";
 

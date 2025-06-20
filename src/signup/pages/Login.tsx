@@ -1,13 +1,11 @@
 import styles from "../Login.module.css";
 import Logo from "../../assets/DayWalkLogo.png";
-import { useLocation } from "react-router-dom";
 
 const Login = () => {
-  const location = useLocation();
   const handleClickLogin = () => {
     const REST_API_KEY = "e3325f522736f4e123141deaf49845ae";
-    const pathname = location.pathname;
-    const REDIRECT_URI = pathname.includes("final")
+    const hostname = window.location.hostname;
+    const REDIRECT_URI = hostname.includes("final")
       ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
       : "https://day-walk.vercel.app/auth/kakao-callback";
 
