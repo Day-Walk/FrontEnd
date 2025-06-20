@@ -8,7 +8,7 @@ interface ChatMessageProps {
   message: MessageType;
   selectedMarker: { lat: number; lng: number } | null;
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
-  handleModalOpen: () => void;
+  handleModalOpen: (placeList: any) => void;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
@@ -35,7 +35,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           {message?.placeList?.map((place: any, idx: number) => (
             <div
               onClick={() => setSelectedMarker(place.location)}
-              key={place.placeId}
+              key={idx}
               className={`${styles.place_box} ${selectedMarker === place.location ? styles.selected_img : ""}`}
             >
               <img
@@ -67,7 +67,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             fontSize={14}
             bgColor="#E96563"
             style={{ flexShrink: 0 }}
-            onClick={handleModalOpen}
+            onClick={() => {
+              handleModalOpen(message.placeList);
+            }}
           >
             내 코스에 추가하기
           </MainButton>

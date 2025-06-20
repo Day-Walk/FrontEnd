@@ -16,13 +16,78 @@ import { Loading1 } from "../loading/Loading";
 import checkboxStyles from "../signup/Signup.module.css";
 import { Check } from "lucide-react";
 
+export type PlaceType = {
+  placeId: string;
+  name: string;
+  address: string;
+  imgUrl: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+};
+
+type MessageType = {
+  userId: string;
+  question: string;
+  answer: {
+    placeList: PlaceType[];
+    detail: string;
+  };
+  createAt: string;
+  message?: {
+    placeList?: PlaceType[];
+    detail?: string;
+  };
+};
+
 const Chatbot = () => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const placeholderText =
     "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
 
-  const [chatLog, setChatLog] = useState<any[]>([]);
+  const [chatLog, setChatLog] = useState<MessageType[] | null>([
+    {
+      userId: "12345678 - 1234 - 5678 - 1234 - 123456789123",
+      question: "홍대 맛집 찾아줘",
+      answer: {
+        placeList: [
+          {
+            placeId: "111",
+            name: "한국경제신문",
+            address: "서울 중구",
+            imgUrl: "http://image.png",
+            location: {
+              lat: 123,
+              lng: 123,
+            },
+          },
+          {
+            placeId: "222",
+            name: "한국경제신문",
+            address: "서울 중구",
+            imgUrl: "http://image.png",
+            location: {
+              lat: 123,
+              lng: 123,
+            },
+          },
+        ],
+        detail: "이건 어떤 어떤 코스입니다",
+      },
+      createAt: " 2025-06-16T09:27:15:2059238",
+    },
+    {
+      userId: " 12345678 - 1234 - 5678 - 1234 - 123456789123",
+      question: "홍대 맛집 찾아줘",
+      answer: {
+        placeList: [],
+        detail: "이건 어떤 어떤 코스입니다",
+      },
+      createAt: "2025-06-16T09:27:15:2059238",
+    },
+  ]);
 
   // const mapInfo =
   //   chatLog.length > 1 && chatLog[1].message?.placeList
@@ -37,7 +102,14 @@ const Chatbot = () => {
   } | null>(null);
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const [selectedPlaceList, setSelectedPlaceList] = useState<
+    PlaceType[] | null
+  >(null);
+
+  const handleOpen = (placeList: PlaceType[]) => {
+    setSelectedPlaceList(placeList);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -54,7 +126,7 @@ const Chatbot = () => {
       // `http://43.201.71.249:8080/api/chat/connect?userId=${userIdState}`,
 
       const newEventSource = new EventSource(
-        `/api/chat/connect?userId=${userIdState}`,
+        `http://43.201.71.249:8080/api/chat/connect?userId=${userIdState}`,
       );
 
       // newEventSource.onopen = () => {
@@ -76,7 +148,7 @@ const Chatbot = () => {
         try {
           const parsed = JSON.parse(e.data);
           console.log("chatbot 이벤트 수신:", parsed);
-          setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
+          // setChatLog((prev) => [...prev, { isUser: false, message: parsed }]);
         } catch (error) {
           setShowModal(true);
           setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
@@ -127,7 +199,7 @@ const Chatbot = () => {
       console.log("1. SSE 연결 완료 : ", new Date().toISOString());
       await getChat();
       console.log("2. getChat API 호출 완료 : ", new Date().toISOString());
-      setChatLog((prev) => [...prev, { isUser: true, message: value }]);
+      // setChatLog((prev) => [...prev, { isUser: true, message: value }]);
     } catch (error) {
       setShowModal(true);
       setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
@@ -173,12 +245,13 @@ const Chatbot = () => {
           userId: userIdState,
         },
       });
-      setChatLog(res.data.chatLog);
+      // setChatLog(res.data.chatLog);
       console.log(res.data.chatLog);
     } catch (error) {
       console.error("채팅 로그 가져오기 실패", error);
     }
   };
+
   useEffect(() => {
     const popupTime = localStorage.getItem("popup");
     if (!popupTime) {
@@ -202,13 +275,14 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* <Modal open={open} onClose={handleClose}>
-        <AddCourseModal
-          courseInfo={chatLog[1]?.message?.placeList}
-          handleClose={handleClose}
-        />
-      </Modal> */}
-
+      {selectedPlaceList && (
+        <Modal open={open} onClose={handleClose}>
+          <AddCourseModal
+            courseInfo={selectedPlaceList}
+            handleClose={handleClose}
+          />
+        </Modal>
+      )}
       <div className={styles.chatbot_container}>
         {loading && (
           <div
@@ -292,30 +366,32 @@ const Chatbot = () => {
               </button>
             </div>
           )}
-          {/* {chatLog.length === 0 ? (
+          {chatLog?.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
               <div className={styles.ask_to}>챗봇에게 물어보세요!</div>
             </div>
           ) : (
             <div className={styles.content}>
-              {chatLog.map((chat, index) =>
-                chat.question ? (
-                  <UserMessage message={chat.question} key={index} />
-                ) : (
+              {chatLog?.flatMap((chat, index) => [
+                chat.question && (
+                  <UserMessage message={chat.question} key={`${index}-q`} />
+                ),
+                chat.answer && (
                   <ChatMessage
+                    key={`${index}-a`}
                     message={chat.answer}
-                    key={index}
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
                     handleModalOpen={handleOpen}
                     inputRef={inputRef}
                   />
                 ),
-              )}
+              ])}
+
               <div ref={contentRef} />
             </div>
-          )} */}
+          )}
 
           <div
             className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}

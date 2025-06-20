@@ -4,24 +4,17 @@ import placeStyle from "../Chatbot.module.css";
 import { Check, MapPin, X } from "lucide-react";
 import { MainButton } from "./Buttons";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import { PlaceType } from "../Chatbot";
 
 interface AddCourse {
-  courseInfo: [placeInfo: any];
+  courseInfo: PlaceType[];
   handleClose: () => void;
 }
 
-interface PlaceInfo {
-  placeId: string;
-  name: string;
-  address: string;
-  imgUrl: string;
-}
-
 interface CourseInfo {
-  userId?: string;
   title: string;
   visible: boolean;
-  placeList: PlaceInfo[];
+  placeList: PlaceType[];
 }
 
 const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
