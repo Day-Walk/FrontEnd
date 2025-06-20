@@ -45,7 +45,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               />
               <div className={styles.place_info}>
                 <div className={styles.place_idx}>{idx + 1}</div>
-                <div>{place.name}</div>
+                <div className={styles.place_name}>{place.name}</div>
                 <div className={styles.place_address}>
                   <MapPin
                     size={14}

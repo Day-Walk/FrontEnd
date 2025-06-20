@@ -135,7 +135,7 @@
 
 .place_img {
   width: 100%;
-  height: auto;
+  height: 100%;
   flex-shrink: 0;
   object-fit: cover;
 }
@@ -146,11 +146,19 @@
   text-shadow: 0 0 4px #333;
   position: absolute;
   bottom: 4px;
-  right: 4px;
+  padding: 0px 5px;
+  max-width: 100%;
 }
 .place_idx {
   font-size: 20px;
   font-weight: bold;
+}
+
+.place_name {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .place_address {
   font-size: 12px;
