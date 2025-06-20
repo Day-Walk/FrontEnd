@@ -56,9 +56,9 @@ const Chatbot = () => {
         `/api/chat/connect?userId=${userIdState}`,
       );
 
-      newEventSource.onopen = () => {
-        console.log("SSE 연결 완료");
-      };
+      // newEventSource.onopen = () => {
+      //   console.log("SSE 연결 완료");
+      // };
 
       newEventSource.addEventListener("connect", (e: any) => {
         console.log("연결 이벤트 수신:", e.data);
@@ -123,7 +123,9 @@ const Chatbot = () => {
 
     try {
       await connectSSE();
+      console.log("1. SSE 연결 완료 : ", new Date().toISOString());
       await getChat();
+      console.log("2. getChat API 호출 완료 : ", new Date().toISOString());
       setChatLog((prev) => [...prev, { isUser: true, message: value }]);
     } catch (error) {
       setShowModal(true);
