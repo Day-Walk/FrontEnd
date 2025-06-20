@@ -10,8 +10,7 @@ import ChatBot from "../assets/ChatBot.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
-import { NativeEventSource } from "event-source-polyfill";
-// import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { EventSource, NativeEventSource } from "event-source-polyfill";
 import { api } from "../utils/api";
 import { Loading1 } from "../loading/Loading";
 import checkboxStyles from "../signup/Signup.module.css";
@@ -52,7 +51,6 @@ const Chatbot = () => {
   const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       const EventSource = NativeEventSource;
-      // const EventSource = EventSourcePolyfill || NativeEventSource;
 
       const newEventSource = new EventSource(
         `/api/chat/connect?userId=${userIdState}`,
@@ -62,10 +60,15 @@ const Chatbot = () => {
         console.log("SSE 연결 완료");
       };
 
+      newEventSource.addEventListener("connect", (e: any) => {
+        console.log("연결 이벤트 수신:", e.data);
+        resolve();
+      });
+
       newEventSource.addEventListener("chatbot", (e: any) => {
         if (e.data === "[DONE]") {
           newEventSource.close();
-          resolve();
+          // resolve();
           return;
         }
 
