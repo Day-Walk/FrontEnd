@@ -201,12 +201,12 @@ const Chatbot = () => {
 
   return (
     <>
-      <Modal open={open} onClose={handleClose}>
+      {/* <Modal open={open} onClose={handleClose}>
         <AddCourseModal
           courseInfo={chatLog[1]?.message?.placeList}
           handleClose={handleClose}
         />
-      </Modal>
+      </Modal> */}
 
       <div className={styles.chatbot_container}>
         {loading && (
