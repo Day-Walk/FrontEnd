@@ -9,7 +9,7 @@ interface MapInfo {
 }
 
 interface ChatbotMap {
-  mapInfo: MapInfo[];
+  mapInfo?: MapInfo[];
   selectedMarker: { lat: number; lng: number } | null;
   setSelectedMarker: (value: { lat: number; lng: number }) => void;
 }
@@ -28,9 +28,13 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
       .catch((err) => console.error("카카오맵 로딩 실패", err));
   }, []);
 
-  const [mapCenter, setMapCenter] = useState<MapInfo>(
-    mapInfo ? { lat: 37.5714, lng: 126.9769 } : mapInfo[0],
-  );
+  // const [mapCenter, setMapCenter] = useState<MapInfo>(
+  //   mapInfo ? { lat: 37.5714, lng: 126.9769 } : mapInfo[0],
+  // );
+  const [mapCenter, setMapCenter] = useState<MapInfo>({
+    lat: 37.5714,
+    lng: 126.9769,
+  });
 
   const handleClickMarker = (location: { lat: number; lng: number }) => {
     setMapCenter(location);

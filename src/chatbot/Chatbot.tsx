@@ -24,10 +24,10 @@ const Chatbot = () => {
 
   const [chatLog, setChatLog] = useState<any[]>([]);
 
-  const mapInfo =
-    chatLog.length > 1 && chatLog[1].message?.placeList
-      ? chatLog[1].message.placeList.map((place: any) => place.location)
-      : [];
+  // const mapInfo =
+  //   chatLog.length > 1 && chatLog[1].message?.placeList
+  //     ? chatLog[1].message.placeList.map((place: any) => place.location)
+  //     : [];
   const [value, setValue] = useState<string>("");
   const userIdState = useRecoilValue(userId);
 
@@ -339,7 +339,6 @@ const Chatbot = () => {
           </div>
         </div>
         <ChatbotMap
-          mapInfo={mapInfo}
           selectedMarker={selectedMarker}
           setSelectedMarker={setSelectedMarker}
         />
