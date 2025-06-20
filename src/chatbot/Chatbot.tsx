@@ -289,7 +289,7 @@ const Chatbot = () => {
               </button>
             </div>
           )}
-          {chatLog.length === 0 ? (
+          {/* {chatLog.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
               <div className={styles.ask_to}>챗봇에게 물어보세요!</div>
@@ -312,7 +312,7 @@ const Chatbot = () => {
               )}
               <div ref={contentRef} />
             </div>
-          )}
+          )} */}
 
           <div
             className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
