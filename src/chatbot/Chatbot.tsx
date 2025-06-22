@@ -288,6 +288,8 @@ const Chatbot = () => {
       newEventSource.onerror = (err: any) => {
         console.error("SSE 연결 에러:", err);
         setLoading(false);
+        setShowModal(true);
+        setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
         newEventSource.close();
         reject(err);
       };
