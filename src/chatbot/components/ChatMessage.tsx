@@ -29,6 +29,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const handleClickUpdateBtn = () => {
     inputRef.current?.focus();
   };
+  const formatDetailText = (text: string) => {
+    return text.split(/(<br>|<n>)/g).map((chunk, idx) => {
+      if (chunk === "<br>")
+        return <div key={idx} style={{ marginBottom: "1em" }} />;
+      if (chunk === "<n>") return <br key={idx} />;
+      return chunk; // 태그 없이 텍스트만 반환
+    });
+  };
 
   return (
     <div className={`${styles.message} ${styles.chat_message}`}>
@@ -63,7 +71,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           ))}
         </div>
       )}
-      <div>{message.detail}</div>
+      {message.detail && <div>{formatDetailText(message.detail)}</div>}
       {message.placeList && message.placeList.length > 0 && (
         <div className={styles.button_wrapper}>
           <MainButton
