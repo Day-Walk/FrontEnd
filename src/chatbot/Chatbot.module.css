@@ -82,7 +82,7 @@
   color: var(--color-main);
   font-weight: bold;
   font-size: 18px;
-  width: 300px;
+  max-width: 300px;
   padding: 10px 16px;
   border-radius: 10px;
   font-weight: 400;
@@ -100,7 +100,7 @@
   align-self: end;
   background-color: var(--color-main);
   color: #fff;
-  text-align: right;
+  text-align: left;
 }
 
 .chat_message {
@@ -135,7 +135,7 @@
 
 .place_img {
   width: 100%;
-  height: auto;
+  height: 100%;
   flex-shrink: 0;
   object-fit: cover;
 }
@@ -146,11 +146,19 @@
   text-shadow: 0 0 4px #333;
   position: absolute;
   bottom: 4px;
-  right: 4px;
+  padding: 0px 5px;
+  max-width: 100%;
 }
 .place_idx {
   font-size: 20px;
   font-weight: bold;
+}
+
+.place_name {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .place_address {
   font-size: 12px;
@@ -183,8 +191,9 @@
 }
 
 .map_marker {
+  height: 40px;
   width: 40px;
-  aspect-ratio: 1/1;
+  /* aspect-ratio: 1/1; */
   background-color: var(--color-main);
   border-radius: 999px;
   text-align: center;
@@ -194,6 +203,7 @@
   color: #fff;
   font-weight: bold;
   font-size: 18px;
+  z-index: 10;
 }
 
 .selected_marker {
@@ -203,6 +213,7 @@
 .selected_img {
   outline: 3px solid var(--color-main);
 }
+
 .button_wrapper {
   display: flex;
   flex-direction: row;

@@ -4,24 +4,20 @@ import placeStyle from "../Chatbot.module.css";
 import { Check, MapPin, X } from "lucide-react";
 import { MainButton } from "./Buttons";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import { PlaceType } from "../Chatbot";
+import { api } from "../../utils/api";
+import { useRecoilValue } from "recoil";
+import { userId } from "../../recoil/userInfo";
 
 interface AddCourse {
-  courseInfo: [placeInfo: any];
+  courseInfo: PlaceType[];
   handleClose: () => void;
 }
 
-interface PlaceInfo {
-  placeId: string;
-  name: string;
-  address: string;
-  imgUrl: string;
-}
-
 interface CourseInfo {
-  userId?: string;
   title: string;
   visible: boolean;
-  placeList: PlaceInfo[];
+  placeList: PlaceType[];
 }
 
 const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
@@ -35,12 +31,30 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState("");
 
-    const handleClickCompleteBtn = () => {
+    const userIdState = useRecoilValue(userId);
+
+    const handleClickCompleteBtn = async () => {
       console.log(addCourseInfo);
       if (!addCourseInfo.title.trim()) {
         setShowModal(true);
         setMessage("코스 이름을 입력해주세요.");
         return;
+      }
+
+      try {
+        const res = await api.post("course", {
+          userId: userIdState,
+          title: addCourseInfo.title,
+          visible: addCourseInfo.visible,
+          placeList: courseInfo.map((place) => place.placeId),
+        });
+        console.log(res.data);
+        setShowModal(true);
+        setMessage("코스가 저장되었습니다.");
+      } catch (error) {
+        console.error("코스 저장 오류 : ", error);
+        setShowModal(true);
+        setMessage("코스 저장 중 오류가 발생했습니다.");
       }
     };
 
@@ -125,7 +139,13 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
           <MainButton onClick={handleClickCompleteBtn}>완료</MainButton>
         </div>
         {showModal && (
-          <AlertModal message={message} onClose={() => setShowModal(false)} />
+          <AlertModal
+            message={message}
+            onClose={() => {
+              setShowModal(false);
+              handleClose();
+            }}
+          />
         )}
       </div>
     );
