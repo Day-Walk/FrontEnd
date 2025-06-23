@@ -3,10 +3,6 @@
     {
       "source": "/:path*",
       "destination": "/"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "https://hktoss.shop/api/:path*"
     }
   ]
 }
