@@ -266,7 +266,9 @@ const PlaceModal = ({
               <div className={style.stars}>
                 <Star size={20} color="#FABD55" fill="#FABD55" />
                 &nbsp;
-                {reviewTotal?.reviewNum == 0 ? "리뷰 없음" : reviewTotal?.stars}
+                {!reviewTotal || reviewTotal?.reviewNum == 0
+                  ? "리뷰 없음"
+                  : reviewTotal?.stars}
               </div>
             </div>
             <div className={style.reviewTags} style={{ marginBottom: "24px" }}>
