@@ -12,12 +12,42 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import { Loading1 } from "../loading/Loading";
-import checkboxStyles from "../signup/Signup.module.css";
-import { Check } from "lucide-react";
 import * as Interfaces from "./interfaces/Interface";
+import ChatRecordPopUp from "./components/ChatRecordPopUp";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
+
+const ChatInput = ({
+  isFocused,
+  setIsFocused,
+  inputValue,
+  setInputValue,
+  inputRef,
+  handlePressEnter,
+  handleClickSendBtn,
+  loading,
+}: Interfaces.ChatInputProps) => {
+  return (
+    <div
+      className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
+    >
+      <textarea
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className={styles.chat_input}
+        placeholder={PLACE_HOLDER}
+        ref={inputRef}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onKeyDown={handlePressEnter}
+      />
+      <MainButton onClick={handleClickSendBtn} paddingY={10} disabled={loading}>
+        전송
+      </MainButton>
+    </div>
+  );
+};
 
 const Chatbot = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -52,6 +82,7 @@ const Chatbot = () => {
     return new Promise((resolve, reject) => {
       const newEventSource = new EventSource(
         `https://hktoss.shop/api/chat/connect?userId=${userIdState}`,
+        { withCredentials: true },
       );
 
       newEventSource.addEventListener("connect", (e: any) => {
@@ -242,70 +273,11 @@ const Chatbot = () => {
         )}
         <div className={styles.chat_wrapper}>
           {openPopup && (
-            <div className={styles.popup_container}>
-              <div className={styles.popup}>
-                채팅 기록은{" "}
-                <span style={{ color: "#00b493", fontWeight: 600 }}>
-                  7일동안{" "}
-                </span>
-                저장됩니다.
-                <br />
-                이후 기록은&nbsp;
-                <span style={{ color: "#EF4444", fontWeight: 600 }}>삭제</span>
-                됩니다.
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    position: "relative",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    id="popupCheckbox"
-                    className={checkboxStyles.checkbox}
-                    onChange={(e) => setIsChecked(e.target.checked)}
-                    checked={isChecked}
-                    style={{
-                      marginRight: "5px",
-                      width: "15px",
-                      height: "15px",
-                    }}
-                  />
-                  <label
-                    htmlFor="popupCheckbox"
-                    style={{ fontSize: "12px", color: "#b0b0b0" }}
-                  >
-                    오늘 하루 보지 않기
-                  </label>
-                  <Check
-                    color="#FFF"
-                    size={12}
-                    strokeWidth={3}
-                    style={{
-                      position: "absolute",
-                      left: "1px",
-                      top: "1px",
-                      pointerEvents: "none",
-                    }}
-                  />
-                </div>
-              </div>
-              <button
-                onClick={handleClickClosePopup}
-                className={styles.close_btn}
-              >
-                닫기
-              </button>
-            </div>
+            <ChatRecordPopUp
+              isChecked={isChecked}
+              setIsChecked={setIsChecked}
+              handleClickClosePopup={handleClickClosePopup}
+            />
           )}
           {chatLog?.length === 0 ? (
             <div className={styles.empty_chat}>
@@ -336,28 +308,16 @@ const Chatbot = () => {
               <div ref={contentRef} />
             </div>
           )}
-
-          <div
-            className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
-          >
-            <textarea
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              className={styles.chat_input}
-              placeholder={PLACE_HOLDER}
-              ref={inputRef}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              onKeyDown={handlePressEnter}
-            />
-            <MainButton
-              onClick={handleClickSendBtn}
-              paddingY={10}
-              disabled={loading}
-            >
-              전송
-            </MainButton>
-          </div>
+          <ChatInput
+            isFocused={isFocused}
+            setIsFocused={setIsFocused}
+            inputValue={value}
+            setInputValue={setValue}
+            inputRef={inputRef}
+            handlePressEnter={handlePressEnter}
+            handleClickSendBtn={handleClickSendBtn}
+            loading={loading}
+          />
         </div>
         <ChatbotMap
           mapInfo={selectedPlaceList}

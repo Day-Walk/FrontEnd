@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from "react";
-import styles from "./Modal.module.css";
+import styles from "./AddCourseModal.module.css";
 import placeStyle from "../Chatbot.module.css";
 import { Check, MapPin, X } from "lucide-react";
 import { MainButton } from "./Buttons";
@@ -9,20 +9,9 @@ import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 
-interface AddCourse {
-  courseInfo: Interfaces.PlaceType[];
-  handleCloseCourseSaveModal: () => void;
-}
-
-interface CourseInfo {
-  title: string;
-  visible: boolean;
-  placeList: Interfaces.PlaceType[];
-}
-
-const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
+const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
   ({ courseInfo, handleCloseCourseSaveModal }, ref) => {
-    const [addCourseInfo, setAddCourseInfo] = useState<CourseInfo>({
+    const [addCourseInfo, setAddCourseInfo] = useState<Interfaces.CourseInfo>({
       title: "",
       visible: false,
       placeList: courseInfo,

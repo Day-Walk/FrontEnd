@@ -19,6 +19,16 @@ export type MessageType = {
   createAt: string;
 };
 
+export type ChatResponse = {
+  placeList?: PlaceType[];
+  detail?: string;
+};
+
+export type CourseInfo = {
+  title: string;
+  visible: boolean;
+  placeList: PlaceType[];
+};
 export interface ChatMessageProps {
   message: ChatResponse;
   selectedMarker: { lat: number; lng: number } | null;
@@ -28,7 +38,23 @@ export interface ChatMessageProps {
   handleClick: () => void;
 }
 
-export type ChatResponse = {
-  placeList?: PlaceType[];
-  detail?: string;
-};
+export interface ChatRecordPopUpProps {
+  isChecked: boolean;
+  setIsChecked: (value: boolean) => void;
+  handleClickClosePopup: () => void;
+}
+export interface AddCourseProps {
+  courseInfo: PlaceType[];
+  handleCloseCourseSaveModal: () => void;
+}
+
+export interface ChatInputProps {
+  isFocused: boolean;
+  setIsFocused: (value: boolean) => void;
+  inputValue: string;
+  setInputValue: (value: string) => void;
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
+  handlePressEnter: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  handleClickSendBtn: () => void;
+  loading: boolean;
+}
