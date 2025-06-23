@@ -16,7 +16,7 @@ const Profile = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <>
+    <div className={style.contentArea}>
       <div className={style.profileWrapper}>
         <div className={style.nameWrapper}>
           <div className={style.profileName}>{userNameState}</div>
@@ -81,7 +81,7 @@ const Profile = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
