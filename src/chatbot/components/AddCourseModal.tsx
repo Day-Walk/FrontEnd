@@ -8,6 +8,7 @@ import * as Interfaces from "../interfaces/Interface";
 import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
+import NoImage from "../../assets/NoImage.png";
 
 const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
   ({ courseInfo, handleCloseCourseSaveModal }, ref) => {
@@ -95,11 +96,20 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
         <div className={styles.img_wrapper}>
           {courseInfo.map((place: any, idx: number) => (
             <div key={place.placeId} className={placeStyle.place_box}>
-              <img
+              {place.imgUrl ? (
+                <img
+                  src={place.imgUrl}
+                  alt={place.name}
+                  className={placeStyle.place_img}
+                />
+              ) : (
+                <img src={NoImage} className={styles.place_img} />
+              )}
+              {/* <img
                 src={place.imgUrl}
                 alt={place.name}
                 className={placeStyle.place_img}
-              />
+              /> */}
               <div className={placeStyle.place_info}>
                 <div
                   className={placeStyle.place_idx}
