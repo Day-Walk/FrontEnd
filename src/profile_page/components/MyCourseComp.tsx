@@ -18,8 +18,12 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    setIsOpen(course?.visible || true);
-  }, []);
+    if (course?.visible) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  }, [course?.visible]);
 
   const handleToggleVisibility = async () => {
     if (!course) return;
@@ -45,6 +49,9 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
   const handleCourseClick = () => {
     navigate(`/course/${course?.courseId}`);
   };
+  useEffect(() => {
+    console.log(course);
+  }, [course]);
 
   return (
     <div className={style.courseBlock}>
