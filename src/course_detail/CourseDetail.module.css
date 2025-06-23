@@ -23,6 +23,7 @@
   border: 1px solid transparent;
   border-radius: 20px;
   overflow: hidden;
+  cursor: pointer;
 }
 .placeBlockClick {
   outline-offset: -1px;
@@ -36,6 +37,7 @@
   width: 100px;
   height: 100px;
   margin: 0 20px;
+  border-radius: 20px;
 }
 .placeCategory {
   display: flex;
@@ -239,10 +241,10 @@
 .userName {
   color: var(--color-main);
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
 }
 .courseTitle {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   line-height: 1.5;
   margin: 24px;

@@ -18,8 +18,12 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    setIsOpen(course?.visible || true);
-  }, []);
+    if (course?.visible) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  }, [course?.visible]);
 
   const handleToggleVisibility = async () => {
     if (!course) return;
@@ -45,6 +49,9 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
   const handleCourseClick = () => {
     navigate(`/course/${course?.courseId}`);
   };
+  useEffect(() => {
+    console.log(course);
+  }, [course]);
 
   return (
     <div className={style.courseBlock}>
@@ -56,9 +63,9 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
         <div className={style.sideButtons}>
           <button onClick={handleToggleVisibility} className={style.btnCenter}>
             {isOpen ? (
-              <SquareCheck color="var(--color-main)" size={24} />
+              <SquareCheck color="var(--color-main)" size={20} />
             ) : (
-              <Square size={24} />
+              <Square size={20} />
             )}
             <label>&nbsp;공개</label>
           </button>

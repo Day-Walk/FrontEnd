@@ -24,10 +24,18 @@ const ChatInput = ({
   inputValue,
   setInputValue,
   inputRef,
-  handlePressEnter,
-  handleClickSendBtn,
+  sendChat,
+
   loading,
 }: Interfaces.ChatInputProps) => {
+  const handlePressEnter = async (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      await sendChat();
+    }
+  };
   return (
     <div
       className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
@@ -41,8 +49,9 @@ const ChatInput = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handlePressEnter}
+        disabled={loading}
       />
-      <MainButton onClick={handleClickSendBtn} paddingY={10} disabled={loading}>
+      <MainButton onClick={sendChat} paddingY={10} disabled={loading}>
         전송
       </MainButton>
     </div>
@@ -187,19 +196,6 @@ const Chatbot = () => {
     }
   };
 
-  const handlePressEnter = async (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      await sendChat();
-    }
-  };
-
-  const handleClickSendBtn = async () => {
-    await sendChat();
-  };
-
   const handleClickClosePopup = () => {
     setOpenPopup(false);
     if (isChecked) {
@@ -314,8 +310,7 @@ const Chatbot = () => {
             inputValue={value}
             setInputValue={setValue}
             inputRef={inputRef}
-            handlePressEnter={handlePressEnter}
-            handleClickSendBtn={handleClickSendBtn}
+            sendChat={sendChat}
             loading={loading}
           />
         </div>

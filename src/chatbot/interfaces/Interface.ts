@@ -54,7 +54,6 @@ export interface ChatInputProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
-  handlePressEnter: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
-  handleClickSendBtn: () => void;
+  sendChat: () => Promise<void>;
   loading: boolean;
 }
