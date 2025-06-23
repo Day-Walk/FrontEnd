@@ -25,9 +25,9 @@ const Course = (nowCourse: Interfaces.Course) => {
 
   const LikeIcon = () => {
     return like ? (
-      <AiFillHeart color="#E96563" size={30} style={{ cursor: "pointer" }} />
+      <AiFillHeart color="#E96563" size={22} style={{ cursor: "pointer" }} />
     ) : (
-      <AiOutlineHeart size={30} style={{ cursor: "pointer" }} />
+      <AiOutlineHeart size={22} style={{ cursor: "pointer" }} />
     );
   };
 
@@ -81,7 +81,7 @@ const Course = (nowCourse: Interfaces.Course) => {
           코스
         </div>
         <div className={style.like}>
-          <div className={style.likeNum}>{course?.courseLike}&nbsp;</div>
+          <div>{course?.courseLike}&nbsp;</div>
           <div onClick={handleLike}>
             <LikeIcon />
           </div>

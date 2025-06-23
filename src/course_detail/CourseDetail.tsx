@@ -114,9 +114,9 @@ const CourseDetail = () => {
 
   const LikeIcon = () => {
     return like ? (
-      <AiFillHeart color="#E96563" size={26} />
+      <AiFillHeart color="#E96563" size={24} style={{ cursor: "pointer" }} />
     ) : (
-      <AiOutlineHeart size={26} />
+      <AiOutlineHeart size={24} style={{ cursor: "pointer" }} />
     );
   };
 
@@ -130,13 +130,14 @@ const CourseDetail = () => {
       if (!like) {
         // 좋아요 등록
         await api.post("/course-like", body);
+        setMessage("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/course-like", {
           data: body,
         });
+        setMessage("코스 찜 리스트에 취소 완료!");
       }
-      setMessage("코스 찜 리스트에 추가 완료!");
       setShowModal(true);
       setLike(!like);
     } catch (error) {
@@ -177,17 +178,17 @@ const CourseDetail = () => {
                 <span className={style.userName}>{courseDetail?.userName}</span>
                 님의
               </div>
-              <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  display: "flex",
+                }}
+              >
                 <div style={{ fontSize: "20px" }}>
                   {courseDetail?.courseLike}&nbsp;
                 </div>
-                <button onClick={handleLike}>
+                <button onClick={handleLike} style={{ marginTop: "4px" }}>
                   <LikeIcon />
                 </button>
-
-                <span>
-                  <Share2 size={24} />
-                </span>
               </div>
             </div>
             <div>{courseDetail?.title} 코스</div>
