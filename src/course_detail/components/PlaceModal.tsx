@@ -116,13 +116,13 @@ const PlaceModal = ({
       if (!like) {
         // 좋아요 등록
         await api.post("/place-like", body);
-        setMessage("코스 찜 리스트에 추가 완료!");
+        setMessage("장소 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/place-like", {
           data: body,
         });
-        setMessage("코스 찜이 취소되었습니다.");
+        setMessage("장소 찜이 취소되었습니다.");
       }
       setShowModal(true);
       setLike(!like);

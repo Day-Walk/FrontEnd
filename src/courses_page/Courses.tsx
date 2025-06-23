@@ -10,6 +10,7 @@ import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../loading/Loading";
+import Footer from "../global_components/Footer/Footer";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -76,54 +77,55 @@ const Courses = () => {
   }
 
   return (
-    <div className={style.courseWrapper}>
-      {/* <div>코스 보기</div> */}
-      <div>
-        <SearchBox onSearchResults={handleSearchResults} />
-      </div>
-      {coursePage ? (
-        <>
-          <div className={style.sortWrapper}>
-            <button
-              className={sort == "like" ? style.click : undefined}
-              onClick={() => setSort("like")}
-            >
-              인기순
-            </button>
-            <p>&nbsp;|&nbsp;</p>
-            <button
-              className={sort == "latest" ? style.click : undefined}
-              onClick={() => setSort("latest")}
-            >
-              최신순
-            </button>
-          </div>
-          <div>
-            {coursePage &&
-              coursePage.page.map((c, i) => (
-                <div
-                  className={i === 0 ? undefined : style.courseList}
-                  key={c.courseId}
-                >
-                  <Course {...c} />
-                </div>
-              ))}
-          </div>
-          <div className={style.paginationWrapper}>
-            <Stack spacing={2}>
-              <Pagination
-                count={coursePagesData?.courseList.length}
-                page={nowPage}
-                onChange={handleChangePage}
-              />
-            </Stack>
-          </div>
-        </>
-      ) : (
-        <div style={{ margin: "60px 10px", color: "#aaa" }}>
-          해당하는 코스가 없어요. 😢
+    <div className={style.contentArea}>
+      <div className={style.courseWrapper}>
+        {/* <div>코스 보기</div> */}
+        <div>
+          <SearchBox onSearchResults={handleSearchResults} />
         </div>
-      )}
+        {coursePage ? (
+          <>
+            <div className={style.sortWrapper}>
+              <button
+                className={sort == "like" ? style.click : undefined}
+                onClick={() => setSort("like")}
+              >
+                인기순
+              </button>
+              <p>&nbsp;|&nbsp;</p>
+              <button
+                className={sort == "latest" ? style.click : undefined}
+                onClick={() => setSort("latest")}
+              >
+                최신순
+              </button>
+            </div>
+            <div>
+              {coursePage &&
+                coursePage.page.map((c, i) => (
+                  <div
+                    className={i === 0 ? undefined : style.courseList}
+                    key={c.courseId}
+                  >
+                    <Course {...c} />
+                  </div>
+                ))}
+            </div>
+            <div className={style.paginationWrapper}>
+              <Stack spacing={2}>
+                <Pagination
+                  count={coursePagesData?.courseList.length}
+                  page={nowPage}
+                  onChange={handleChangePage}
+                />
+              </Stack>
+            </div>
+          </>
+        ) : (
+          <div className={style.noCourse}>해당하는 코스가 없어요. 😢</div>
+        )}
+      </div>
+      <Footer />
     </div>
   );
 };

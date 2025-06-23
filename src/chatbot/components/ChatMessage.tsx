@@ -3,6 +3,7 @@ import styles from "../Chatbot.module.css";
 import { MapPin } from "lucide-react";
 import { MainButton } from "./Buttons";
 import ChatBot from "../../assets/ChatBot.png";
+import NoImage from "../../assets/NoImage.png";
 
 interface ChatMessageProps {
   message: MessageType;
@@ -34,7 +35,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       if (chunk === "<br>")
         return <div key={idx} style={{ marginBottom: "1em" }} />;
       if (chunk === "<n>") return <br key={idx} />;
-      return chunk; // 태그 없이 텍스트만 반환
+      return chunk;
     });
   };
 
@@ -49,11 +50,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               key={idx}
               className={`${styles.place_box} ${selectedMarker === place.location ? styles.selected_img : ""}`}
             >
-              <img
-                src={place.imgUrl}
-                alt={place.name}
-                className={styles.place_img}
-              />
+              {place.imgUrl ? (
+                <img
+                  src={place.imgUrl}
+                  alt={place.name}
+                  className={styles.place_img}
+                />
+              ) : (
+                <img src={NoImage} className={styles.place_img} />
+              )}
+
               <div className={styles.place_info}>
                 <div className={styles.place_idx}>{idx + 1}</div>
                 <div className={styles.place_name}>{place.name}</div>

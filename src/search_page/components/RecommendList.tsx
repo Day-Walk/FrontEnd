@@ -33,7 +33,7 @@ const RecommendedList: React.FC<Props> = ({
             <img src={NoImage} className={style.placeImg} />
           )}
           <div className={style.placeInfo}>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "start" }}>
               <span className={style.placeRecommend}>
                 <span>추천&nbsp;</span>
                 <ThumbsUp size={14} color="var(--color-main)" />
