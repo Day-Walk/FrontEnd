@@ -30,9 +30,21 @@ const Search = () => {
   const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
   const userNameState = useRecoilValue(userName);
 
-  const handlePlaceClick = (p: Interfaces.SearchPlace) => {
+  const postClickLog = async (placeId: string) => {
+    try {
+      await api.post("/click-log", {
+        placeId: placeId,
+        userId: userIdState,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handlePlaceClick = async (p: Interfaces.SearchPlace) => {
     setSelectedPlaceId(p.placeId);
     setSelectedPlace(p);
+    await postClickLog(p.placeId);
   };
 
   const [searchKeyword, setSearchKeyword] = useState<string>("");
