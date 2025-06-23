@@ -4,32 +4,32 @@ import placeStyle from "../Chatbot.module.css";
 import { Check, MapPin, X } from "lucide-react";
 import { MainButton } from "./Buttons";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
-import { PlaceType } from "../Chatbot";
+import * as Interfaces from "../interfaces/Interface";
 import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 
 interface AddCourse {
-  courseInfo: PlaceType[];
-  handleClose: () => void;
+  courseInfo: Interfaces.PlaceType[];
+  handleCloseCourseSaveModal: () => void;
 }
 
 interface CourseInfo {
   title: string;
   visible: boolean;
-  placeList: PlaceType[];
+  placeList: Interfaces.PlaceType[];
 }
 
 const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
-  ({ courseInfo, handleClose }, ref) => {
+  ({ courseInfo, handleCloseCourseSaveModal }, ref) => {
     const [addCourseInfo, setAddCourseInfo] = useState<CourseInfo>({
       title: "",
       visible: false,
       placeList: courseInfo,
     });
 
-    const [showModal, setShowModal] = useState(false);
-    const [message, setMessage] = useState("");
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>("");
 
     const userIdState = useRecoilValue(userId);
 
@@ -64,7 +64,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
           color="#333"
           size={24}
           style={{ placeSelf: "end", cursor: "pointer" }}
-          onClick={handleClose}
+          onClick={handleCloseCourseSaveModal}
         />
         <h2 className={styles.title}>내 코스에 추가하기</h2>
         <div className={styles.title_wrapper}>
@@ -133,7 +133,11 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
           ))}
         </div>
         <div className={styles.btn_wrapper}>
-          <MainButton bgColor="#d9d9d9" fontColor="#333" onClick={handleClose}>
+          <MainButton
+            bgColor="#d9d9d9"
+            fontColor="#333"
+            onClick={handleCloseCourseSaveModal}
+          >
             취소
           </MainButton>
           <MainButton onClick={handleClickCompleteBtn}>완료</MainButton>
@@ -143,7 +147,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, AddCourse>(
             message={message}
             onClose={() => {
               setShowModal(false);
-              handleClose();
+              handleCloseCourseSaveModal();
             }}
           />
         )}

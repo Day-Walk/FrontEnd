@@ -10,67 +10,43 @@ import ChatBot from "../assets/ChatBot.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
-
 import { api } from "../utils/api";
 import { Loading1 } from "../loading/Loading";
 import checkboxStyles from "../signup/Signup.module.css";
 import { Check } from "lucide-react";
+import * as Interfaces from "./interfaces/Interface";
 
-export type PlaceType = {
-  placeId: string;
-  name: string;
-  address: string;
-  imgUrl: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-};
-
-type MessageType = {
-  userId: string;
-  question: string;
-  answer: {
-    placeList: PlaceType[];
-    detail: string;
-  };
-  createAt: string;
-};
+const PLACE_HOLDER =
+  "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
 
 const Chatbot = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState("");
-  const placeholderText =
-    "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
-
-  const [chatLog, setChatLog] = useState<MessageType[]>([]);
-
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [chatLog, setChatLog] = useState<Interfaces.MessageType[]>([]);
   const [value, setValue] = useState<string>("");
   const userIdState = useRecoilValue(userId);
-
+  const [open, setOpen] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-
-  const [open, setOpen] = useState(false);
   const [selectedPlaceList, setSelectedPlaceList] = useState<
-    PlaceType[] | null
+    Interfaces.PlaceType[] | null
   >(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [openPopup, setOpenPopup] = useState<boolean>(false);
 
-  const handleOpen = (placeList: PlaceType[]) => {
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const clickRef = useRef(false);
+
+  const handleOpenCourseSaveModal = (placeList: Interfaces.PlaceType[]) => {
     setSelectedPlaceList(placeList);
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
-
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
-
-  const contentRef = useRef<HTMLDivElement>(null);
-  // 중복 요청 차단용
-  const clickRef = useRef(false);
-  const [loading, setLoading] = useState(false);
+  const handleCloseCourseSaveModal = () => setOpen(false);
 
   const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -91,7 +67,7 @@ const Chatbot = () => {
         }
 
         try {
-          const parsed: MessageType["answer"] = JSON.parse(e.data);
+          const parsed: Interfaces.MessageType["answer"] = JSON.parse(e.data);
           console.log("chatbot 이벤트 수신:", parsed);
 
           setChatLog((prev) => {
@@ -193,9 +169,6 @@ const Chatbot = () => {
     await sendChat();
   };
 
-  const [isChecked, setIsChecked] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
-
   const handleClickClosePopup = () => {
     setOpenPopup(false);
     if (isChecked) {
@@ -244,10 +217,10 @@ const Chatbot = () => {
   return (
     <>
       {selectedPlaceList && (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={open} onClose={handleCloseCourseSaveModal}>
           <AddCourseModal
             courseInfo={selectedPlaceList}
-            handleClose={handleClose}
+            handleCloseCourseSaveModal={handleCloseCourseSaveModal}
           />
         </Modal>
       )}
@@ -351,7 +324,7 @@ const Chatbot = () => {
                     message={chat.answer}
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
-                    handleModalOpen={handleOpen}
+                    handleModalOpen={handleOpenCourseSaveModal}
                     inputRef={inputRef}
                     handleClick={() => {
                       setSelectedPlaceList(chat.answer.placeList);
@@ -371,7 +344,7 @@ const Chatbot = () => {
               value={value}
               onChange={(e) => setValue(e.target.value)}
               className={styles.chat_input}
-              placeholder={placeholderText}
+              placeholder={PLACE_HOLDER}
               ref={inputRef}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}

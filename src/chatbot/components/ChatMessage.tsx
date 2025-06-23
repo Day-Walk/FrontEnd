@@ -4,22 +4,9 @@ import { MapPin } from "lucide-react";
 import { MainButton } from "./Buttons";
 import ChatBot from "../../assets/ChatBot.png";
 import NoImage from "../../assets/NoImage.png";
+import * as Interfaces from "../interfaces/Interface";
 
-interface ChatMessageProps {
-  message: MessageType;
-  selectedMarker: { lat: number; lng: number } | null;
-  setSelectedMarker: (value: { lat: number; lng: number }) => void;
-  handleModalOpen: (placeList: any) => void;
-  inputRef: React.RefObject<HTMLTextAreaElement | null>;
-  handleClick: () => void;
-}
-
-type MessageType = {
-  placeList?: any[];
-  detail?: string;
-};
-
-const ChatMessage: React.FC<ChatMessageProps> = ({
+const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   message,
   selectedMarker,
   setSelectedMarker,

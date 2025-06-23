@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { loadKakaoMap } from "../../KakaoMapLoader";
 import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
 import styles from "../Chatbot.module.css";
-import { PlaceType } from "../Chatbot";
+import * as Interfaces from "../interfaces/Interface";
 
 interface Location {
   lat: number;
@@ -10,7 +10,7 @@ interface Location {
 }
 
 interface ChatbotMap {
-  mapInfo: PlaceType[] | null;
+  mapInfo: Interfaces.PlaceType[] | null;
   selectedMarker: Location | null;
   setSelectedMarker: (value: Location) => void;
 }
