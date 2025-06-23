@@ -77,7 +77,7 @@ const Courses = () => {
   }
 
   return (
-    <>
+    <div className={style.contentArea}>
       <div className={style.courseWrapper}>
         {/* <div>코스 보기</div> */}
         <div>
@@ -122,13 +122,11 @@ const Courses = () => {
             </div>
           </>
         ) : (
-          <div style={{ margin: "60px 10px", color: "#aaa" }}>
-            해당하는 코스가 없어요. 😢
-          </div>
+          <div className={style.noCourse}>해당하는 코스가 없어요. 😢</div>
         )}
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
