@@ -25,7 +25,8 @@
   overflow: hidden;
 }
 .placeBlockClick {
-  border: 2px solid var(--color-main);
+  outline-offset: -1px;
+  outline: 2px solid var(--color-main);
 }
 .idx {
   font-size: 20px;
