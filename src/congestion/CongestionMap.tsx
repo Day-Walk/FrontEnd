@@ -6,13 +6,14 @@ import { Slider } from "@mui/material";
 import Marker from "./components/Marker";
 import axios from "axios";
 import { RotateCcw } from "lucide-react";
+import { api } from "../utils/api";
 
 export interface CongestionData {
   area_congest_lvl: string;
   area_congest_num: number;
   area_nm: string;
-  category: string;
-  congestion_color: string;
+  category?: string;
+  congestion_color?: string;
   x: number;
   y: number;
 }
@@ -42,9 +43,10 @@ const MARKS = [
 const CongestionMap = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [blink, setBlink] = useState(false);
+  const [markerValue, setMarkerValue] = useState<number>(1);
 
   const markerText = ["붐빔", "약간붐빔", "보통", "여유"];
-  const [realData, setRealData] = useState<CongestionData[]>();
+  const [data, setData] = useState<CongestionData[]>();
 
   const getData = async () => {
     setBlink(true);
@@ -52,7 +54,7 @@ const CongestionMap = () => {
       "https://data.seoul.go.kr/SeoulRtd/getCategoryList?page=1&category=전체보기&count=all&sort=true";
     try {
       const res = await axios.get(url);
-      setRealData(res.data.row);
+      setData(res.data.row);
     } catch (error) {
       console.error("API 호출 실패:", error);
     } finally {
@@ -62,11 +64,35 @@ const CongestionMap = () => {
     }
   };
 
+  const getCrowdData = async () => {
+    setBlink(true);
+    try {
+      const res = await api.get("/crowd", {
+        params: {
+          hour: markerValue,
+        },
+      });
+      setData(res.data.crowdLevel.row);
+    } catch (error) {
+      console.error("혼잡도 예측 데이터 호출 실패:", error);
+    } finally {
+      setTimeout(() => {
+        setBlink(false);
+      }, 500);
+    }
+  };
+
   useEffect(() => {
     getData();
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (tabIndex === 1) {
+      getCrowdData();
+    } else {
+      getData();
+    }
+  }, [markerValue, tabIndex]);
   return (
     <div
       style={{ width: "100%", height: "100%" }}
@@ -101,6 +127,10 @@ const CongestionMap = () => {
             max={12}
             min={1}
             style={{ width: "320px" }}
+            value={markerValue}
+            onChange={(e, value) => {
+              setMarkerValue(value as number);
+            }}
           ></Slider>
         )}
         <hr color="#e5e5e5" style={{ width: "100%" }} />
@@ -116,7 +146,7 @@ const CongestionMap = () => {
           ))}
         </div>
       </div>
-      <MapCompnent realData={realData ?? []} />
+      <MapCompnent data={data ?? []} />
     </div>
   );
 };
