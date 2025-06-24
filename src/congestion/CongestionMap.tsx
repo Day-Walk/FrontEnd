@@ -58,6 +58,8 @@ const CongestionMap = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {}, []);
   return (
     <>
       <div className={styles.wrapper}>

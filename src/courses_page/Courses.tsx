@@ -34,21 +34,21 @@ const Courses = () => {
     setCoursePage(coursePagesData?.courseList[value - 1]);
   };
 
+  const fetchCourses = async () => {
+    try {
+      const response = await api.get<Interfaces.CourseListResponse>(
+        `/course/all?sort=${sort}&userId=${userIdState}`,
+      );
+      setCoursePagesData(response.data);
+      setCoursePage(response.data.courseList[nowPage - 1]);
+      setLoading(false);
+      console.log("Fetched courses:", response.data);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await api.get<Interfaces.CourseListResponse>(
-          `/course/all?sort=${sort}&userId=${userIdState}`,
-        );
-        setCoursePagesData(response.data);
-        setCoursePage(response.data.courseList[nowPage - 1]);
-        setLoading(false);
-        console.log("Fetched courses:", response.data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-        setLoading(false);
-      }
-    };
     fetchCourses();
   }, [sort, nowPage]);
 
@@ -79,7 +79,6 @@ const Courses = () => {
   return (
     <div className={style.contentArea}>
       <div className={style.courseWrapper}>
-        {/* <div>코스 보기</div> */}
         <div>
           <SearchBox onSearchResults={handleSearchResults} />
         </div>
@@ -107,7 +106,7 @@ const Courses = () => {
                     className={i === 0 ? undefined : style.courseList}
                     key={c.courseId}
                   >
-                    <Course {...c} />
+                    <Course {...c} fetchCourses={fetchCourses} />
                   </div>
                 ))}
             </div>
