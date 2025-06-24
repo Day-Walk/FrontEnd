@@ -74,9 +74,20 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
           />
           {selectedMarker?.area_nm === data.area_nm && (
             <div className={styles.marker_info}>
-              <div>장소이름 : {selectedMarker.area_nm}</div>
-              <div>카테고리 : {selectedMarker.category}</div>
-              <div>혼잡도 : {selectedMarker.area_congest_lvl}</div>
+              <div className={styles.detail_title}>위치정보</div>
+              <div className={styles.detail_label}>장소이름</div>
+              <div className={styles.detail_value}>
+                {selectedMarker.area_nm}
+              </div>
+              <div className={styles.detail_label}>카테고리</div>
+              <div className={styles.detail_value}>
+                {" "}
+                {selectedMarker.category}
+              </div>
+              <div className={styles.detail_label}> 혼잡도</div>
+              <div className={styles.detail_value}>
+                {selectedMarker.area_congest_lvl}
+              </div>
             </div>
           )}
         </CustomOverlayMap>
