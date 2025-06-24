@@ -6,7 +6,7 @@ import Marker from "./Marker";
 import styles from "../Congestion.module.css";
 
 interface MapComponentProps {
-  realData: CongestionData[];
+  data: CongestionData[];
 }
 
 enum CongestionLevel {
@@ -16,7 +16,7 @@ enum CongestionLevel {
   "여유" = "#22C55E",
 }
 
-const MapCompnent: React.FC<MapComponentProps> = ({ realData }) => {
+const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
   const KAKAO_APPKEY = import.meta.env.VITE_KAKAOMAP_KEY;
   const [loaded, setLoaded] = useState(false);
 
@@ -30,7 +30,6 @@ const MapCompnent: React.FC<MapComponentProps> = ({ realData }) => {
   const handleClickMarker = (selectedData: CongestionData) => {
     setSelectedMarker(selectedData);
     setMapCenter({ lat: selectedData.x, lng: selectedData.y });
-    console.log(selectedData);
   };
 
   useEffect(() => {
@@ -51,7 +50,7 @@ const MapCompnent: React.FC<MapComponentProps> = ({ realData }) => {
       isPanto={true}
       onClick={() => setSelectedMarker(null)}
     >
-      {realData?.map((data, index) => (
+      {data?.map((data, index) => (
         <CustomOverlayMap
           key={data.area_nm}
           position={{ lat: data.x, lng: data.y }}
@@ -75,9 +74,20 @@ const MapCompnent: React.FC<MapComponentProps> = ({ realData }) => {
           />
           {selectedMarker?.area_nm === data.area_nm && (
             <div className={styles.marker_info}>
-              <div>장소이름 : {selectedMarker.area_nm}</div>
-              <div>카테고리 : {selectedMarker.category}</div>
-              <div>혼잡도 : {selectedMarker.area_congest_lvl}</div>
+              <div className={styles.detail_title}>위치정보</div>
+              <div className={styles.detail_label}>장소이름</div>
+              <div className={styles.detail_value}>
+                {selectedMarker.area_nm}
+              </div>
+              <div className={styles.detail_label}>카테고리</div>
+              <div className={styles.detail_value}>
+                {" "}
+                {selectedMarker.category}
+              </div>
+              <div className={styles.detail_label}> 혼잡도</div>
+              <div className={styles.detail_value}>
+                {selectedMarker.area_congest_lvl}
+              </div>
             </div>
           )}
         </CustomOverlayMap>

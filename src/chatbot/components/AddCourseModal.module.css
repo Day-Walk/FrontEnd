@@ -55,13 +55,14 @@
 }
 .share {
   color: var(--color-main);
+  cursor: pointer;
 }
 
 .img_wrapper {
   display: flex;
   width: 100%;
   overflow: auto;
-  height: 180px;
+  height: 150px;
   gap: 20px;
   padding-bottom: 10px;
 }
@@ -90,4 +91,11 @@
   justify-content: end;
   gap: 10px;
   margin: 10px 0 0;
+}
+
+.text {
+  flex-shrink: 0;
+  color: var(--color-main);
+  font-size: 18px;
+  font-weight: bold;
 }

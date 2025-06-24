@@ -69,6 +69,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
               }));
             }}
           />
+          <div className={styles.text}>코스</div>
         </div>
         <div className={styles.title_wrapper}>
           <input
@@ -82,6 +83,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
               }));
             }}
             checked={addCourseInfo.visible}
+            style={{ cursor: "pointer" }}
           />
           <label htmlFor="isShare" className={styles.share}>
             코스를 사람들과 공유하기
@@ -105,20 +107,24 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
               ) : (
                 <img src={NoImage} className={styles.place_img} />
               )}
-              {/* <img
-                src={place.imgUrl}
-                alt={place.name}
-                className={placeStyle.place_img}
-              /> */}
+
               <div className={placeStyle.place_info}>
                 <div
                   className={placeStyle.place_idx}
-                  style={{ marginBottom: "4px" }}
+                  style={{ padding: "2px" }}
                 >
                   {idx + 1}
                 </div>
-                <div style={{ marginBottom: "2px" }}>{place.name}</div>
-                <div className={placeStyle.place_address}>
+                <div
+                  className={placeStyle.place_name}
+                  style={{ padding: "2px" }}
+                >
+                  {place.name}
+                </div>
+                <div
+                  style={{ padding: "2px" }}
+                  className={placeStyle.place_address}
+                >
                   <MapPin
                     size={14}
                     style={{

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { getPlaceUrl } from "./getPlaceUrl";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../../loading/Loading";
+import NoImage from "../../assets/NoImage.png";
 
 const PlaceModal = ({
   placeId,
@@ -203,7 +204,7 @@ const PlaceModal = ({
         style={{ left: isModalOpen ? "0px" : "-400px" }}
       >
         <div className={isPlaceOnly ? style.placeModalOnly : style.placeModal}>
-          {selectedPlace && selectedPlace?.imgUrlList.length > 0 && (
+          {selectedPlace && (
             <div className={style.sliderWrapper}>
               {selectedPlace.imgUrlList.length > 1 && (
                 <button className={style.arrowLeft} onClick={handlePrev}>
@@ -217,14 +218,18 @@ const PlaceModal = ({
                     transform: `translateX(-${currentImgIndex * 100}%)`,
                   }}
                 >
-                  {selectedPlace?.imgUrlList.map((imgUrl, index) => (
-                    <img
-                      key={index}
-                      src={imgUrl}
-                      className={style.modalImg}
-                      alt={`Place Image ${index + 1}`}
-                    />
-                  ))}
+                  {selectedPlace.imgUrlList.length === 0 ? (
+                    <img src={NoImage} className={style.modalImg} />
+                  ) : (
+                    selectedPlace.imgUrlList.map((imgUrl, index) => (
+                      <img
+                        key={imgUrl}
+                        src={imgUrl}
+                        className={style.modalImg}
+                        alt={`Place Image ${index + 1}`}
+                      />
+                    ))
+                  )}
                 </div>
               </div>
               {selectedPlace.imgUrlList.length > 1 && (
