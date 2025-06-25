@@ -78,11 +78,7 @@ const UserLike = () => {
         );
         return prev.filter((item) => item !== index);
       } else {
-        if (prev.length >= 3) {
-          setShowModal(true);
-          setMessage("카테고리는 최대 3개까지만 선택이 가능합니다.");
-          return prev;
-        } else return [...prev, index];
+        return [...prev, index];
       }
     });
   };
@@ -119,20 +115,25 @@ const UserLike = () => {
             : item,
         );
       } else {
-        // 새로운 카테고리 추가
-        return [...prev, { categoryId, tagList: [tagId] }];
+        if (selectedTagList.length >= 3) {
+          setMessage("카테고리는 최대 3개까지만 선택할 수 있습니다.");
+          setShowModal(true);
+          return prev;
+        } else {
+          // 새로운 카테고리 추가
+          return [...prev, { categoryId, tagList: [tagId] }];
+        }
       }
     });
 
     // 모달 실행
     if (exceeded) {
       setShowModal(true);
-      setMessage("태그는 최대 5개까지만 선택할 수 있습니다.");
+      setMessage("카테고리 당 태그는 최대 5개까지만 선택할 수 있습니다.");
     }
   };
 
   const isFinished = () => {
-    if (selected.length < 1 || selected.length > 3) return false;
     if (selectedTagList.length < 1 || selectedTagList.length > 3) return false;
     for (let item of selectedTagList) {
       if (item.tagList.length < 1 || item.tagList.length > 5) return false;
@@ -185,19 +186,23 @@ const UserLike = () => {
           어떤 장소를 찾아보러 오셨나요?
         </div>
         <div className={styles.category_wrapper}>
-          {categories.map((category, index) => (
-            <button
-              key={category.categoryId}
-              className={`${styles.element} ${styles.button} ${
-                selected.includes(index) ? styles.selected_btn : ""
-              }`}
-              onClick={() => {
-                handleClickCategory(index);
-              }}
-            >
-              {category.categoryName}
-            </button>
-          ))}
+          {categories.map((category, index) => {
+            const isSelected = selected.includes(index);
+            const isInTagList = selectedTagList.some(
+              (tagList) => tagList.categoryId === category.categoryId,
+            );
+            return (
+              <button
+                key={category.categoryId}
+                className={`${styles.element} ${styles.button} ${isSelected && isInTagList ? styles.selected_btn : ""} ${isSelected && !isInTagList ? styles.selected_category : ""}`}
+                onClick={() => {
+                  handleClickCategory(index);
+                }}
+              >
+                {category.categoryName}
+              </button>
+            );
+          })}
         </div>
         <div className={styles.category_wrapper}>
           {tagList.map((tags, index) => (
