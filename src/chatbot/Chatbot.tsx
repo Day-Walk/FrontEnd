@@ -282,6 +282,8 @@ const Chatbot = () => {
                       setSelectedPlaceList(chat.answer.placeList);
                     }}
                     loading={loading && index === chatLog.length - 1}
+                    userMessage={chat.question}
+                    setInputValue={setValue}
                   />
                 ),
               ])}

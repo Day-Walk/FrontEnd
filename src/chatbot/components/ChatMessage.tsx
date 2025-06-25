@@ -24,8 +24,11 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   inputRef,
   handleClick,
   loading,
+  userMessage,
+  setInputValue,
 }) => {
-  const handleClickUpdateBtn = () => {
+  const handleClickReRecommed = () => {
+    setInputValue(userMessage);
     inputRef.current?.focus();
   };
   const formatDetailText = (text: string) => {
@@ -103,9 +106,9 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
             fontSize={14}
             bgColor="#F7A19B"
             style={{ flexShrink: 0 }}
-            onClick={handleClickUpdateBtn}
+            onClick={handleClickReRecommed}
           >
-            수정하기
+            다시 추천받기
           </MainButton>
           <MainButton
             onClick={() => {

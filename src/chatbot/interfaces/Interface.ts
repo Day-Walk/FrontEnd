@@ -45,6 +45,8 @@ export interface ChatMessageProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
   handleClick: () => void;
   loading: boolean;
+  userMessage: string;
+  setInputValue: (value: string) => void;
 }
 
 export interface ChatRecordPopUpProps {
