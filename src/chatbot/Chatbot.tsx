@@ -30,7 +30,6 @@ const ChatInput = ({
   setInputValue,
   inputRef,
   sendChat,
-
   loading,
 }: Interfaces.ChatInputProps) => {
   const handlePressEnter = async (
@@ -43,7 +42,7 @@ const ChatInput = ({
   };
   return (
     <div
-      className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
+      className={`${styles.input_wrapper} ${isFocused && !loading ? styles.focused : ""}`}
     >
       <textarea
         value={inputValue}
@@ -56,7 +55,12 @@ const ChatInput = ({
         onKeyDown={handlePressEnter}
         disabled={loading}
       />
-      <MainButton onClick={sendChat} paddingY={10} disabled={loading}>
+      <MainButton
+        onClick={sendChat}
+        paddingY={10}
+        disabled={loading}
+        bgColor={`${loading ? "#d9d9d9" : "#00B493"}`}
+      >
         전송
       </MainButton>
     </div>
@@ -109,6 +113,7 @@ const Chatbot = () => {
         if (e.data === "[DONE]") {
           newEventSource.close();
           setLoading(false);
+          inputRef.current?.focus();
           return;
         }
 
@@ -174,7 +179,6 @@ const Chatbot = () => {
       return;
     }
 
-    clickRef.current = true;
     setLoading(true);
     try {
       setChatLog((prev) => [
@@ -193,8 +197,6 @@ const Chatbot = () => {
       setShowModal(true);
       setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
       console.error("sendChat 실패", error);
-    } finally {
-      clickRef.current = false;
     }
   };
 
@@ -231,6 +233,12 @@ const Chatbot = () => {
       setChatLog(chatData);
     }
   }, [chatLogLoadable, setChatLog]);
+
+  useEffect(() => {
+    if (!loading) {
+      inputRef.current?.focus();
+    }
+  }, [loading]);
 
   return (
     <>
