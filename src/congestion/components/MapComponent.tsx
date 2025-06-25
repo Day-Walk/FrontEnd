@@ -4,6 +4,7 @@ import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
 import { CongestionData } from "../CongestionMap";
 import Marker from "./Marker";
 import styles from "../Congestion.module.css";
+import Loading from "../../global_components/Loading";
 
 interface MapComponentProps {
   data: CongestionData[];
@@ -39,7 +40,7 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
   }, []);
 
   if (!loaded) {
-    return <div>카카오맵 로딩 중...</div>;
+    return <Loading />;
   }
 
   return (

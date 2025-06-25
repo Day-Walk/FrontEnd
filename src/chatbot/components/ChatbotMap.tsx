@@ -3,6 +3,7 @@ import { loadKakaoMap } from "../../KakaoMapLoader";
 import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
 import styles from "../Chatbot.module.css";
 import * as Interfaces from "../interfaces/Interface";
+import Loading from "../../global_components/Loading";
 
 interface Location {
   lat: number;
@@ -45,7 +46,7 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
   }, [selectedMarker]);
 
   if (!loaded) {
-    return <div>카카오맵 로딩 중...</div>;
+    return <Loading />;
   }
 
   return (

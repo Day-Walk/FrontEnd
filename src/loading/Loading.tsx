@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./loading.module.css";
+import ChatBot from "../assets/ChatBot.png";
 
 interface LoadingProps {
   width?: string;
@@ -33,7 +34,7 @@ const Loading1: React.FC<LoadingProps> = ({ width = "200px", style = {} }) => {
   return (
     <LoadingWrapper>
       <img
-        src="../src/assets/ChatBot.png"
+        src={ChatBot}
         style={{
           width: `${width}`,
           ...style,
