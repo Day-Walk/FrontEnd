@@ -29,13 +29,22 @@ export type CourseInfo = {
   visible: boolean;
   placeList: PlaceType[];
 };
+
+export type MarkerInfo = {
+  location: {
+    lat: number;
+    lng: number;
+  };
+  placeId: string;
+};
 export interface ChatMessageProps {
   message: ChatResponse;
-  selectedMarker: { lat: number; lng: number } | null;
-  setSelectedMarker: (value: { lat: number; lng: number }) => void;
+  selectedMarker: MarkerInfo | null;
+  setSelectedMarker: (value: MarkerInfo) => void;
   handleModalOpen: (placeList: any) => void;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
   handleClick: () => void;
+  loading: boolean;
 }
 
 export interface ChatRecordPopUpProps {

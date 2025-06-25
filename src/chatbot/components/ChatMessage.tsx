@@ -6,6 +6,16 @@ import ChatBot from "../../assets/ChatBot.png";
 import NoImage from "../../assets/NoImage.png";
 import * as Interfaces from "../interfaces/Interface";
 
+const LoadingSpinner = () => {
+  return (
+    <div className={styles.dot_spinner}>
+      <div className={styles.dot} />
+      <div className={styles.dot} />
+      <div className={styles.dot} />
+    </div>
+  );
+};
+
 const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   message,
   selectedMarker,
@@ -13,6 +23,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   handleModalOpen,
   inputRef,
   handleClick,
+  loading,
 }) => {
   const handleClickUpdateBtn = () => {
     inputRef.current?.focus();
@@ -29,11 +40,20 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   return (
     <div className={`${styles.message} ${styles.chat_message}`}>
       <img src={ChatBot} alt="Chatbot" className={styles.chatbot_image} />
+      {loading && <LoadingSpinner />}
       {message.placeList && message.placeList.length > 0 && (
         <div onClick={handleClick} className={styles.place_wrapper}>
           {message?.placeList?.map((place: any, idx: number) => (
             <div
-              onClick={() => setSelectedMarker(place.location)}
+              onClick={() =>
+                setSelectedMarker({
+                  location: {
+                    lat: place.location.lat,
+                    lng: place.location.lng,
+                  },
+                  placeId: place.placeId,
+                })
+              }
               key={idx}
               className={`${styles.place_box} ${selectedMarker === place.location ? styles.selected_img : ""}`}
             >
@@ -90,8 +110,11 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
               handleClick();
               if (message.placeList && message.placeList.length > 0) {
                 setSelectedMarker({
-                  lat: message.placeList[0].location.lat,
-                  lng: message.placeList[0].location.lng,
+                  location: {
+                    lat: message.placeList[0].location.lat,
+                    lng: message.placeList[0].location.lng,
+                  },
+                  placeId: "",
                 });
               }
             }}
