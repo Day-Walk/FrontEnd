@@ -7,6 +7,7 @@ import Marker from "./components/Marker";
 import axios from "axios";
 import { RotateCcw } from "lucide-react";
 import { api } from "../utils/api";
+import Loading from "../global_components/Loading";
 
 export interface CongestionData {
   area_congest_lvl: string;
@@ -42,14 +43,14 @@ const MARKS = [
 
 const CongestionMap = () => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [blink, setBlink] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [markerValue, setMarkerValue] = useState<number>(1);
 
   const markerText = ["붐빔", "약간붐빔", "보통", "여유"];
-  const [data, setData] = useState<CongestionData[]>();
+  const [data, setData] = useState<CongestionData[]>([]);
 
   const getData = async () => {
-    setBlink(true);
+    setLoading(true);
     const url =
       "https://data.seoul.go.kr/SeoulRtd/getCategoryList?page=1&category=전체보기&count=all&sort=true";
     try {
@@ -58,14 +59,12 @@ const CongestionMap = () => {
     } catch (error) {
       console.error("API 호출 실패:", error);
     } finally {
-      setTimeout(() => {
-        setBlink(false);
-      }, 100);
+      setLoading(false);
     }
   };
 
   const getCrowdData = async () => {
-    setBlink(true);
+    setLoading(true);
     try {
       const res = await api.get("/crowd", {
         params: {
@@ -76,9 +75,7 @@ const CongestionMap = () => {
     } catch (error) {
       console.error("혼잡도 예측 데이터 호출 실패:", error);
     } finally {
-      setTimeout(() => {
-        setBlink(false);
-      }, 500);
+      setLoading(false);
     }
   };
 
@@ -94,60 +91,63 @@ const CongestionMap = () => {
     }
   }, [markerValue, tabIndex]);
   return (
-    <div
-      style={{ width: "100%", height: "100%" }}
-      className={blink ? styles.blink : ""}
-    >
-      <div className={styles.wrapper}>
-        {["실시간 혼잡도", "혼잡도 예측"].map((label, index) => {
-          const ButtonComponent =
-            tabIndex === index ? MainButton : BorderButton;
-          return (
-            <ButtonComponent
-              key={index}
-              onClick={() => {
-                setTabIndex(index);
+    <>
+      {loading && <Loading />}
+      <div
+        style={{ width: "100%", height: "100%" }}
+        className={loading ? styles.loading : ""}
+      >
+        <div className={styles.wrapper}>
+          {["실시간 혼잡도", "혼잡도 예측"].map((label, index) => {
+            const ButtonComponent =
+              tabIndex === index ? MainButton : BorderButton;
+            return (
+              <ButtonComponent
+                key={index}
+                onClick={() => {
+                  setTabIndex(index);
+                }}
+                style={{ height: "46px", borderRadius: "20px", width: "100%" }}
+              >
+                {label}
+              </ButtonComponent>
+            );
+          })}
+          <div className={styles.refresh_button} onClick={getData}>
+            새로고침
+            <RotateCcw size={16} color="#333" />
+          </div>
+          {tabIndex === 1 && (
+            <Slider
+              marks={MARKS}
+              defaultValue={1}
+              step={null}
+              valueLabelDisplay="auto"
+              max={12}
+              min={1}
+              style={{ width: "320px" }}
+              value={markerValue}
+              onChange={(e, value) => {
+                setMarkerValue(value as number);
               }}
-              style={{ height: "46px", borderRadius: "20px", width: "100%" }}
-            >
-              {label}
-            </ButtonComponent>
-          );
-        })}
-        <div className={styles.refresh_button} onClick={getData}>
-          새로고침
-          <RotateCcw size={16} color="#333" />
+            ></Slider>
+          )}
+          <hr color="#e5e5e5" style={{ width: "100%" }} />
+          <div className={styles.marker_wrapper}>
+            <Marker color="#EF4444" size={40} shadow={true} />
+            <Marker color="#F97316" size={40} shadow={true} />
+            <Marker color="#EAB308" size={40} shadow={true} />
+            <Marker color="#22C55E" size={40} shadow={true} />
+          </div>
+          <div className={styles.marker_wrapper}>
+            {markerText.map((text, index) => (
+              <div key={index}>{text}</div>
+            ))}
+          </div>
         </div>
-        {tabIndex === 1 && (
-          <Slider
-            marks={MARKS}
-            defaultValue={1}
-            step={null}
-            valueLabelDisplay="auto"
-            max={12}
-            min={1}
-            style={{ width: "320px" }}
-            value={markerValue}
-            onChange={(e, value) => {
-              setMarkerValue(value as number);
-            }}
-          ></Slider>
-        )}
-        <hr color="#e5e5e5" style={{ width: "100%" }} />
-        <div className={styles.marker_wrapper}>
-          <Marker color="#EF4444" size={40} shadow={true} />
-          <Marker color="#F97316" size={40} shadow={true} />
-          <Marker color="#EAB308" size={40} shadow={true} />
-          <Marker color="#22C55E" size={40} shadow={true} />
-        </div>
-        <div className={styles.marker_wrapper}>
-          {markerText.map((text, index) => (
-            <div key={index}>{text}</div>
-          ))}
-        </div>
+        <MapCompnent data={data ?? []} />
       </div>
-      <MapCompnent data={data ?? []} />
-    </div>
+    </>
   );
 };
 

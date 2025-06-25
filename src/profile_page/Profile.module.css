@@ -266,7 +266,7 @@
   -o-border-radius: 20px;
 }
 .pInfo {
-  width: 200px;
+  width: 100%;
 }
 .likePlaceGrid {
   display: grid;

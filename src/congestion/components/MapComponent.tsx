@@ -47,10 +47,10 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
     <Map
       center={mapCenter}
       style={{ width: "100%", height: "100%" }}
-      level={3}
+      level={8}
       isPanto={true}
       onClick={() => setSelectedMarker(null)}
-      minLevel={8}
+      minLevel={10}
     >
       {data?.map((data, index) => (
         <CustomOverlayMap
