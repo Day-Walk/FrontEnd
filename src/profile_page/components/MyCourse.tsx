@@ -65,7 +65,6 @@ const MyCourse = () => {
 
   return (
     <div className={style.courseWrapper}>
-      <div className={style.subTitle}>나의 코스</div>
       {coursePage ? (
         <>
           <div>

@@ -49,6 +49,7 @@ const Header = () => {
         color={selectedItem === "/profile" ? "#00b493" : "#888"}
         onClick={() => handleClickHeaderItem("/profile")}
         style={{ cursor: "pointer" }}
+        strokeWidth={1.5}
       />
     </div>
   );

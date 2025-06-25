@@ -80,7 +80,6 @@ const LikePlace = () => {
 
   return (
     <div className={style.courseWrapper}>
-      <div className={style.subTitle}>찜한 장소</div>
       {currentPagePlaces.length > 0 ? (
         <>
           <div className={style.likePlaceGrid}>
