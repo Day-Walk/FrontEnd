@@ -2,7 +2,7 @@
   width: 90%;
   margin-left: 5%;
   display: flex;
-  margin-top: 20px;
+  margin-top: 40px;
   flex: 1;
 }
 
@@ -16,7 +16,8 @@
   border: 1px solid #cccccc;
   border-radius: 12px;
   width: 200px;
-  height: 200px;
+  height: 180px;
+  flex-shrink: 0;
 }
 
 .rightWrapper {
@@ -251,6 +252,10 @@
   box-shadow: 0 0 2px rgba(102, 102, 102, 0.1);
   gap: 20px;
 }
+.pBlock:hover {
+  scale: 1.05;
+  transition: transform 0.2s ease-in-out;
+}
 .likePlaceImg {
   width: 130px;
   height: 130px;
@@ -306,6 +311,10 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
+}
+
+.settingBtn:hover {
+  background-color: #eee;
 }
 
 .modalOverlay {

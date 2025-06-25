@@ -72,7 +72,6 @@ const MyReview = () => {
 
   return (
     <div className={style.courseWrapper}>
-      <div className={style.subTitle}>내가 쓴 리뷰</div>
       {reviewPage ? (
         <>
           <div>

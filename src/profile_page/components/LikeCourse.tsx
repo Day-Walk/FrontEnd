@@ -66,7 +66,6 @@ const LikeCourse = () => {
 
   return (
     <div className={style.courseWrapper}>
-      <div className={style.subTitle}>찜한 코스</div>
       {coursePage ? (
         <>
           <div>
