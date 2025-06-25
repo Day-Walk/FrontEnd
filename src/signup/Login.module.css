@@ -36,6 +36,7 @@
   aspect-ratio: 600 / 90;
   margin-top: 20px;
   cursor: pointer;
+  place-self: center;
 }
 
 .title {
@@ -46,5 +47,7 @@
 }
 
 .discription {
-  color: #2c5044;
+  /* color: #2c5044; */
+  /* font-weight: 600; */
+  line-height: 22px;
 }
