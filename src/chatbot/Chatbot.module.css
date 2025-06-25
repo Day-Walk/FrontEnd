@@ -209,6 +209,7 @@
 }
 
 .selected_marker {
+  background-color: #00715d;
   animation: boing 1s ease-in-out infinite;
 }
 

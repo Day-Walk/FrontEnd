@@ -14,6 +14,7 @@ import { getPlaceUrl } from "./getPlaceUrl";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../../loading/Loading";
 import NoImage from "../../assets/NoImage.png";
+import ReactDOM from "react-dom";
 
 const PlaceModal = ({
   placeId,
@@ -46,53 +47,37 @@ const PlaceModal = ({
     setNowPage(value);
     setReviewList(reviews?.reviewList[value - 1]);
   };
-
   useEffect(() => {
-    const getPlace = async () => {
+    const fetchAllData = async () => {
+      setLoading(true);
       try {
-        const data = await api.get(
+        const placeRes = await api.get(
           `/place?placeId=${placeId}&userId=${currentUserId}`,
         );
-        setSelectedPlace(data.data.placeInfo);
-        if (isPlaceOnly && data.data.placeInfo.location && onSelectLocation) {
-          onSelectLocation(data.data.placeInfo.location);
+        setSelectedPlace(placeRes.data.placeInfo);
+        if (
+          isPlaceOnly &&
+          placeRes.data.placeInfo.location &&
+          onSelectLocation
+        ) {
+          onSelectLocation(placeRes.data.placeInfo.location);
         }
-        console.log(data.data);
-        setLoading(false);
-      } catch (e) {
-        console.log(e);
-        setShowModal(true);
-        setMessage("장소 상세 조회 중 오류가 발생했습니다.");
-        setLoading(false);
-      }
-    };
 
-    const getReview = async () => {
-      try {
-        const data = await api.get(`/review/all/place?placeId=${placeId}`);
-        setReviews(data.data);
-        setReviewList(data.data.reviewList[0]);
-        // console.log(data.data);
+        const reviewRes = await api.get(`/review/all/place?placeId=${placeId}`);
+        setReviews(reviewRes.data);
+        setReviewList(reviewRes.data.reviewList[0]);
+
+        const totalRes = await api.get(`/review/all/total?placeId=${placeId}`);
+        setReviewTotal(totalRes.data.reviewTotal);
       } catch (e) {
-        console.log(e);
+        console.error("데이터 요청 실패:", e);
         setShowModal(true);
-        setMessage("장소 리뷰 조회 중 오류가 발생했습니다.");
+        setMessage("장소 정보를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
       }
     };
-    const getReviewTotal = async () => {
-      try {
-        const data = await api.get(`/review/all/total?placeId=${placeId}`);
-        setReviewTotal(data.data.reviewTotal);
-        // console.log("***", data.data);
-      } catch (e) {
-        console.log(e);
-        setShowModal(true);
-        setMessage("리뷰 통계 조회 중 오류가 발생했습니다.");
-      }
-    };
-    getPlace();
-    getReview();
-    getReviewTotal();
+    fetchAllData();
   }, [placeId]);
 
   useEffect(() => {
@@ -176,267 +161,268 @@ const PlaceModal = ({
     return <div>장소 정보를 불러오는 중...</div>;
   }
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 20,
-        }}
-      >
-        <Loading1 />
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={
-        isPlaceOnly ? style.placeModalWrapperOnly : style.placeModalWrapper
-      }
-    >
+    <>
+      {loading &&
+        ReactDOM.createPortal(
+          <div className={style.fullScreenOverlay}>
+            <Loading1 />
+          </div>,
+          document.body,
+        )}
       <div
-        className={style.slideGroup}
-        style={{ left: isModalOpen ? "0px" : "-400px" }}
+        className={
+          isPlaceOnly ? style.placeModalWrapperOnly : style.placeModalWrapper
+        }
       >
-        <div className={isPlaceOnly ? style.placeModalOnly : style.placeModal}>
-          {selectedPlace && (
-            <div className={style.sliderWrapper}>
-              {selectedPlace.imgUrlList.length > 1 && (
-                <button className={style.arrowLeft} onClick={handlePrev}>
-                  <ChevronLeft />
-                </button>
-              )}
-              <div className={style.slideViewport}>
-                <div
-                  className={style.slideTrack}
-                  style={{
-                    transform: `translateX(-${currentImgIndex * 100}%)`,
-                  }}
-                >
-                  {selectedPlace.imgUrlList.length === 0 ? (
-                    <img src={NoImage} className={style.modalImg} />
-                  ) : (
-                    selectedPlace.imgUrlList.map((imgUrl, index) => (
-                      <img
-                        key={imgUrl}
-                        src={imgUrl}
-                        className={style.modalImg}
-                        alt={`Place Image ${index + 1}`}
-                      />
-                    ))
-                  )}
-                </div>
-              </div>
-              {selectedPlace.imgUrlList.length > 1 && (
-                <button className={style.arrowRight} onClick={handleNext}>
-                  <ChevronRight />
-                </button>
-              )}
-            </div>
-          )}
-
-          <div className={style.modalHeader}>
-            <div className={style.modalTitle}>{selectedPlace?.name}</div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span className={style.placeModalCategory}>
-                {selectedPlace?.category}({selectedPlace?.subCategory})
-              </span>
-              <div>
-                <button onClick={handleCreateReview}>
-                  <Pencil size={26} />
-                </button>
-                &nbsp;
-                <button onClick={handleLike}>
-                  <LikeIcon />
-                </button>
-                &nbsp;
-                <Share2 size={26} />
-              </div>
-            </div>
-          </div>
-
-          <div style={{ padding: "0 16px 0 26px" }}>
-            <div className={style.modalReviewTitle}>
-              <div className={style.stars}>
-                <Star size={20} color="#FABD55" fill="#FABD55" />
-                &nbsp;
-                {!reviewTotal || reviewTotal?.reviewNum == 0
-                  ? "리뷰 없음"
-                  : reviewTotal?.stars}
-              </div>
-            </div>
-            <div className={style.reviewTags} style={{ marginBottom: "24px" }}>
-              {reviewTotal?.tagList.map((tag, index) => (
-                <span key={index} className={style.reviewTotalTag}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <div>
-              <p style={{ lineHeight: "24px", fontSize: "14px" }}>
-                {selectedPlace?.content &&
-                  selectedPlace.content
-                    .replaceAll("<br>", ".") // <br>을 마침표로 대체
-                    .split(".")
-                    .map((line, idx) => {
-                      const trimmed = line.trim();
-                      return trimmed ? <p key={idx}>{trimmed}.</p> : null;
-                    })}
-              </p>
-            </div>
-            <br />
-            <br />
-            <hr color="#E5E5E5" />
-          </div>
-
-          <div className={style.modalContent}>
-            <div>
-              <div className={style.modalSubTitle}>주소</div>
-              {selectedPlace?.address?.split("<br>").map((line, idx) => (
-                <p style={{ lineHeight: "20px" }} key={idx}>
-                  {line}
-                </p>
-              ))}
-            </div>
-            <div>
-              <div className={style.modalSubTitle}>운영 시간</div>
-              {selectedPlace?.openTime?.split("<br>").map((line, idx) => (
-                <p style={{ lineHeight: "20px" }} key={idx}>
-                  {line}
-                </p>
-              ))}
-            </div>
-            <div>
-              <div className={style.modalSubTitle}>전화번호</div>
-              <p>
-                {selectedPlace?.phoneNum.map((num) => (
-                  <p
-                    key={num}
-                    className={style.phoneNum}
-                    style={{ lineHeight: "20px" }}
-                  >
-                    {num}
-                  </p>
-                ))}
-              </p>
-            </div>
-
-            <div className={style.viewDetailButton}>
-              {naverUrl && (
-                <a href={naverUrl} target="_blank" rel="noopener noreferrer">
-                  <button style={{ display: "flex", alignItems: "center" }}>
-                    <span>상세 정보 보기&nbsp;</span>
-                    <CircleChevronRight size={24} />
+        <div
+          className={style.slideGroup}
+          style={{ left: isModalOpen ? "0px" : "-400px" }}
+        >
+          <div
+            className={isPlaceOnly ? style.placeModalOnly : style.placeModal}
+          >
+            {selectedPlace && (
+              <div className={style.sliderWrapper}>
+                {selectedPlace.imgUrlList.length > 1 && (
+                  <button className={style.arrowLeft} onClick={handlePrev}>
+                    <ChevronLeft />
                   </button>
-                </a>
-              )}
-            </div>
-            <div>
-              <div>리뷰&nbsp;({reviewTotal?.reviewNum})</div>
+                )}
+                <div className={style.slideViewport}>
+                  <div
+                    className={style.slideTrack}
+                    style={{
+                      transform: `translateX(-${currentImgIndex * 100}%)`,
+                    }}
+                  >
+                    {selectedPlace.imgUrlList.length === 0 ? (
+                      <img src={NoImage} className={style.modalImg} />
+                    ) : (
+                      selectedPlace.imgUrlList.map((imgUrl, index) => (
+                        <img
+                          key={imgUrl}
+                          src={imgUrl}
+                          className={style.modalImg}
+                          alt={`Place Image ${index + 1}`}
+                        />
+                      ))
+                    )}
+                  </div>
+                </div>
+                {selectedPlace.imgUrlList.length > 1 && (
+                  <button className={style.arrowRight} onClick={handleNext}>
+                    <ChevronRight />
+                  </button>
+                )}
+              </div>
+            )}
+
+            <div className={style.modalHeader}>
+              <div className={style.modalTitle}>{selectedPlace?.name}</div>
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
-                {reviewList &&
-                  reviewList.page &&
-                  reviewList.page.map((review, index) => (
-                    <>
-                      <div key={index} className={style.reviewBlock}>
-                        <div className={style.reviewHeader}>
-                          <span className={style.reviewUserName}>
-                            <CircleUserRound size={24} />
-                            &nbsp;{review.userName}
-                          </span>
-                          <div className={style.stars}>
-                            <Star size={20} color="#FABD55" fill="#FABD55" />{" "}
-                            &nbsp;
-                            {review.stars.toFixed(1)}
-                          </div>
-                        </div>
-                        <div className={style.reviewContentBlock}>
-                          {review.imgUrl && (
-                            <a
-                              href={review.imgUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <img
-                                src={review.imgUrl}
-                                alt={`Review Image ${index + 1}`}
-                                className={style.reviewImg}
-                              />
-                            </a>
-                          )}
-                          <div>
-                            <span className={style.reviewDate}>
-                              작성일 : {review.createAt.split("T")[0]}
-                            </span>
-                            <div className={style.reviewContent}>
-                              {review.content}
-                            </div>
-                          </div>
-                        </div>
-                        <div className={style.reviewTags}>
-                          {review.tagList.map((tag, tagIndex) => (
-                            <span key={tagIndex} className={style.reviewTag}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  ))}
-
-                <div className={style.paginationWrapper}>
-                  <Stack spacing={2}>
-                    <Pagination
-                      count={reviews?.reviewList.length}
-                      page={nowPage}
-                      onChange={handleChangePage}
-                    />
-                  </Stack>
+                <span className={style.placeModalCategory}>
+                  {selectedPlace?.category}({selectedPlace?.subCategory})
+                </span>
+                <div>
+                  <button onClick={handleCreateReview}>
+                    <Pencil size={26} />
+                  </button>
+                  &nbsp;
+                  <button onClick={handleLike}>
+                    <LikeIcon />
+                  </button>
+                  &nbsp;
+                  <Share2 size={26} />
                 </div>
               </div>
-              <div style={{ marginBottom: "20px" }}></div>
+            </div>
+
+            <div style={{ padding: "0 16px 0 26px" }}>
+              <div className={style.modalReviewTitle}>
+                <div className={style.stars}>
+                  <Star size={20} color="#FABD55" fill="#FABD55" />
+                  &nbsp;
+                  {!reviewTotal || reviewTotal?.reviewNum == 0
+                    ? "리뷰 없음"
+                    : reviewTotal?.stars}
+                </div>
+              </div>
+              <div
+                className={style.reviewTags}
+                style={{ marginBottom: "24px" }}
+              >
+                {reviewTotal?.tagList.map((tag, index) => (
+                  <span key={index} className={style.reviewTotalTag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div>
+                <p style={{ lineHeight: "24px", fontSize: "14px" }}>
+                  {selectedPlace?.content &&
+                    selectedPlace.content
+                      .replaceAll("<br>", ".") // <br>을 마침표로 대체
+                      .split(".")
+                      .map((line, idx) => {
+                        const trimmed = line.trim();
+                        return trimmed ? <p key={idx}>{trimmed}.</p> : null;
+                      })}
+                </p>
+              </div>
+              <br />
+              <br />
+              <hr color="#E5E5E5" />
+            </div>
+
+            <div className={style.modalContent}>
+              <div>
+                <div className={style.modalSubTitle}>주소</div>
+                {selectedPlace?.address?.split("<br>").map((line, idx) => (
+                  <p style={{ lineHeight: "20px" }} key={idx}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <div>
+                <div className={style.modalSubTitle}>운영 시간</div>
+                {selectedPlace?.openTime?.split("<br>").map((line, idx) => (
+                  <p style={{ lineHeight: "20px" }} key={idx}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <div>
+                <div className={style.modalSubTitle}>전화번호</div>
+                <p>
+                  {selectedPlace?.phoneNum.map((num) => (
+                    <p
+                      key={num}
+                      className={style.phoneNum}
+                      style={{ lineHeight: "20px" }}
+                    >
+                      {num}
+                    </p>
+                  ))}
+                </p>
+              </div>
+
+              <div className={style.viewDetailButton}>
+                {naverUrl && (
+                  <a href={naverUrl} target="_blank" rel="noopener noreferrer">
+                    <button style={{ display: "flex", alignItems: "center" }}>
+                      <span>상세 정보 보기&nbsp;</span>
+                      <CircleChevronRight size={24} />
+                    </button>
+                  </a>
+                )}
+              </div>
+              <div>
+                <div>
+                  {reviewTotal
+                    ? `리뷰 (${reviewTotal?.reviewNum})`
+                    : "리뷰없음"}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  {reviewList &&
+                    reviewList.page &&
+                    reviewList.page.map((review, index) => (
+                      <>
+                        <div key={index} className={style.reviewBlock}>
+                          <div className={style.reviewHeader}>
+                            <span className={style.reviewUserName}>
+                              <CircleUserRound size={24} />
+                              &nbsp;{review.userName}
+                            </span>
+                            <div className={style.stars}>
+                              <Star size={20} color="#FABD55" fill="#FABD55" />{" "}
+                              &nbsp;
+                              {review.stars.toFixed(1)}
+                            </div>
+                          </div>
+                          <div className={style.reviewContentBlock}>
+                            {review.imgUrl && (
+                              <a
+                                href={review.imgUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <img
+                                  src={review.imgUrl}
+                                  alt={`Review Image ${index + 1}`}
+                                  className={style.reviewImg}
+                                />
+                              </a>
+                            )}
+                            <div>
+                              <span className={style.reviewDate}>
+                                작성일 : {review.createAt.split("T")[0]}
+                              </span>
+                              <div className={style.reviewContent}>
+                                {review.content}
+                              </div>
+                            </div>
+                          </div>
+                          <div className={style.reviewTags}>
+                            {review.tagList.map((tag, tagIndex) => (
+                              <span key={tagIndex} className={style.reviewTag}>
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    ))}
+
+                  <div className={style.paginationWrapper}>
+                    <Stack spacing={2}>
+                      <Pagination
+                        count={reviews?.reviewList.length}
+                        page={nowPage}
+                        onChange={handleChangePage}
+                      />
+                    </Stack>
+                  </div>
+                </div>
+                <div style={{ marginBottom: "20px" }}></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {!isModalOpen && (
-          <button
-            className={style.slideOutButton}
-            onClick={() => setIsModalOpen(true)}
-          >
-            <ChevronRight size={24} />
-          </button>
-        )}
-        {isModalOpen && (
-          <button
-            className={style.slideInButton}
-            onClick={() => setIsModalOpen(false)}
-          >
-            <ChevronLeft size={24} />
-          </button>
+          {!isModalOpen && (
+            <button
+              className={style.slideOutButton}
+              onClick={() => setIsModalOpen(true)}
+            >
+              <ChevronRight size={24} />
+            </button>
+          )}
+          {isModalOpen && (
+            <button
+              className={style.slideInButton}
+              onClick={() => setIsModalOpen(false)}
+            >
+              <ChevronLeft size={24} />
+            </button>
+          )}
+        </div>
+        {showModal && (
+          <AlertModal message={message} onClose={() => setShowModal(false)} />
         )}
       </div>
-      {showModal && (
-        <AlertModal message={message} onClose={() => setShowModal(false)} />
-      )}
-    </div>
+    </>
   );
 };
 export default PlaceModal;

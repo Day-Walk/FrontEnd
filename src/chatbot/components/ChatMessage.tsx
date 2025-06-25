@@ -43,45 +43,47 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
       {loading && <LoadingSpinner />}
       {message.placeList && message.placeList.length > 0 && (
         <div onClick={handleClick} className={styles.place_wrapper}>
-          {message?.placeList?.map((place: any, idx: number) => (
-            <div
-              onClick={() =>
-                setSelectedMarker({
-                  location: {
-                    lat: place.location.lat,
-                    lng: place.location.lng,
-                  },
-                  placeId: place.placeId,
-                })
-              }
-              key={idx}
-              className={`${styles.place_box} ${selectedMarker === place.location ? styles.selected_img : ""}`}
-            >
-              {place.imgUrl ? (
-                <img
-                  src={place.imgUrl}
-                  alt={place.name}
-                  className={styles.place_img}
-                />
-              ) : (
-                <img src={NoImage} className={styles.place_img} />
-              )}
-
-              <div className={styles.place_info}>
-                <div className={styles.place_idx}>{idx + 1}</div>
-                <div className={styles.place_name}>{place.name}</div>
-                <div className={styles.place_address}>
-                  <MapPin
-                    size={14}
-                    style={{
-                      filter: " drop-shadow(0 0 4px #333)",
-                    }}
+          {message?.placeList?.map(
+            (place: Interfaces.PlaceType, idx: number) => (
+              <div
+                onClick={() =>
+                  setSelectedMarker({
+                    location: {
+                      lat: place.location.lat,
+                      lng: place.location.lng,
+                    },
+                    placeId: place.placeId,
+                  })
+                }
+                key={idx}
+                className={`${styles.place_box} ${selectedMarker?.location.lat === place.location.lat && selectedMarker?.location.lng === place.location.lng ? styles.selected_img : ""}`}
+              >
+                {place.imgUrl ? (
+                  <img
+                    src={place.imgUrl}
+                    alt={place.name}
+                    className={styles.place_img}
                   />
-                  {place.address.split(" ").slice(0, 2).join(" ")}
+                ) : (
+                  <img src={NoImage} className={styles.place_img} />
+                )}
+
+                <div className={styles.place_info}>
+                  <div className={styles.place_idx}>{idx + 1}</div>
+                  <div className={styles.place_name}>{place.name}</div>
+                  <div className={styles.place_address}>
+                    <MapPin
+                      size={14}
+                      style={{
+                        filter: " drop-shadow(0 0 4px #333)",
+                      }}
+                    />
+                    {place.address.split(" ").slice(0, 2).join(" ")}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       )}
       {message.detail && <div>{formatDetailText(message.detail)}</div>}
