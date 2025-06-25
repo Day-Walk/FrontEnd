@@ -49,11 +49,13 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
       level={3}
       isPanto={true}
       onClick={() => setSelectedMarker(null)}
+      minLevel={8}
     >
       {data?.map((data, index) => (
         <CustomOverlayMap
           key={data.area_nm}
           position={{ lat: data.x, lng: data.y }}
+          zIndex={selectedMarker?.area_nm === data.area_nm ? 100 : 1}
         >
           <Marker
             size={40}
@@ -81,7 +83,6 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
               </div>
               <div className={styles.detail_label}>카테고리</div>
               <div className={styles.detail_value}>
-                {" "}
                 {selectedMarker.category}
               </div>
               <div className={styles.detail_label}> 혼잡도</div>

@@ -54,6 +54,7 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
       style={{ width: "100%", height: "100%" }}
       level={3}
       isPanto={true}
+      minLevel={8}
     >
       {mapInfo?.map((info, index) => {
         const isSelected =
