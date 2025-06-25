@@ -119,7 +119,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
                     lat: message.placeList[0].location.lat,
                     lng: message.placeList[0].location.lng,
                   },
-                  placeId: "",
+                  placeId: message.placeList[0].placeId,
                 });
               }
             }}

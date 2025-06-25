@@ -11,7 +11,7 @@ const ChatRecordPopUp = ({
   return (
     <div className={styles.popup_container}>
       <div className={styles.popup}>
-        채팅 기록은
+        채팅 기록은&nbsp;
         <span style={{ color: "#00b493", fontWeight: 600 }}>7일동안 </span>
         저장됩니다.
         <br />

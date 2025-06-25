@@ -25,6 +25,10 @@
   overflow-x: auto;
   overflow-y: hidden;
 }
+.coursePlaceList:hover {
+  scale: 1.05;
+  transition: transform 0.2s ease-in-out;
+}
 
 .placeBlock {
   position: relative;
