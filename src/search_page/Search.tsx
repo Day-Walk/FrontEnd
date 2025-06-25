@@ -242,24 +242,23 @@ const Search = () => {
   return (
     <div className={style.courseDetailWrapper}>
       <div className={style.detailLeft}>
-        {/* <h1>Course Detail : {id}</h1> */}
-        <div>
-          {!recommendedPlaces && (
-            <div className={style.courseTitleNone}>
-              <img src={RobotImage} width={150} />
-              <div>
-                <span style={{ color: "var(--color-main)" }}>
-                  {userNameState}
-                </span>
-                님!
-                <br />
-                관심있는 장소를
-                <br />
-                검색해보세요.
-              </div>
+        <SearchBox onSearch={onSearch} />
+        {!recommendedPlaces && (
+          <div className={style.courseTitleNone}>
+            <img src={RobotImage} width={150} />
+            <div>
+              <span style={{ color: "var(--color-main)" }}>
+                {userNameState}
+              </span>
+              님!
+              <br />
+              관심있는 장소를
+              <br />
+              검색해보세요.
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
         <div>
           {recommendedPlaces &&
             (recommendedPlaces.length > 0 ? (
@@ -300,9 +299,9 @@ const Search = () => {
       </div>
       <div className={style.detailRight}>
         <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-        <div className={style.searchBoxWrapper}>
+        {/* <div className={style.searchBoxWrapper}>
           <SearchBox onSearch={onSearch} />
-        </div>
+        </div> */}
         {selectedPlaceId && selectedPlaceId.length > 0 && (
           <PlaceModal
             placeId={selectedPlaceId ? selectedPlaceId : ""}
