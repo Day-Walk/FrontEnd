@@ -1,7 +1,6 @@
 import styles from "./Header.module.css";
 import Logo from "../../assets/DayWalkLogo.png";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import {
   BotMessageSquare,
   CircleUserRound,
@@ -11,61 +10,25 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const iconInfo = {
-  size: 24,
-  color: "#333333",
-};
 const items = [
-  {
-    title: "코스보기",
-    icon: <Map size={iconInfo.size} color={iconInfo.color} />,
-    url: "/",
-  },
-  {
-    title: "장소검색",
-    icon: <Search size={iconInfo.size} color={iconInfo.color} />,
-    url: "/search",
-  },
-  {
-    title: "챗봇",
-    icon: <BotMessageSquare size={iconInfo.size} color={iconInfo.color} />,
-    url: "/chatbot",
-  },
-  {
-    title: "혼잡도",
-    icon: <Radio size={iconInfo.size} color={iconInfo.color} />,
-    url: "/congestion",
-  },
+  { title: "코스보기", url: "/" },
+  { title: "장소검색", url: "/search" },
+  { title: "챗봇", url: "/chatbot" },
+  { title: "혼잡도", url: "/congestion" },
 ];
 
 const Header = () => {
   const navigate = useNavigate();
-  const [selectedItem, setSelectedItem] = useState<string | null>("/");
+  const pathname = useLocation().pathname;
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleClickHeaderItem = (url: string) => {
     setSelectedItem(url);
     navigate(url);
   };
 
-  const pathname = useLocation().pathname;
   useEffect(() => {
-    console.log("pathname:", pathname);
-
-    if (pathname === selectedItem) return;
-
-    if (pathname === "/") {
-      setSelectedItem("/");
-    } else if (pathname === "/search") {
-      setSelectedItem("/search");
-    } else if (pathname === "/chatbot") {
-      setSelectedItem("/chatbot");
-    } else if (pathname === "/congestion") {
-      setSelectedItem("/congestion");
-    } else if (pathname === "/profile") {
-      setSelectedItem("/profile");
-    } else {
-      setSelectedItem(null);
-    }
+    setSelectedItem(pathname);
   }, [pathname]);
 
   return (
@@ -78,12 +41,12 @@ const Header = () => {
       />
       <HeaderItems
         items={items}
-        handleClick={handleClickHeaderItem}
         selectedItem={selectedItem}
+        handleClick={handleClickHeaderItem}
       />
       <CircleUserRound
         size={32}
-        color={selectedItem === "/profile" ? "#00B493" : "#333333"}
+        color={selectedItem === "/profile" ? "#00b493" : "#888"}
         onClick={() => handleClickHeaderItem("/profile")}
         style={{ cursor: "pointer" }}
       />
@@ -94,7 +57,7 @@ const Header = () => {
 interface HeaderItemsProps {
   handleClick: (url: string) => void;
   selectedItem: string | null;
-  items: { title: string; icon: JSX.Element; url: string }[];
+  items: { title: string; url: string }[];
 }
 
 const HeaderItems = ({
@@ -102,22 +65,39 @@ const HeaderItems = ({
   selectedItem,
   items,
 }: HeaderItemsProps) => {
+  const getIcon = (title: string, selected: boolean) => {
+    const color = selected ? "#333" : "#888";
+    switch (title) {
+      case "코스보기":
+        return <Map size={20} color={color} />;
+      case "장소검색":
+        return <Search size={20} color={color} />;
+      case "챗봇":
+        return <BotMessageSquare size={20} color={color} />;
+      case "혼잡도":
+        return <Radio size={20} color={color} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <ul className={styles.item_list_wrapper}>
-      {items.map((item) => (
-        <li
-          className={styles.item_list}
-          key={item.title}
-          onClick={() => handleClick(item.url)}
-        >
-          {item.icon}
-          <span
-            className={`${selectedItem === item.url ? styles.selected_item : ""}`}
+      {items.map((item) => {
+        const isSelected = selectedItem === item.url;
+        return (
+          <li
+            className={styles.item_list}
+            key={item.title}
+            onClick={() => handleClick(item.url)}
           >
-            {item.title}
-          </span>
-        </li>
-      ))}
+            {getIcon(item.title, isSelected)}
+            <span className={isSelected ? styles.selected_item : ""}>
+              {item.title}
+            </span>
+          </li>
+        );
+      })}
     </ul>
   );
 };
