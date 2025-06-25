@@ -4,6 +4,7 @@ import axios from "axios";
 import { api } from "../../utils/api";
 import { useSetRecoilState } from "recoil";
 import { userId, userName } from "../../recoil/userInfo";
+import Loading from "../../global_components/Loading";
 
 const KakaoCallback = () => {
   const location = useLocation();
@@ -96,7 +97,7 @@ const KakaoCallback = () => {
     fetchKakaoUser();
   }, [location.search]);
 
-  return <div>카카오 로그인 처리 중입니다...</div>;
+  return <Loading />;
 };
 
 export default KakaoCallback;

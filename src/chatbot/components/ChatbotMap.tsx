@@ -3,6 +3,7 @@ import { loadKakaoMap } from "../../KakaoMapLoader";
 import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
 import styles from "../Chatbot.module.css";
 import * as Interfaces from "../interfaces/Interface";
+import Loading from "../../global_components/Loading";
 
 interface Location {
   lat: number;
@@ -11,8 +12,8 @@ interface Location {
 
 interface ChatbotMap {
   mapInfo: Interfaces.PlaceType[] | null;
-  selectedMarker: Location | null;
-  setSelectedMarker: (value: Location) => void;
+  selectedMarker: Interfaces.MarkerInfo | null;
+  setSelectedMarker: (value: Interfaces.MarkerInfo) => void;
 }
 
 const ChatbotMap: React.FC<ChatbotMap> = ({
@@ -29,26 +30,23 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
       .catch((err) => console.error("카카오맵 로딩 실패", err));
   }, []);
 
-  const [mapCenter, setMapCenter] = useState<Location>(
-    mapInfo && mapInfo.length > 0
-      ? selectedMarker
-        ? selectedMarker
-        : mapInfo[0].location
-      : { lat: 37.5714, lng: 126.9769 },
-  );
+  const [mapCenter, setMapCenter] = useState<Location>({
+    lat: 37.5714,
+    lng: 126.9769,
+  });
 
-  const handleClickMarker = (location: { lat: number; lng: number }) => {
+  const handleClickMarker = (location: Location, placeId: string) => {
     setMapCenter(location);
-    setSelectedMarker(location);
-    console.log(location);
+    setSelectedMarker({ location, placeId });
+    console.log(location, placeId);
   };
 
   useEffect(() => {
-    if (selectedMarker) setMapCenter(selectedMarker);
+    if (selectedMarker) setMapCenter(selectedMarker.location);
   }, [selectedMarker]);
 
   if (!loaded) {
-    return <div>카카오맵 로딩 중...</div>;
+    return <Loading />;
   }
 
   return (
@@ -57,11 +55,12 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
       style={{ width: "100%", height: "100%" }}
       level={3}
       isPanto={true}
+      minLevel={8}
     >
       {mapInfo?.map((info, index) => {
         const isSelected =
-          selectedMarker?.lat === info.location.lat &&
-          selectedMarker?.lng === info.location.lng;
+          selectedMarker?.location?.lat === info.location.lat &&
+          selectedMarker?.location?.lng === info.location.lng;
 
         return (
           <CustomOverlayMap
@@ -73,7 +72,7 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
               className={`${styles.map_marker} ${
                 isSelected ? styles.selected_marker : ""
               }`}
-              onClick={() => handleClickMarker(info.location)}
+              onClick={() => handleClickMarker(info.location, info.placeId)}
             >
               {index + 1}
             </div>

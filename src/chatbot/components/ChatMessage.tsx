@@ -6,6 +6,16 @@ import ChatBot from "../../assets/ChatBot.png";
 import NoImage from "../../assets/NoImage.png";
 import * as Interfaces from "../interfaces/Interface";
 
+const LoadingSpinner = () => {
+  return (
+    <div className={styles.dot_spinner}>
+      <div className={styles.dot} />
+      <div className={styles.dot} />
+      <div className={styles.dot} />
+    </div>
+  );
+};
+
 const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   message,
   selectedMarker,
@@ -13,8 +23,12 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   handleModalOpen,
   inputRef,
   handleClick,
+  loading,
+  userMessage,
+  setInputValue,
 }) => {
-  const handleClickUpdateBtn = () => {
+  const handleClickReRecommed = () => {
+    setInputValue(userMessage);
     inputRef.current?.focus();
   };
   const formatDetailText = (text: string) => {
@@ -29,39 +43,50 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   return (
     <div className={`${styles.message} ${styles.chat_message}`}>
       <img src={ChatBot} alt="Chatbot" className={styles.chatbot_image} />
+      {loading && <LoadingSpinner />}
       {message.placeList && message.placeList.length > 0 && (
         <div onClick={handleClick} className={styles.place_wrapper}>
-          {message?.placeList?.map((place: any, idx: number) => (
-            <div
-              onClick={() => setSelectedMarker(place.location)}
-              key={idx}
-              className={`${styles.place_box} ${selectedMarker === place.location ? styles.selected_img : ""}`}
-            >
-              {place.imgUrl ? (
-                <img
-                  src={place.imgUrl}
-                  alt={place.name}
-                  className={styles.place_img}
-                />
-              ) : (
-                <img src={NoImage} className={styles.place_img} />
-              )}
-
-              <div className={styles.place_info}>
-                <div className={styles.place_idx}>{idx + 1}</div>
-                <div className={styles.place_name}>{place.name}</div>
-                <div className={styles.place_address}>
-                  <MapPin
-                    size={14}
-                    style={{
-                      filter: " drop-shadow(0 0 4px #333)",
-                    }}
+          {message?.placeList?.map(
+            (place: Interfaces.PlaceType, idx: number) => (
+              <div
+                onClick={() =>
+                  setSelectedMarker({
+                    location: {
+                      lat: place.location.lat,
+                      lng: place.location.lng,
+                    },
+                    placeId: place.placeId,
+                  })
+                }
+                key={idx}
+                className={`${styles.place_box} ${selectedMarker?.location.lat === place.location.lat && selectedMarker?.location.lng === place.location.lng ? styles.selected_img : ""}`}
+              >
+                {place.imgUrl ? (
+                  <img
+                    src={place.imgUrl}
+                    alt={place.name}
+                    className={styles.place_img}
                   />
-                  {place.address.split(" ").slice(0, 2).join(" ")}
+                ) : (
+                  <img src={NoImage} className={styles.place_img} />
+                )}
+
+                <div className={styles.place_info}>
+                  <div className={styles.place_idx}>{idx + 1}</div>
+                  <div className={styles.place_name}>{place.name}</div>
+                  <div className={styles.place_address}>
+                    <MapPin
+                      size={14}
+                      style={{
+                        filter: " drop-shadow(0 0 4px #333)",
+                      }}
+                    />
+                    {place.address.split(" ").slice(0, 2).join(" ")}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       )}
       {message.detail && <div>{formatDetailText(message.detail)}</div>}
@@ -81,17 +106,20 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
             fontSize={14}
             bgColor="#F7A19B"
             style={{ flexShrink: 0 }}
-            onClick={handleClickUpdateBtn}
+            onClick={handleClickReRecommed}
           >
-            수정하기
+            다시 추천받기
           </MainButton>
           <MainButton
             onClick={() => {
               handleClick();
               if (message.placeList && message.placeList.length > 0) {
                 setSelectedMarker({
-                  lat: message.placeList[0].location.lat,
-                  lng: message.placeList[0].location.lng,
+                  location: {
+                    lat: message.placeList[0].location.lat,
+                    lng: message.placeList[0].location.lng,
+                  },
+                  placeId: "",
                 });
               }
             }}

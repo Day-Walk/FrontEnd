@@ -8,12 +8,17 @@ import { Modal } from "@mui/material";
 import AddCourseModal from "./components/AddCourseModal";
 import ChatBot from "../assets/ChatBot.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
-import { useRecoilValue } from "recoil";
+import {
+  useRecoilValue,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from "recoil";
 import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
-import { Loading1 } from "../loading/Loading";
 import * as Interfaces from "./interfaces/Interface";
 import ChatRecordPopUp from "./components/ChatRecordPopUp";
+import PlaceModal from "../course_detail/components/PlaceModal";
+import { chatLogSelector, chatLogState } from "../recoil/chatLog";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
@@ -25,7 +30,6 @@ const ChatInput = ({
   setInputValue,
   inputRef,
   sendChat,
-
   loading,
 }: Interfaces.ChatInputProps) => {
   const handlePressEnter = async (
@@ -38,7 +42,7 @@ const ChatInput = ({
   };
   return (
     <div
-      className={`${styles.input_wrapper} ${isFocused ? styles.focused : ""}`}
+      className={`${styles.input_wrapper} ${isFocused && !loading ? styles.focused : ""}`}
     >
       <textarea
         value={inputValue}
@@ -51,7 +55,12 @@ const ChatInput = ({
         onKeyDown={handlePressEnter}
         disabled={loading}
       />
-      <MainButton onClick={sendChat} paddingY={10} disabled={loading}>
+      <MainButton
+        onClick={sendChat}
+        paddingY={10}
+        disabled={loading}
+        bgColor={`${loading ? "#d9d9d9" : "#00B493"}`}
+      >
         전송
       </MainButton>
     </div>
@@ -61,15 +70,13 @@ const ChatInput = ({
 const Chatbot = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
-  const [chatLog, setChatLog] = useState<Interfaces.MessageType[]>([]);
   const [value, setValue] = useState<string>("");
   const userIdState = useRecoilValue(userId);
   const [open, setOpen] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedMarker, setSelectedMarker] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+
+  const [selectedMarker, setSelectedMarker] =
+    useState<Interfaces.MarkerInfo | null>(null);
   const [selectedPlaceList, setSelectedPlaceList] = useState<
     Interfaces.PlaceType[] | null
   >(null);
@@ -80,6 +87,9 @@ const Chatbot = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const clickRef = useRef(false);
+  const chatLogLoadable = useRecoilValueLoadable(chatLogSelector);
+  const setChatLog = useSetRecoilState(chatLogState);
+  const chatLog = useRecoilValue(chatLogState);
 
   const handleOpenCourseSaveModal = (placeList: Interfaces.PlaceType[]) => {
     setSelectedPlaceList(placeList);
@@ -103,6 +113,7 @@ const Chatbot = () => {
         if (e.data === "[DONE]") {
           newEventSource.close();
           setLoading(false);
+          inputRef.current?.focus();
           return;
         }
 
@@ -153,15 +164,6 @@ const Chatbot = () => {
       });
 
       console.log(res.data);
-      setChatLog((prev) => [
-        ...prev,
-        {
-          userId: userIdState,
-          question: value,
-          answer: { placeList: [], detail: "" },
-          createAt: new Date().toISOString(),
-        },
-      ]);
     } catch (error) {
       console.error(error);
       setShowModal(true);
@@ -177,22 +179,24 @@ const Chatbot = () => {
       return;
     }
 
-    clickRef.current = true;
     setLoading(true);
-
     try {
+      setChatLog((prev) => [
+        ...prev,
+        {
+          userId: userIdState,
+          question: value,
+          answer: { placeList: [], detail: "" },
+          createAt: new Date().toISOString(),
+        },
+      ]);
+      setValue("");
       await connectSSE();
-      console.log("1. SSE 연결 완료 : ", new Date().toISOString());
       await getChat();
-      console.log("2. getChat API 호출 완료 : ", new Date().toISOString());
     } catch (error) {
       setShowModal(true);
       setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
       console.error("sendChat 실패", error);
-    } finally {
-      setValue("");
-      clickRef.current = false;
-      // setLoading(false);
     }
   };
 
@@ -203,20 +207,6 @@ const Chatbot = () => {
         "popup",
         (new Date().getTime() + 24 * 60 * 60 * 1000).toString(),
       );
-    }
-  };
-
-  const getChatLog = async () => {
-    try {
-      const res = await api.get("/chat/log", {
-        params: {
-          userId: userIdState,
-        },
-      });
-      setChatLog(res.data.chatLog);
-      console.log(res.data.chatLog);
-    } catch (error) {
-      console.error("채팅 로그 가져오기 실패", error);
     }
   };
 
@@ -238,8 +228,17 @@ const Chatbot = () => {
   }, [chatLog, loading]);
 
   useEffect(() => {
-    getChatLog();
-  }, []);
+    if (chatLogLoadable.state === "hasValue") {
+      const chatData = chatLogLoadable.contents;
+      setChatLog(chatData);
+    }
+  }, [chatLogLoadable, setChatLog]);
+
+  useEffect(() => {
+    if (!loading) {
+      inputRef.current?.focus();
+    }
+  }, [loading]);
 
   return (
     <>
@@ -252,21 +251,6 @@ const Chatbot = () => {
         </Modal>
       )}
       <div className={styles.chatbot_container}>
-        {loading && (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.5)",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              zIndex: 20,
-            }}
-          >
-            <Loading1 />
-          </div>
-        )}
         <div className={styles.chat_wrapper}>
           {openPopup && (
             <ChatRecordPopUp
@@ -297,6 +281,9 @@ const Chatbot = () => {
                     handleClick={() => {
                       setSelectedPlaceList(chat.answer.placeList);
                     }}
+                    loading={loading && index === chatLog.length - 1}
+                    userMessage={chat.question}
+                    setInputValue={setValue}
                   />
                 ),
               ])}
@@ -313,6 +300,23 @@ const Chatbot = () => {
             sendChat={sendChat}
             loading={loading}
           />
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            left: "420px",
+            top: 0,
+            width: "fit-content",
+            height: "100%",
+            zIndex: 10,
+          }}
+        >
+          {selectedMarker && (
+            <PlaceModal
+              placeId={selectedMarker ? selectedMarker.placeId : ""}
+              isPlaceOnly={true}
+            />
+          )}
         </div>
         <ChatbotMap
           mapInfo={selectedPlaceList}

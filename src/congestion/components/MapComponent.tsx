@@ -4,6 +4,7 @@ import { CustomOverlayMap, Map } from "react-kakao-maps-sdk";
 import { CongestionData } from "../CongestionMap";
 import Marker from "./Marker";
 import styles from "../Congestion.module.css";
+import Loading from "../../global_components/Loading";
 
 interface MapComponentProps {
   data: CongestionData[];
@@ -39,7 +40,7 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
   }, []);
 
   if (!loaded) {
-    return <div>카카오맵 로딩 중...</div>;
+    return <Loading />;
   }
 
   return (
@@ -49,11 +50,13 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
       level={3}
       isPanto={true}
       onClick={() => setSelectedMarker(null)}
+      minLevel={8}
     >
       {data?.map((data, index) => (
         <CustomOverlayMap
           key={data.area_nm}
           position={{ lat: data.x, lng: data.y }}
+          zIndex={selectedMarker?.area_nm === data.area_nm ? 100 : 1}
         >
           <Marker
             size={40}
@@ -81,7 +84,6 @@ const MapCompnent: React.FC<MapComponentProps> = ({ data }) => {
               </div>
               <div className={styles.detail_label}>카테고리</div>
               <div className={styles.detail_value}>
-                {" "}
                 {selectedMarker.category}
               </div>
               <div className={styles.detail_label}> 혼잡도</div>
