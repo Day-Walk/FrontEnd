@@ -10,7 +10,6 @@ import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId, userName } from "../recoil/userInfo";
-// import RobotImage from "../assets/goodVersion.png";
 import RobotImage from "../assets/goodVersion2.jpeg";
 import { Loading1 } from "../loading/Loading";
 
@@ -42,11 +41,32 @@ const Search = () => {
       console.log(e);
     }
   };
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const detailLeftRef = useRef<HTMLDivElement>(null);
 
-  const handlePlaceClick = async (p: Interfaces.SearchPlace) => {
-    setSelectedPlaceId(p.placeId);
-    setSelectedPlace(p);
-    await postClickLog(p.placeId);
+  const scrollToListItem = (index: number) => {
+    console.log("scrollToListItem", index);
+    const scrollContainer = detailLeftRef.current;
+    if (!scrollContainer) return;
+
+    if (index < 0) {
+      scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    const el = itemRefs.current[index];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handlePlaceClick = async (
+    place: Interfaces.SearchPlace,
+    index: number,
+  ) => {
+    setSelectedPlaceId(place.placeId);
+    setSelectedPlace(place);
+    await postClickLog(place.placeId);
+    scrollToListItem(index - 1);
   };
 
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -140,7 +160,7 @@ const Search = () => {
           place,
           index,
           selectedPlaceId,
-          () => handlePlaceClick(place),
+          () => handlePlaceClick(place, index),
           style.mapMarker,
           style.selectedMarker,
           duplicates.some((d) => d.placeId === place.placeId)
@@ -153,12 +173,13 @@ const Search = () => {
 
     if (regularPlaces) {
       regularPlaces.forEach((place, index) => {
+        const actualIndex = index + recomLength;
         const overlay = CustomMarker(
           map,
           place,
-          index + recomLength,
+          actualIndex,
           selectedPlaceId,
-          () => handlePlaceClick(place),
+          () => handlePlaceClick(place, actualIndex),
           style.mapMarker,
           style.selectedMarker,
           duplicates.some((d) => d.placeId === place.placeId)
@@ -224,7 +245,7 @@ const Search = () => {
 
   return (
     <div className={style.courseDetailWrapper}>
-      <div className={style.detailLeft}>
+      <div className={style.detailLeft} ref={detailLeftRef}>
         <SearchBox onSearch={onSearch} />
         {isSearching && (
           <div
@@ -275,6 +296,7 @@ const Search = () => {
                   places={recommendedPlaces}
                   selectedPlaceId={selectedPlaceId}
                   onPlaceClick={handlePlaceClick}
+                  itemRefs={itemRefs}
                 />
                 <hr color="#e5e5e5" style={{ margin: "20px" }} />
               </>
@@ -290,6 +312,8 @@ const Search = () => {
               places={regularPlaces}
               selectedPlaceId={selectedPlaceId}
               onPlaceClick={handlePlaceClick}
+              itemRefs={itemRefs}
+              startIndex={recommendedPlaces?.length ?? 0}
             />
           )}
         </div>

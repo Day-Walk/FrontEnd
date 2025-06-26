@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "../CourseDetail.module.css";
 import * as Interfaces from "../interfaces/Interface";
 import * as rInterfaces from "../interfaces/ReviewInterface";
@@ -39,6 +39,14 @@ const PlaceModal = ({
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [placeId]);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -181,6 +189,7 @@ const PlaceModal = ({
         >
           <div
             className={isPlaceOnly ? style.placeModalOnly : style.placeModal}
+            ref={scrollRef}
           >
             {selectedPlace && (
               <div className={style.sliderWrapper}>
