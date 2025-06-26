@@ -21,6 +21,7 @@ const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
   const navigate = useNavigate();
   const userIdState = useRecoilValue(userId);
   const [isHovering, setIsHovering] = useState<boolean>(false);
+  const dateOnly = nowCourse.createAt.split("T")[0];
 
   useEffect(() => {
     setLike(course?.like || false);
@@ -65,6 +66,7 @@ const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
   };
 
   const handleCourseClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsHovering(false);
     const { left, width } = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - left;
     const clickPercent = (clickX / width) * 100;
@@ -88,10 +90,15 @@ const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
         <div className={style.hoverCourse}>클릭해서 자세히 보기 →</div>
       )}
       <div className={style.header}>
-        <div className={style.title}>
-          "{course?.userName}" 님의{" "}
-          <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
-          코스
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div className={style.title}>
+            "{course?.userName}" 님의{" "}
+            <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
+            코스
+          </div>
+          <div style={{ marginLeft: "20px", fontSize: "14px", color: "#bbb" }}>
+            {dateOnly}
+          </div>
         </div>
         <div className={style.like}>
           <div>{course?.courseLike}&nbsp;</div>
