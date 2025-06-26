@@ -222,27 +222,24 @@ const Search = () => {
     renderMarkers();
   }, [recommendedPlaces, selectedPlaceId]);
 
-  if (isSearching) {
-    return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 20,
-        }}
-      >
-        <Loading1 />
-      </div>
-    );
-  }
-
   return (
     <div className={style.courseDetailWrapper}>
       <div className={style.detailLeft}>
         <SearchBox onSearch={onSearch} />
+        {isSearching && (
+          <div
+            style={{
+              position: "absolute",
+              top: "60px",
+              left: 0,
+              width: "100%",
+              zIndex: 10,
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+            }}
+          >
+            <Loading1 />
+          </div>
+        )}
         {!recommendedPlaces && (
           <div className={style.courseTitleNone}>
             <img src={RobotImage} width={150} />
