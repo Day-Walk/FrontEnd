@@ -8,20 +8,19 @@ import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import NoImage from "../../assets/NoImage.png";
-import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 interface CourseProps extends Interfaces.Course {
   fetchCourses: () => void;
+  showModal: (msg: string) => void;
 }
 
-const Course = ({ fetchCourses, ...nowCourse }: CourseProps) => {
+const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [like, setLike] = useState<boolean>(course?.like || false);
   const courseId = nowCourse.courseId;
   const navigate = useNavigate();
   const userIdState = useRecoilValue(userId);
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isHovering, setIsHovering] = useState<boolean>(false);
 
   useEffect(() => {
     setLike(course?.like || false);
@@ -45,33 +44,51 @@ const Course = ({ fetchCourses, ...nowCourse }: CourseProps) => {
       if (!like) {
         // 좋아요 등록
         await api.post("/course-like", body);
-        setMessage("코스 찜 리스트에 추가 완료!");
+        setLike(!like);
+        showModal("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
         await api.delete("/course-like", {
           data: body,
         });
-        setMessage("코스 찜이 취소되었습니다.");
+        showModal("코스 찜이 취소되었습니다.");
+        setLike(!like);
+        showModal("코스 찜이 취소되었습니다.");
       }
-      setShowModal(true);
       setLike(!like);
     } catch (error) {
       console.error("좋아요 처리 실패:", error);
-      setMessage("좋아요 처리 중 오류가 발생했습니다.");
-      setShowModal(true);
+      showModal("좋아요 처리 중 오류가 발생했습니다.");
     } finally {
       await fetchCourses();
     }
   };
 
-  const handleCourseClick = () => {
-    navigate(`/course/${courseId}`);
+  const handleCourseClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, width } = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - left;
+    const clickPercent = (clickX / width) * 100;
+
+    if (clickPercent <= 90) {
+      // 클릭 위치가 왼쪽 90% 이내
+      navigate(`/course/${courseId}`);
+    } else {
+      return;
+    }
   };
 
   return (
-    <div className={style.courseBlock}>
+    <div
+      onClick={handleCourseClick}
+      className={style.courseBlock}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {isHovering && (
+        <div className={style.hoverCourse}>클릭해서 자세히 보기 →</div>
+      )}
       <div className={style.header}>
-        <div onClick={handleCourseClick} className={style.title}>
+        <div className={style.title}>
           "{course?.userName}" 님의{" "}
           <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
           코스
@@ -83,7 +100,7 @@ const Course = ({ fetchCourses, ...nowCourse }: CourseProps) => {
           </div>
         </div>
       </div>
-      <div onClick={handleCourseClick} className={style.coursePlaceList}>
+      <div className={style.coursePlaceList}>
         {course?.placeList.map((place, idx) => (
           <div key={place.placeId} className={style.placeBlock}>
             {place.imgUrl ? (
@@ -112,9 +129,6 @@ const Course = ({ fetchCourses, ...nowCourse }: CourseProps) => {
           </div>
         ))}
       </div>
-      {showModal && (
-        <AlertModal message={message} onClose={() => setShowModal(false)} />
-      )}
     </div>
   );
 };

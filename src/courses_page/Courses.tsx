@@ -11,6 +11,7 @@ import { api } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../loading/Loading";
 import Footer from "../global_components/Footer/Footer";
+import AlertModal from "../global_components/AlertModal/AlertModal";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -25,6 +26,9 @@ const Courses = () => {
   const [sort, setSort] = useState<string>("like"); // like or latest
   const [coursePage, setCoursePage] = useState<Interfaces.CoursePage>();
   // coursePagesData.courseList[nowPage - 1],
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -106,7 +110,14 @@ const Courses = () => {
                     className={i === 0 ? undefined : style.courseList}
                     key={c.courseId}
                   >
-                    <Course {...c} fetchCourses={fetchCourses} />
+                    <Course
+                      {...c}
+                      fetchCourses={fetchCourses}
+                      showModal={(msg: string) => {
+                        setModalMessage(msg);
+                        setShowModal(true);
+                      }}
+                    />
                   </div>
                 ))}
             </div>
@@ -124,6 +135,13 @@ const Courses = () => {
           <div className={style.noCourse}>해당하는 코스가 없어요. 😢</div>
         )}
       </div>
+      {showModal && (
+        <AlertModal
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+
       <Footer />
     </div>
   );
