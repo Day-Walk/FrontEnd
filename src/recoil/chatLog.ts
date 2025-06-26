@@ -13,3 +13,8 @@ export const chatLogState = atom<ChatLogState>({
     isLoaded: false,
   },
 });
+
+export const chatLoading = atom<boolean>({
+  key: "chatLoading",
+  default: false,
+});
