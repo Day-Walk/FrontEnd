@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import style from "../CourseDetail.module.css";
 import * as Interfaces from "../interfaces/Interface";
 import * as rInterfaces from "../interfaces/ReviewInterface";
-import { ChevronLeft, ChevronRight, Share2, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { CircleChevronRight, Pencil, CircleUserRound } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
@@ -238,8 +238,6 @@ const PlaceModal = ({
                   <button onClick={handleLike}>
                     <LikeIcon />
                   </button>
-                  &nbsp;
-                  <Share2 size={26} />
                 </div>
               </div>
             </div>

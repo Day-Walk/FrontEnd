@@ -25,7 +25,7 @@ const SearchBox = ({ onSearch }: Props) => {
           if (e.key === "Enter") handleSearch();
         }}
       />
-      <Search className={style.searchIcon} />
+      <Search className={style.searchIcon} onClick={handleSearch} />
     </div>
   );
 };
