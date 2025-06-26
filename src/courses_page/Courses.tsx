@@ -194,7 +194,7 @@ const Courses = () => {
           }}
           className={style.hoverCourse}
         >
-          클릭해서 코스 자세히 보기 →
+          코스 클릭해서 자세히 보기 →
         </div>
       )}
       <Footer />
