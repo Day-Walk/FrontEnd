@@ -9,17 +9,23 @@ import { userName } from "../recoil/userInfo";
 import { useRecoilValue } from "recoil";
 import EditNameModal from "./components/Modals/EditNameModal";
 import Footer from "../global_components/Footer/Footer";
+import { api } from "../utils/api";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
   const userNameState = useRecoilValue(userName);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    // 로그아웃 api 추가 필요
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    try {
+      await api.post("/user/logout");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userName");
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
