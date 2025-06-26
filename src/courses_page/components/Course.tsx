@@ -86,9 +86,6 @@ const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      {isHovering && (
-        <div className={style.hoverCourse}>클릭해서 자세히 보기 →</div>
-      )}
       <div className={style.header}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div className={style.title}>

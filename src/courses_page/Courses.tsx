@@ -29,6 +29,17 @@ const Courses = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
+  const [isHovering, setIsHovering] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
     value: number,
@@ -136,6 +147,8 @@ const Courses = () => {
                   <div
                     className={i === 0 ? undefined : style.courseList}
                     key={c.courseId}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
                   >
                     <Course
                       {...c}
@@ -170,7 +183,20 @@ const Courses = () => {
           onClose={() => setShowModal(false)}
         />
       )}
-
+      {isHovering && (
+        <div
+          style={{
+            position: "fixed",
+            top: mousePos.y + 10,
+            left: mousePos.x + 10,
+            pointerEvents: "none",
+            zIndex: 9999,
+          }}
+          className={style.hoverCourse}
+        >
+          클릭해서 코스 자세히 보기 →
+        </div>
+      )}
       <Footer />
     </div>
   );
