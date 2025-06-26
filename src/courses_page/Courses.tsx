@@ -25,7 +25,6 @@ const Courses = () => {
   const [nowPage, setNowPage] = useState<number>(1);
   const [sort, setSort] = useState<string>("like"); // like or latest
   const [coursePage, setCoursePage] = useState<Interfaces.CoursePage>();
-  // coursePagesData.courseList[nowPage - 1],
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -52,8 +51,13 @@ const Courses = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    fetchCourses();
+    if (query.length == 0) {
+      fetchCourses();
+    } else {
+      fetchSearchResults(query, sort);
+    }
   }, [sort, nowPage]);
 
   // 검색결과 저장
@@ -61,6 +65,25 @@ const Courses = () => {
     setCoursePagesData(data);
     setNowPage(1);
     setCoursePage(data.courseList[0]);
+  };
+
+  const [query, setQuery] = useState<string>("");
+  const [nowQuery, setNowQuery] = useState<string>("");
+
+  const fetchSearchResults = async (searchQuery: string, sortOrder: string) => {
+    try {
+      const url =
+        searchQuery.length <= 0
+          ? `/course/all?sort=${sortOrder}&userId=${userIdState}`
+          : `/course/search?searchStr=${encodeURIComponent(searchQuery)}&sort=${sortOrder}&userId=${userIdState}`;
+
+      const response = await api.get(url);
+      const data = response.data;
+      handleSearchResults(data);
+    } catch (error) {
+      console.error("검색 실패:", error);
+    }
+    setNowQuery(searchQuery);
   };
 
   if (loading) {
@@ -84,7 +107,11 @@ const Courses = () => {
     <div className={style.contentArea}>
       <div className={style.courseWrapper}>
         <div>
-          <SearchBox onSearchResults={handleSearchResults} />
+          <SearchBox
+            query={query}
+            setQuery={setQuery}
+            onSearch={() => fetchSearchResults(query, sort)}
+          />
         </div>
         {coursePage ? (
           <>
@@ -132,7 +159,9 @@ const Courses = () => {
             </div>
           </>
         ) : (
-          <div className={style.noCourse}>해당하는 코스가 없어요. 😢</div>
+          <div className={style.noCourse}>
+            "{nowQuery}" 검색어에 해당하는 코스가 없어요. 😢
+          </div>
         )}
       </div>
       {showModal && (
