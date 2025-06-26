@@ -30,6 +30,7 @@ const Search = () => {
     useState<Interfaces.SearchPlace | null>(null);
   const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
   const userNameState = useRecoilValue(userName);
+  const [isSearching, setIsSearching] = useState(false);
 
   const postClickLog = async (placeId: string) => {
     try {
@@ -49,13 +50,13 @@ const Search = () => {
   };
 
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+
   const onSearch = (keyword: string) => {
     setSearchKeyword(keyword);
-    console.log(keyword);
+    setIsSearching(true); // 검색 시작 시 로딩 표시
   };
 
   const userIdState = useRecoilValue(userId);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (searchKeyword.length == 0) return;
@@ -68,10 +69,10 @@ const Search = () => {
         setRecommendedPlaces(data["recommendList"]);
         setRegularPlaces(data["placeList"]);
         console.log(data);
-        // setLoading(false);
       } catch (e) {
         console.log(e);
-        // setLoading(false);
+      } finally {
+        setIsSearching(false); // 검색 종료 후 로딩 해제
       }
     };
     getResults();
@@ -204,7 +205,6 @@ const Search = () => {
         }
       })
       .catch(console.error);
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -222,7 +222,7 @@ const Search = () => {
     renderMarkers();
   }, [recommendedPlaces, selectedPlaceId]);
 
-  if (loading) {
+  if (isSearching) {
     return (
       <div
         style={{
@@ -299,9 +299,6 @@ const Search = () => {
       </div>
       <div className={style.detailRight}>
         <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-        {/* <div className={style.searchBoxWrapper}>
-          <SearchBox onSearch={onSearch} />
-        </div> */}
         {selectedPlaceId && selectedPlaceId.length > 0 && (
           <PlaceModal
             placeId={selectedPlaceId ? selectedPlaceId : ""}
