@@ -20,14 +20,23 @@
   width: 90%;
   margin: 14px auto;
   padding: 16px 20px;
-  border: 1px solid transparent;
+  border: 1px solid #ccc;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
 }
 .placeBlockClick {
   outline-offset: -1px;
   outline: 2px solid var(--color-main);
+}
+.placeBlock:hover {
+  scale: 1.05;
+  transition: transform 0.2s ease-in-out;
 }
 .idx {
   font-size: 20px;
