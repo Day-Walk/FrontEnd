@@ -119,7 +119,7 @@ const Signup = () => {
         <input
           id="name"
           type="text"
-          placeholder="ex - 하루걸음"
+          placeholder="사용하실 닉네임을 입력해주세요."
           value={userInfo.userName}
           onChange={(e) => handleChange("userName", e.target.value)}
           className={`${styles.element} ${styles.input}`}

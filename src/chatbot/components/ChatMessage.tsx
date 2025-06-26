@@ -24,11 +24,14 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   inputRef,
   handleClick,
   loading,
-  userMessage,
+
   setInputValue,
+  openPlaceModal,
 }) => {
   const handleClickReRecommed = () => {
-    setInputValue(userMessage);
+    const firstLine = message.detail?.split("<br>")[0] ?? "";
+
+    setInputValue(firstLine + " 추천했던 장소 제외하고 다시 추천해줘.");
     inputRef.current?.focus();
   };
   const formatDetailText = (text: string) => {
@@ -49,15 +52,16 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
           {message?.placeList?.map(
             (place: Interfaces.PlaceType, idx: number) => (
               <div
-                onClick={() =>
+                onClick={() => {
+                  openPlaceModal(true);
                   setSelectedMarker({
                     location: {
                       lat: place.location.lat,
                       lng: place.location.lng,
                     },
                     placeId: place.placeId,
-                  })
-                }
+                  });
+                }}
                 key={idx}
                 className={`${styles.place_box} ${selectedMarker?.location.lat === place.location.lat && selectedMarker?.location.lng === place.location.lng ? styles.selected_img : ""}`}
               >

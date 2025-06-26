@@ -84,6 +84,7 @@ const Chatbot = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const clickRef = useRef(false);
   const [chatLog, setChatLog] = useRecoilState(chatLogState);
+  const [openPlaceModal, setOpenPlaceModal] = useState<boolean>(false);
 
   const handleOpenCourseSaveModal = (placeList: Interfaces.PlaceType[]) => {
     setSelectedPlaceList(placeList);
@@ -131,6 +132,14 @@ const Chatbot = () => {
               log: updatedLog,
             };
           });
+
+          if (parsed.placeList.length > 0) {
+            setSelectedPlaceList(parsed.placeList);
+            setSelectedMarker({
+              location: parsed.placeList[0].location,
+              placeId: parsed.placeList[0].placeId,
+            });
+          }
         } catch (error) {
           setShowModal(true);
           setMessage("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
@@ -295,8 +304,8 @@ const Chatbot = () => {
                       setSelectedPlaceList(chat.answer.placeList);
                     }}
                     loading={loading && index === chatLog.log.length - 1}
-                    userMessage={chat.question}
                     setInputValue={setValue}
+                    openPlaceModal={setOpenPlaceModal}
                   />
                 ),
               ])}
@@ -324,7 +333,7 @@ const Chatbot = () => {
             zIndex: 10,
           }}
         >
-          {selectedMarker && (
+          {selectedMarker && openPlaceModal && (
             <PlaceModal
               placeId={selectedMarker ? selectedMarker.placeId : ""}
               isPlaceOnly={true}

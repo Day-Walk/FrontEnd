@@ -15,6 +15,7 @@ const items = [
   { title: "장소검색", url: "/search" },
   { title: "챗봇", url: "/chatbot" },
   { title: "혼잡도", url: "/congestion" },
+  { title: "마이페이지", url: "/profile" },
 ];
 
 const Header = () => {
@@ -44,13 +45,7 @@ const Header = () => {
         selectedItem={selectedItem}
         handleClick={handleClickHeaderItem}
       />
-      <CircleUserRound
-        size={32}
-        color={selectedItem === "/profile" ? "#00b493" : "#888"}
-        onClick={() => handleClickHeaderItem("/profile")}
-        style={{ cursor: "pointer" }}
-        strokeWidth={1.5}
-      />
+      <div style={{ width: "90px" }}></div>
     </div>
   );
 };
@@ -77,6 +72,8 @@ const HeaderItems = ({
         return <BotMessageSquare size={20} color={color} />;
       case "혼잡도":
         return <Radio size={20} color={color} />;
+      case "마이페이지":
+        return <CircleUserRound size={20} color={color} />;
       default:
         return null;
     }
