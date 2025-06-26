@@ -58,20 +58,6 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
         />
         <h2 className={styles.title}>내 코스에 추가하기</h2>
         <div className={styles.title_wrapper}>
-          <div className={styles.course_title}>코스 이름 :</div>
-          <input
-            className={styles.input}
-            value={addCourseInfo.title}
-            onChange={(e) => {
-              setAddCourseInfo((prev) => ({
-                ...prev,
-                title: e.target.value,
-              }));
-            }}
-          />
-          <div className={styles.text}>코스</div>
-        </div>
-        <div className={styles.title_wrapper}>
           <input
             type="checkbox"
             id="isShare"
@@ -95,6 +81,21 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
             style={{ position: "absolute", left: "3px", pointerEvents: "none" }}
           />
         </div>
+        <div className={styles.title_wrapper}>
+          <input
+            placeholder="코스 이름을 입력하세요!"
+            className={styles.input}
+            value={addCourseInfo.title}
+            onChange={(e) => {
+              setAddCourseInfo((prev) => ({
+                ...prev,
+                title: e.target.value,
+              }));
+            }}
+          />
+          <div className={styles.text}>코스</div>
+        </div>
+
         <div className={styles.img_wrapper}>
           {courseInfo.map((place: any, idx: number) => (
             <div key={place.placeId} className={placeStyle.place_box}>
@@ -140,12 +141,20 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
         <div className={styles.btn_wrapper}>
           <MainButton
             bgColor="#d9d9d9"
-            fontColor="#333"
+            fontColor="#fff"
             onClick={handleCloseCourseSaveModal}
+            paddingY={10}
+            paddingX={20}
           >
             취소
           </MainButton>
-          <MainButton onClick={handleClickCompleteBtn}>완료</MainButton>
+          <MainButton
+            paddingY={10}
+            paddingX={20}
+            onClick={handleClickCompleteBtn}
+          >
+            완료
+          </MainButton>
         </div>
         {showModal && (
           <AlertModal
