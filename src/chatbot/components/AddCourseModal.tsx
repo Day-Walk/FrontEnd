@@ -14,7 +14,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
   ({ courseInfo, handleCloseCourseSaveModal }, ref) => {
     const [addCourseInfo, setAddCourseInfo] = useState<Interfaces.CourseInfo>({
       title: "",
-      visible: false,
+      visible: true,
       placeList: courseInfo,
     });
 
