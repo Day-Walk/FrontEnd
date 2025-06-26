@@ -32,7 +32,7 @@ const KakaoCallback = () => {
         navigate("/signup", {
           state: {
             id: userId,
-            name,
+            name: kakaoName,
           },
         });
       }
