@@ -8,17 +8,13 @@ import { Modal } from "@mui/material";
 import AddCourseModal from "./components/AddCourseModal";
 import ChatBot from "../assets/ChatBot.png";
 import AlertModal from "../global_components/AlertModal/AlertModal";
-import {
-  useRecoilValue,
-  useRecoilValueLoadable,
-  useSetRecoilState,
-} from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import * as Interfaces from "./interfaces/Interface";
 import ChatRecordPopUp from "./components/ChatRecordPopUp";
 import PlaceModal from "../course_detail/components/PlaceModal";
-import { chatLogSelector, chatLogState } from "../recoil/chatLog";
+import { chatLogState } from "../recoil/chatLog";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
@@ -87,9 +83,7 @@ const Chatbot = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const clickRef = useRef(false);
-  const chatLogLoadable = useRecoilValueLoadable(chatLogSelector);
-  const setChatLog = useSetRecoilState(chatLogState);
-  const chatLog = useRecoilValue(chatLogState);
+  const [chatLog, setChatLog] = useRecoilState(chatLogState);
 
   const handleOpenCourseSaveModal = (placeList: Interfaces.PlaceType[]) => {
     setSelectedPlaceList(placeList);
@@ -122,17 +116,20 @@ const Chatbot = () => {
           console.log("chatbot 이벤트 수신:", parsed);
 
           setChatLog((prev) => {
-            if (!prev || prev.length === 0) return prev;
+            if (!prev || !prev.log || prev.log.length === 0) return prev;
 
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
+            const updatedLog = [...prev.log];
+            const lastIndex = updatedLog.length - 1;
 
-            updated[lastIndex] = {
-              ...updated[lastIndex],
+            updatedLog[lastIndex] = {
+              ...updatedLog[lastIndex],
               answer: parsed,
             };
 
-            return updated;
+            return {
+              ...prev,
+              log: updatedLog,
+            };
           });
         } catch (error) {
           setShowModal(true);
@@ -181,15 +178,18 @@ const Chatbot = () => {
 
     setLoading(true);
     try {
-      setChatLog((prev) => [
+      setChatLog((prev) => ({
         ...prev,
-        {
-          userId: userIdState,
-          question: value,
-          answer: { placeList: [], detail: "" },
-          createAt: new Date().toISOString(),
-        },
-      ]);
+        log: [
+          ...(prev?.log || []),
+          {
+            userId: userIdState,
+            question: value,
+            answer: { placeList: [], detail: "" },
+            createAt: new Date().toISOString(),
+          },
+        ],
+      }));
       setValue("");
       await connectSSE();
       await getChat();
@@ -228,11 +228,24 @@ const Chatbot = () => {
   }, [chatLog, loading]);
 
   useEffect(() => {
-    if (chatLogLoadable.state === "hasValue") {
-      const chatData = chatLogLoadable.contents;
-      setChatLog(chatData);
+    if (!chatLog.isLoaded && userIdState) {
+      const getChatLog = async () => {
+        try {
+          const res = await api.get("/chat/log", {
+            params: { userId: userIdState },
+          });
+          setChatLog({
+            log: res.data.chatLog,
+            isLoaded: true,
+          });
+        } catch (error) {
+          console.error("채팅 로그 가져오기 실패:", error);
+        }
+      };
+
+      getChatLog();
     }
-  }, [chatLogLoadable, setChatLog]);
+  }, [userIdState, chatLog.isLoaded]);
 
   useEffect(() => {
     if (!loading) {
@@ -259,14 +272,14 @@ const Chatbot = () => {
               handleClickClosePopup={handleClickClosePopup}
             />
           )}
-          {chatLog?.length === 0 ? (
+          {chatLog.log.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
               <div className={styles.ask_to}>챗봇에게 물어보세요!</div>
             </div>
           ) : (
             <div className={styles.content}>
-              {chatLog?.flatMap((chat, index) => [
+              {chatLog.log.flatMap((chat, index) => [
                 chat.question && (
                   <UserMessage message={chat.question} key={`${index}-q`} />
                 ),
@@ -281,7 +294,7 @@ const Chatbot = () => {
                     handleClick={() => {
                       setSelectedPlaceList(chat.answer.placeList);
                     }}
-                    loading={loading && index === chatLog.length - 1}
+                    loading={loading && index === chatLog.log.length - 1}
                     userMessage={chat.question}
                     setInputValue={setValue}
                   />
