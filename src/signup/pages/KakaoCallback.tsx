@@ -55,9 +55,13 @@ const KakaoCallback = () => {
       return;
     }
     const hostname = window.location.hostname;
-    const REDIRECT_URI = hostname.includes("final")
-      ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
-      : "https://day-walk.vercel.app/auth/kakao-callback";
+
+    const REDIRECT_URI =
+      hostname.includes("localhost") || hostname.includes("127.0.0.1")
+        ? "http://localhost:5173/auth/kakao-callback"
+        : hostname.includes("final")
+          ? "https://final-front-end-fawn.vercel.app/auth/kakao-callback"
+          : "https://day-walk.vercel.app/auth/kakao-callback";
 
     try {
       const tokenRes = await axios.post(
