@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./Profile.module.css";
 import MyCourse from "./components/MyCourse";
 import MyReview from "./components/MyReview";
@@ -10,11 +10,13 @@ import { useRecoilValue } from "recoil";
 import EditNameModal from "./components/Modals/EditNameModal";
 import Footer from "../global_components/Footer/Footer";
 import { api } from "../utils/api";
+import { useLocation } from "react-router-dom";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
   const userNameState = useRecoilValue(userName);
   const [modalOpen, setModalOpen] = useState(false);
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -27,6 +29,12 @@ const Profile = () => {
       alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
     }
   };
+
+  useEffect(() => {
+    if (location.state && location.state.menuIndex) {
+      setMenuIndex(location.state.menuIndex);
+    }
+  }, []);
 
   return (
     <div className={style.contentArea}>

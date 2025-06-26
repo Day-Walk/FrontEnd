@@ -122,7 +122,14 @@ const ReviewForm = () => {
       console.log("리뷰 등록 성공:", response.data);
       setMessage("리뷰가 등록되었습니다!");
       setShowModal(true);
-      setOnModalClose(() => () => navigate(-1)); // 모달 닫힐 때 뒤로가기
+      setOnModalClose(
+        () => () =>
+          navigate("/profile", {
+            state: {
+              menuIndex: 1,
+            },
+          }),
+      ); // 모달 닫힐 때 뒤로가기
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
       setMessage("리뷰 등록 중 오류가 발생했습니다.");
