@@ -67,6 +67,7 @@ const Search = () => {
     setSelectedPlace(place);
     await postClickLog(place.placeId);
     scrollToListItem(index - 1);
+    setIsModalOpen(true); // 모달 열기
   };
 
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -77,6 +78,7 @@ const Search = () => {
   };
 
   const userIdState = useRecoilValue(userId);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (searchKeyword.length == 0) return;
@@ -93,6 +95,7 @@ const Search = () => {
         console.log(e);
       } finally {
         setIsSearching(false); // 검색 종료 후 로딩 해제
+        setIsModalOpen(false); // 모달 닫기
       }
     };
     getResults();
@@ -320,7 +323,7 @@ const Search = () => {
       </div>
       <div className={style.detailRight}>
         <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-        {selectedPlaceId && selectedPlaceId.length > 0 && (
+        {isModalOpen && selectedPlaceId && selectedPlaceId.length > 0 && (
           <PlaceModal
             placeId={selectedPlaceId ? selectedPlaceId : ""}
             isPlaceOnly={false}
