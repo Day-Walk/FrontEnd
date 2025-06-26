@@ -28,7 +28,9 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   setInputValue,
 }) => {
   const handleClickReRecommed = () => {
-    setInputValue(userMessage);
+    const firstLine = message.detail?.split("<br>")[0] ?? "";
+
+    setInputValue(firstLine + " 추천했던 장소 제외하고 다시 추천해줘.");
     inputRef.current?.focus();
   };
   const formatDetailText = (text: string) => {
