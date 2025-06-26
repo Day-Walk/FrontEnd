@@ -54,9 +54,12 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
             )}
           </div>
           <div className={style.reviewInfo}>
-            <div className={style.rPlace}>{review?.placeName}</div>
-            <div className={style.rDate}>
-              작성일 : {review?.createAt.split("T")[0]}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div className={style.rPlace}>{review?.placeName}</div>
+              &nbsp;&nbsp;
+              <div className={style.rDate}>
+                작성일 : {review?.createAt.split("T")[0]}
+              </div>
             </div>
             <div className={style.rAddress}>
               <MapPin size={14} />
