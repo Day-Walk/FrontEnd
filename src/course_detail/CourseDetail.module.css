@@ -376,6 +376,7 @@
   animation: boing 1s ease-in-out infinite;
   background-color: #00715d;
 }
+
 .fullScreenOverlay {
   position: fixed;
   top: 0;

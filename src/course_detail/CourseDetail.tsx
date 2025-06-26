@@ -58,13 +58,62 @@ const CourseDetail = () => {
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
+  const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
+
+  // 마커 렌더링 함수
+  const renderMarkers = () => {
+    if (!window.kakao || !mapInstance.current) return;
+
+    const map = mapInstance.current;
+
+    // 기존 마커 제거
+    markerOverlaysRef.current.forEach((overlay) => overlay.setMap(null));
+    markerOverlaysRef.current = [];
+
+    const placeLength = courseDetail?.placeList?.length ?? 0;
+    const placeListTmp = courseDetail?.placeList;
+
+    if (placeListTmp) {
+      placeListTmp.forEach((place, index) => {
+        const overlay = CustomMarker(
+          map,
+          place,
+          index,
+          selectedPlaceId,
+          () => handlePlaceClick(place),
+          style.mapMarker,
+          style.selectedMarker,
+          // duplicates.some((d) => d.placeId === place.placeId)
+          //   ? style.duplicateMarker
+          //   : "",
+        );
+        markerOverlaysRef.current.push(overlay);
+      });
+    }
+  };
 
   useEffect(() => {
-    if (!courseDetail) return;
+    if (
+      !window.kakao ||
+      !mapInstance.current ||
+      !courseDetail?.placeList?.length
+    )
+      return;
+
+    const firstPlace = courseDetail?.placeList[0];
+    const center = new window.kakao.maps.LatLng(
+      firstPlace.location.lat,
+      firstPlace.location.lng,
+    );
+
+    mapInstance.current.setCenter(center);
+  }, [courseDetail]);
+
+  useEffect(() => {
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
-          const firstPlace = courseDetail?.placeList[0];
+          const firstPlace = courseDetail?.placeList?.[0] || null;
           const center = firstPlace
             ? new window.kakao.maps.LatLng(
                 firstPlace.location.lat,
@@ -74,28 +123,16 @@ const CourseDetail = () => {
 
           const options = {
             center,
-            level: 6,
+            level: 5,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
-
-          console.log("**", courseDetail);
-          courseDetail?.placeList.forEach((place, index) => {
-            CustomMarker(
-              map,
-              place,
-              index,
-              selectedPlaceId,
-              () => handlePlaceClick(place),
-              style.mapMarker,
-              style.selectedMarker,
-            );
-          });
         }
       })
       .catch(console.error);
-  }, [courseDetail, selectedPlaceId]);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (!window.kakao || !selectedPlace || !mapInstance.current) return;
@@ -107,6 +144,10 @@ const CourseDetail = () => {
 
     mapInstance.current.setCenter(newCenter);
   }, [selectedPlace]);
+
+  useEffect(() => {
+    renderMarkers();
+  }, [courseDetail, selectedPlaceId]);
 
   useEffect(() => {
     setLike(courseDetail?.like || false);

@@ -6,14 +6,16 @@ export function CustomMarker(
   onClick: () => void,
   markerClass: string,
   selectedMarkerClass: string,
-) {
+  duplicateMarekerClass?: string,
+): kakao.maps.CustomOverlay {
   const position = new window.kakao.maps.LatLng(
     place.location.lat,
     place.location.lng,
   );
+  console.log("******", place, selectedPlaceId);
 
   const div = document.createElement("div");
-  div.className = `${markerClass} ${place.placeId === selectedPlaceId ? selectedMarkerClass : ""}`;
+  div.className = `${markerClass} ${place.placeId === selectedPlaceId ? selectedMarkerClass : ""} ${duplicateMarekerClass}`;
   div.innerText = `${index + 1}`;
   div.onclick = onClick;
 
@@ -24,4 +26,5 @@ export function CustomMarker(
   });
 
   overlay.setMap(map);
+  return overlay;
 }
