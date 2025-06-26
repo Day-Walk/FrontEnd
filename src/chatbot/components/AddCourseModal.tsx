@@ -9,6 +9,7 @@ import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import NoImage from "../../assets/NoImage.png";
+import { useNavigate } from "react-router-dom";
 
 const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
   ({ courseInfo, handleCloseCourseSaveModal }, ref) => {
@@ -20,8 +21,10 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
 
     const [showModal, setShowModal] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
+    const [courseId, setCourseId] = useState<string>("");
 
     const userIdState = useRecoilValue(userId);
+    const navigate = useNavigate();
 
     const handleClickCompleteBtn = async () => {
       console.log(addCourseInfo);
@@ -38,6 +41,8 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
           visible: addCourseInfo.visible,
           placeList: courseInfo.map((place) => place.placeId),
         });
+        const courseId = res.data.courseId;
+        setCourseId(courseId);
         console.log(res.data);
         setShowModal(true);
         setMessage("코스가 저장되었습니다.");
@@ -46,6 +51,11 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
         setShowModal(true);
         setMessage("코스 저장 중 오류가 발생했습니다.");
       }
+    };
+
+    const moveToCourseDetail = () => {
+      if (courseId === "") return;
+      navigate(`/course/${courseId}`);
     };
 
     return (
@@ -162,6 +172,7 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
             onClose={() => {
               setShowModal(false);
               handleCloseCourseSaveModal();
+              moveToCourseDetail();
             }}
           />
         )}
