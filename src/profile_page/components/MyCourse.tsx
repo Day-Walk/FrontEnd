@@ -19,6 +19,12 @@ const MyCourse = () => {
   // coursePagesData.courseList[nowPage - 1],
   const userIdState = useRecoilValue(userId);
 
+  const [deleted, setDeleted] = useState<string>("");
+
+  const handleDelete = (deletedId: string) => {
+    setDeleted(deletedId);
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       console.log("userIdState", userIdState);
@@ -36,7 +42,7 @@ const MyCourse = () => {
       }
     };
     fetchCourses();
-  }, []);
+  }, [deleted]);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -74,7 +80,7 @@ const MyCourse = () => {
                   className={i === 0 ? undefined : style.courseList}
                   key={c.courseId}
                 >
-                  <Course {...c} />
+                  <Course nowCourse={c} onDelete={handleDelete} />
                 </div>
               ))}
           </div>

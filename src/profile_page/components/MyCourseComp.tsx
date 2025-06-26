@@ -8,8 +8,14 @@ import { api } from "../../utils/api";
 import EditCourseModal from "./Modals/EditCourseModal";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import { Trash2 } from "lucide-react";
 
-const MyCourseList = (nowCourse: Interfaces.Course) => {
+interface Props {
+  nowCourse: Interfaces.Course;
+  onDelete: (reviewId: string) => void; // 부모에게 삭제 사실 알림
+}
+
+const MyCourseList = ({ nowCourse, onDelete }: Props) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -53,6 +59,23 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
     console.log(course);
   }, [course]);
 
+  const handleDeleteCourse = async () => {
+    try {
+      await api.delete("/course", {
+        data: { courseId: course?.courseId },
+      });
+      setShowModal(true);
+      setMessage("내 코스 삭제 완료!");
+      setTimeout(() => {
+        if (course?.courseId) onDelete(course?.courseId);
+      }, 700);
+    } catch (error) {
+      console.error("내 코스 삭제 실패:", error);
+      setShowModal(true);
+      setMessage("코스 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <div className={style.courseBlock}>
       <div className={style.header}>
@@ -76,6 +99,11 @@ const MyCourseList = (nowCourse: Interfaces.Course) => {
           >
             <Pencil size={18} />
             <label>&nbsp;수정</label>
+          </button>
+          &nbsp;&nbsp;&nbsp;
+          <button className={style.btnCenter} onClick={handleDeleteCourse}>
+            <Trash2 size={22} color="#E96563" />
+            <label>&nbsp;삭제</label>
           </button>
           {modalOpen && course && (
             <EditCourseModal
