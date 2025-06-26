@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./loading.module.css";
-import ChatBot from "../assets/ChatBot.png";
+import ChatBot from "../assets/ChatBot2D.png";
 
 interface LoadingProps {
   width?: string;
