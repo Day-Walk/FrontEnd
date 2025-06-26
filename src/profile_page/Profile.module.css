@@ -168,8 +168,8 @@
 }
 
 .reviewBlock {
-  padding: 10px;
-  margin: 10px;
+  padding: 20px 20px 10px 20px;
+  margin: 20px;
   border: 1px solid #e5e5e5;
   border-radius: 20px;
   -webkit-border-radius: 20px;
@@ -184,8 +184,8 @@
   align-items: center;
 }
 .reviewImg {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   border-radius: 20px;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
@@ -196,7 +196,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 10px;
 }
 .tag {
   font-weight: bold;
@@ -208,6 +207,7 @@
   -moz-border-radius: 16px;
   -ms-border-radius: 16px;
   -o-border-radius: 16px;
+  font-size: 14px;
 }
 .reviewInfo {
   display: flex;
@@ -241,11 +241,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 10px 0;
+  margin: 14px 0 8px 0;
 }
 .pBlock {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border: #e5e5e5 1px solid;
   border-radius: 20px;
   padding: 10px;

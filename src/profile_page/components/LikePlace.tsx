@@ -10,6 +10,7 @@ import NoImage from "../../assets/NoImage.png";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../../loading/Loading";
+import AlertModal from "../../global_components/AlertModal/AlertModal";
 
 const LikePlace = () => {
   const [likePlaces, setLikePlaces] = useState<Interfaces.FavoritePlacePage[]>(
@@ -17,18 +18,14 @@ const LikePlace = () => {
   );
   const [likedList, setLikedList] = useState<boolean[]>();
   const [nowPage, setNowPage] = useState<number>(1);
-  const toggleLike = (index: number) => {
-    setLikedList((prev = []) =>
-      prev.map((liked, i) => (i === index ? !liked : liked)),
-    );
-  };
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
   const userIdState = useRecoilValue(userId);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
-      console.log("userIdState", userIdState);
       try {
         const response = await api.get<Interfaces.FavoritePlaceListResponse>(
           `/place-like/user?userId=${userIdState}`,
@@ -37,7 +34,6 @@ const LikePlace = () => {
         setLikePlaces(pageList);
         setLikedList(pageList[0]?.page.map(() => true) ?? []);
         setLoading(false);
-        console.log("like place:", response.data);
       } catch (error) {
         console.error("Error fetching courses:", error);
         setLoading(false);
@@ -55,11 +51,38 @@ const LikePlace = () => {
     setLikedList(nextPage?.page ? nextPage.page.map(() => true) : []);
   };
 
-  const currentPagePlaces = likePlaces[nowPage - 1]?.page ?? [];
-  const navigate = useNavigate();
-  const handleSelectPlace = (placeId: string) => {
-    navigate(`/place/${placeId}`);
+  const handleSelectPlace = (
+    e: React.MouseEvent<HTMLDivElement>,
+    placeId: string,
+  ) => {
+    const { left, width } = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - left;
+    const clickPercent = (clickX / width) * 100;
+    if (clickPercent <= 90) navigate(`/place/${placeId}`);
   };
+
+  const handleLike = async (index: number, placeId: string) => {
+    const body = { userId: userIdState, placeId };
+    try {
+      if (likedList?.[index]) {
+        await api.delete("/place-like", { data: body });
+        setMessage("장소 찜 리스트에서 삭제 완료!");
+      } else {
+        await api.post("/place-like", body);
+        setMessage("장소 찜 리스트에 추가 완료!");
+      }
+      setLikedList((prev = []) =>
+        prev.map((liked, i) => (i === index ? !liked : liked)),
+      );
+    } catch (error) {
+      setMessage("좋아요 처리 중 오류가 발생했습니다.");
+      console.error("좋아요 처리 실패:", error);
+    } finally {
+      setShowModal(true);
+    }
+  };
+
+  const currentPagePlaces = likePlaces[nowPage - 1]?.page ?? [];
 
   if (loading) {
     return (
@@ -84,7 +107,7 @@ const LikePlace = () => {
         <>
           <div className={style.likePlaceGrid}>
             {currentPagePlaces.map((p, index) => (
-              <div key={index} onClick={() => handleSelectPlace(p.placeId)}>
+              <div key={index} onClick={(e) => handleSelectPlace(e, p.placeId)}>
                 <div className={style.pBlock}>
                   {p.imgUrl ? (
                     <img
@@ -99,7 +122,10 @@ const LikePlace = () => {
                     <div className={style.pHeader}>
                       <div className={style.pName}>{p.name}</div>
                       <div
-                        onClick={() => toggleLike(index)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLike(index, p.placeId);
+                        }}
                         style={{ cursor: "pointer" }}
                       >
                         {likedList && likedList[index] ? (
@@ -137,7 +163,11 @@ const LikePlace = () => {
           찜한 장소가 아직 없어요. 😢
         </div>
       )}
+      {showModal && (
+        <AlertModal message={message} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };
+
 export default LikePlace;
