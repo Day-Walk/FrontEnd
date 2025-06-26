@@ -15,19 +15,36 @@ const Profile = () => {
   const userNameState = useRecoilValue(userName);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    // 로그아웃 api 추가 필요
+    window.location.href = "/login";
+  };
+
   return (
     <div className={style.contentArea}>
       <div className={style.profileWrapper}>
-        <div className={style.nameWrapper}>
-          <div className={style.profileName}>{userNameState}</div>
-          <button
-            onClick={() => setModalOpen(true)}
+        <div>
+          <div className={style.nameWrapper}>
+            <div className={style.profileName}>{userNameState}</div>
+            <button
+              onClick={() => setModalOpen(true)}
+              className={style.settingBtn}
+            >
+              <Settings size={20} />
+              <div>&nbsp;프로필 수정</div>
+            </button>
+            {modalOpen && <EditNameModal onClose={() => setModalOpen(false)} />}
+          </div>
+          <div>&nbsp;</div>
+          <div
+            onClick={handleLogout}
             className={style.settingBtn}
+            style={{ width: "200px" }}
           >
-            <Settings size={20} />
-            <div>&nbsp;프로필 수정</div>
-          </button>
-          {modalOpen && <EditNameModal onClose={() => setModalOpen(false)} />}
+            로그아웃
+          </div>
         </div>
         <div className={style.rightWrapper}>
           <ul className={style.menuList}>
