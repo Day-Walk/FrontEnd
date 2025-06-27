@@ -239,13 +239,34 @@ const PlaceModal = ({
                 <span className={style.placeModalCategory}>
                   {selectedPlace?.category}({selectedPlace?.subCategory})
                 </span>
-                <div>
-                  <button onClick={handleCreateReview}>
-                    <Pencil size={26} />
-                  </button>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    onClick={handleCreateReview}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      border: "1px solid rgb(92 128 116)",
+                      padding: "2px 8px",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <label
+                      style={{
+                        fontSize: "14px",
+                        color: "#2c5044",
+                        cursor: "pointer",
+                      }}
+                    >
+                      리뷰 작성&nbsp;
+                    </label>
+                    <button>
+                      <Pencil size={22} color="#2c5044" />
+                    </button>
+                  </div>
                   &nbsp;
                   <button onClick={handleLike}>
-                    <LikeIcon />
+                    <LikeIcon size={22} />
                   </button>
                 </div>
               </div>
