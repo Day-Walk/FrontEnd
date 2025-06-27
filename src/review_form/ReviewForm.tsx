@@ -101,6 +101,12 @@ const ReviewForm = () => {
   };
   const [onModalClose, setOnModalClose] = useState<() => void>(() => () => {});
 
+  const handelCancel = () => {
+    setShowModal(true);
+    setMessage("리뷰 작성을 취소하시겠습니까?");
+    setOnModalClose(() => () => navigate(-1));
+  };
+
   const handleSubmitReview = async () => {
     if (!rating || selectedTags.length === 0 || !content) {
       setShowModal(true);
@@ -246,7 +252,9 @@ const ReviewForm = () => {
         </div>
 
         <div className={style.buttonRow}>
-          <button className={style.cancel}>취소</button>
+          <button onClick={handelCancel} className={style.cancel}>
+            취소
+          </button>
           <button onClick={handleSubmitReview} className={style.submit}>
             리뷰 등록하기
           </button>
