@@ -7,6 +7,7 @@ import axios from "axios";
 import { RotateCcw } from "lucide-react";
 import { api } from "../utils/api";
 import Loading from "../global_components/Loading";
+import AlertModal from "../global_components/AlertModal/AlertModal";
 
 export interface CongestionData {
   area_congest_lvl: string;
@@ -30,6 +31,8 @@ type MarkerValue = 0 | 1 | 2 | 3 | 6 | 12;
 const CongestionMap = () => {
   const [loading, setLoading] = useState(false);
   const [markerValue, setMarkerValue] = useState<MarkerValue>(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const markerText = ["붐빔", "약간붐빔", "보통", "여유"];
   const [data, setData] = useState<CongestionData[]>([]);
@@ -52,6 +55,8 @@ const CongestionMap = () => {
       const res = await axios.get(url);
       setData(res.data.row);
     } catch (error) {
+      setShowModal(true);
+      setMessage("실시간 혼잡도 정보를 가져올 수 없습니다.");
       console.error("API 호출 실패:", error);
     } finally {
       setLoading(false);
@@ -66,12 +71,23 @@ const CongestionMap = () => {
           hour: markerValue,
         },
       });
+
+      if (
+        res.data.crowdLevel === null ||
+        res.data.crowdLevel.row.length === 0
+      ) {
+        setShowModal(true);
+        setMessage("혼잡도 예측 정보를 가져올 수 없습니다.");
+      }
       setCongestionDatas((prev) => ({
         ...prev,
-        [markerValue]: res.data.crowdLevel.row,
+        [markerValue]: res.data.crowdLevel?.row,
       }));
-      setData(res.data.crowdLevel.row);
+
+      setData(res.data.crowdLevel?.row);
     } catch (error) {
+      setShowModal(true);
+      setMessage("혼잡도 예측 정보를 가져올 수 없습니다.");
       console.error("혼잡도 예측 데이터 호출 실패:", error);
     } finally {
       setLoading(false);
@@ -90,7 +106,7 @@ const CongestionMap = () => {
       getData();
       return;
     }
-    if (congestionDatas[markerValue].length > 0) {
+    if (congestionDatas[markerValue]?.length > 0) {
       setData(congestionDatas[markerValue]);
     } else {
       getCrowdData(markerValue);
@@ -193,6 +209,14 @@ const CongestionMap = () => {
         </div>
         <MapCompnent data={data ?? []} />
       </div>
+      {showModal && (
+        <AlertModal
+          message={message}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        />
+      )}
     </>
   );
 };
