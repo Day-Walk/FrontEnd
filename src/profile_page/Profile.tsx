@@ -4,7 +4,7 @@ import MyCourse from "./components/MyCourse";
 import MyReview from "./components/MyReview";
 import LikeCourse from "./components/LikeCourse";
 import LikePlace from "./components/LikePlace";
-import { Settings } from "lucide-react";
+import { LogOutIcon, Settings } from "lucide-react";
 import { userName } from "../recoil/userInfo";
 import { useRecoilValue } from "recoil";
 import EditNameModal from "./components/Modals/EditNameModal";
@@ -59,13 +59,14 @@ const Profile = () => {
             <div>&nbsp;프로필 수정</div>
           </button>
           {modalOpen && <EditNameModal onClose={() => setModalOpen(false)} />}
-          <div>&nbsp;</div>
+          <div className={style.hrLine}></div>
           <div
             onClick={handleLogout}
             className={style.settingBtn}
-            style={{ width: "200px" }}
+            style={{ width: "200px", color: "#bbb" }}
           >
-            로그아웃
+            <LogOutIcon size={20} />
+            <div>&nbsp;로그아웃</div>
           </div>
         </div>
         <div className={style.rightWrapper}>

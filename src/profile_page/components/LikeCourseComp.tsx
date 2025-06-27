@@ -25,9 +25,9 @@ const LikeCourseList = (nowCourse: Interfaces.Course) => {
 
   const LikeIcon = () => {
     return like ? (
-      <AiFillHeart color="#E96563" size={30} style={{ cursor: "pointer" }} />
+      <AiFillHeart color="#E96563" size={22} style={{ cursor: "pointer" }} />
     ) : (
-      <AiOutlineHeart size={30} style={{ cursor: "pointer" }} />
+      <AiOutlineHeart size={22} style={{ cursor: "pointer" }} />
     );
   };
 
