@@ -10,11 +10,10 @@ import { userId } from "../../recoil/userInfo";
 import NoImage from "../../assets/NoImage.png";
 
 interface CourseProps extends Interfaces.Course {
-  fetchCourses: () => void;
   showModal: (msg: string) => void;
 }
 
-const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
+const Course = ({ showModal, ...nowCourse }: CourseProps) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [like, setLike] = useState<boolean>(course?.like || false);
   const courseId = nowCourse.courseId;
@@ -45,7 +44,6 @@ const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
       if (!like) {
         // 좋아요 등록
         await api.post("/course-like", body);
-        setLike(!like);
         showModal("코스 찜 리스트에 추가 완료!");
       } else {
         // 좋아요 취소
@@ -53,15 +51,11 @@ const Course = ({ fetchCourses, showModal, ...nowCourse }: CourseProps) => {
           data: body,
         });
         showModal("코스 찜이 취소되었습니다.");
-        setLike(!like);
-        showModal("코스 찜이 취소되었습니다.");
       }
       setLike(!like);
     } catch (error) {
       console.error("좋아요 처리 실패:", error);
       showModal("좋아요 처리 중 오류가 발생했습니다.");
-    } finally {
-      await fetchCourses();
     }
   };
 
