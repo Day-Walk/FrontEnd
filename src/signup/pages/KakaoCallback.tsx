@@ -93,6 +93,7 @@ const KakaoCallback = () => {
 
       await postLogin(kakaoId, nickname);
     } catch (error) {
+      navigate("/login");
       console.error("Kakao Login error : ", error);
     }
   };
