@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../loading/Loading";
 import Footer from "../global_components/Footer/Footer";
 import AlertModal from "../global_components/AlertModal/AlertModal";
+import MainBanner from "./components/MainBanner";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -101,6 +102,7 @@ const Courses = () => {
   return (
     <div className={style.contentArea}>
       <div className={style.courseWrapper}>
+        <MainBanner />
         <div>
           <SearchBox
             query={query}

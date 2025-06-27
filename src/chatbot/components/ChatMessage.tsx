@@ -34,13 +34,43 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
     setInputValue(firstLine + " 추천했던 장소 제외하고 다시 추천해줘.");
     inputRef.current?.focus();
   };
+
   const formatDetailText = (text: string) => {
-    return text.split(/(<br>|<n>)/g).map((chunk, idx) => {
-      if (chunk === "<br>")
-        return <div key={idx} style={{ marginBottom: "1em" }} />;
-      if (chunk === "<n>") return <br key={idx} />;
-      return chunk;
-    });
+    const paragraphs = text.split("<br>").filter(Boolean);
+
+    return (
+      <div>
+        {paragraphs.map((paragraph, idx) => {
+          const lines = paragraph.split("<n>").filter(Boolean);
+          const firstLine = lines[0].trim();
+          const isPlaceLine = /^\d+\.\s.*\s-\s.*$/.test(firstLine);
+
+          return (
+            <div key={idx}>
+              {isPlaceLine ? (
+                <>
+                  <div style={{ fontWeight: "bold", paddingBottom: "4px" }}>
+                    {firstLine}
+                  </div>
+                  {lines.slice(1).map((desc, i) => (
+                    <div key={i} style={{ color: "#aaa", fontSize: "14px" }}>
+                      {desc.trim()}
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div>{firstLine}</div>
+              )}
+              {idx !== paragraphs.length - 1 && (
+                <>
+                  <br />
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
