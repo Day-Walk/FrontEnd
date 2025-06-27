@@ -11,6 +11,7 @@ import EditNameModal from "./components/Modals/EditNameModal";
 import Footer from "../global_components/Footer/Footer";
 import { api } from "../utils/api";
 import { useLocation } from "react-router-dom";
+import ChatbotFace from "../assets/ChatBot.png";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
@@ -41,16 +42,23 @@ const Profile = () => {
       <div className={style.profileWrapper}>
         <div>
           <div className={style.nameWrapper}>
-            <div className={style.profileName}>{userNameState}</div>
-            <button
-              onClick={() => setModalOpen(true)}
-              className={style.settingBtn}
-            >
-              <Settings size={20} />
-              <div>&nbsp;프로필 수정</div>
-            </button>
-            {modalOpen && <EditNameModal onClose={() => setModalOpen(false)} />}
+            <img src={ChatbotFace} alt="Chatbot Face" width={70} />
+            <div style={{ lineHeight: "1.5" }}>
+              <span className={style.profileName}>{userNameState}</span> 님!
+              <br />
+              좋은 하루 되세요💛
+            </div>
           </div>
+          <div>&nbsp;</div>
+          <button
+            onClick={() => setModalOpen(true)}
+            className={style.settingBtn}
+            style={{ width: "200px" }}
+          >
+            <Settings size={20} />
+            <div>&nbsp;프로필 수정</div>
+          </button>
+          {modalOpen && <EditNameModal onClose={() => setModalOpen(false)} />}
           <div>&nbsp;</div>
           <div
             onClick={handleLogout}

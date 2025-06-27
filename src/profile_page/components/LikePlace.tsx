@@ -111,6 +111,7 @@ const LikePlace = () => {
                 <div className={style.pBlock}>
                   {p.imgUrl ? (
                     <img
+                      width={130}
                       src={p.imgUrl}
                       alt="img"
                       className={style.likePlaceImg}
