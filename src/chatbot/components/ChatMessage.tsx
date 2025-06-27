@@ -36,7 +36,6 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   };
 
   const formatDetailText = (text: string) => {
-    console.log(text);
     const paragraphs = text.split("<br>").filter(Boolean);
 
     return (

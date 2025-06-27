@@ -75,7 +75,9 @@ const MainBanner = () => {
       </div>
       <div className={styles.icons}>
         {[1, 2, 3, 4].map((i) => (
-          <div style={{ border: "1px solid #ccc" }}>{i}</div>
+          <div key={i} style={{ border: "1px solid #ccc" }}>
+            {i}
+          </div>
         ))}
       </div>
     </div>
