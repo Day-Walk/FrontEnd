@@ -182,7 +182,7 @@ const Courses = () => {
           }}
         />
       )}
-      {isHovering && (
+      {isHovering && !(mousePos.x === 0 && mousePos.y === 0) && (
         <div
           style={{
             position: "fixed",
