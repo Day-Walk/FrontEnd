@@ -266,7 +266,7 @@ const PlaceModal = ({
                   </div>
                   &nbsp;
                   <button onClick={handleLike}>
-                    <LikeIcon size={22} />
+                    <LikeIcon />
                   </button>
                 </div>
               </div>
