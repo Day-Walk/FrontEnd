@@ -8,6 +8,7 @@ import { api } from "../../utils/api";
 import EditCourseModal from "./Modals/EditCourseModal";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import ConfirmModal from "../../global_components/ConfirmModal/ConfirmModal";
 import { Trash2 } from "lucide-react";
 
 interface Props {
@@ -22,6 +23,7 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     if (course?.visible) {
@@ -30,6 +32,10 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
       setIsOpen(false);
     }
   }, [course?.visible]);
+
+  const handleClickDelete = () => {
+    setConfirmModalOpen(true);
+  };
 
   const handleToggleVisibility = async () => {
     if (!course) return;
@@ -68,7 +74,7 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
       setMessage("내 코스 삭제 완료!");
       setTimeout(() => {
         if (course?.courseId) onDelete(course?.courseId);
-      }, 700);
+      }, 1000);
     } catch (error) {
       console.error("내 코스 삭제 실패:", error);
       setShowModal(true);
@@ -101,7 +107,7 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
             <label>&nbsp;수정</label>
           </button>
           &nbsp;&nbsp;&nbsp;
-          <button className={style.btnCenter} onClick={handleDeleteCourse}>
+          <button className={style.btnCenter} onClick={handleClickDelete}>
             <Trash2 size={22} color="#E96563" />
             <label>&nbsp;삭제</label>
           </button>
@@ -142,6 +148,18 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
           </div>
         ))}
       </div>
+      {confirmModalOpen && (
+        <ConfirmModal
+          message="정말로 이 코스를 삭제하시겠습니까?"
+          onConfirm={() => {
+            handleDeleteCourse();
+            setConfirmModalOpen(false);
+          }}
+          onCancel={() => {
+            setConfirmModalOpen(false); // 취소 시 그냥 모달 닫기
+          }}
+        />
+      )}
       {showModal && (
         <AlertModal message={message} onClose={() => setShowModal(false)} />
       )}

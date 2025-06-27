@@ -29,7 +29,6 @@ const Courses = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
   const [isHovering, setIsHovering] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -54,10 +53,11 @@ const Courses = () => {
       const response = await api.get<Interfaces.CourseListResponse>(
         `/course/all?sort=${sort}&userId=${userIdState}`,
       );
-      setCoursePagesData(response.data);
-      setCoursePage(response.data.courseList[nowPage - 1]);
+      const clonedData = JSON.parse(JSON.stringify(response.data));
+      setCoursePagesData(clonedData);
+      setCoursePage(clonedData.courseList[nowPage - 1]);
       setLoading(false);
-      console.log("Fetched courses:", response.data);
+      console.log("Fetched courses:", clonedData);
     } catch (error) {
       console.error("Error fetching courses:", error);
       setLoading(false);
@@ -65,6 +65,7 @@ const Courses = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     if (query.length == 0) {
       fetchCourses();
     } else {
@@ -98,23 +99,6 @@ const Courses = () => {
     setNowQuery(searchQuery);
   };
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 20,
-        }}
-      >
-        <Loading1 />
-      </div>
-    );
-  }
-
   return (
     <div className={style.contentArea}>
       <div className={style.courseWrapper}>
@@ -126,7 +110,7 @@ const Courses = () => {
             onSearch={() => fetchSearchResults(query, sort)}
           />
         </div>
-        {coursePage ? (
+        {!loading && coursePage ? (
           <>
             <div className={style.sortWrapper}>
               <button
@@ -154,7 +138,6 @@ const Courses = () => {
                   >
                     <Course
                       {...c}
-                      fetchCourses={fetchCourses}
                       showModal={(msg: string) => {
                         setModalMessage(msg);
                         setShowModal(true);
@@ -173,6 +156,19 @@ const Courses = () => {
               </Stack>
             </div>
           </>
+        ) : loading ? (
+          <div
+            style={{
+              position: "absolute",
+              top: "60px",
+              left: 0,
+              width: "100%",
+              zIndex: 10,
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+            }}
+          >
+            <Loading1 />
+          </div>
         ) : (
           <div className={style.noCourse}>
             "{nowQuery}" 검색어에 해당하는 코스가 없어요. 😢
@@ -182,10 +178,13 @@ const Courses = () => {
       {showModal && (
         <AlertModal
           message={modalMessage}
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            window.location.reload();
+          }}
         />
       )}
-      {isHovering && (
+      {isHovering && !(mousePos.x === 0 && mousePos.y === 0) && (
         <div
           style={{
             position: "fixed",

@@ -112,14 +112,17 @@
   display: inline-block;
   width: 420px;
   border-radius: 12px;
-  border: 1px solid #cccccc;
+  border: 2px solid #cccccc;
   margin: 40px 0 10px 0;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
+  box-sizing: border-box;
 }
-
+.searchWrapper:focus-within {
+  border: 2px solid var(--color-main);
+}
 .searchInput {
   width: 350px;
   border: none;

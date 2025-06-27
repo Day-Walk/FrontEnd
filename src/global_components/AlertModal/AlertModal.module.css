@@ -25,7 +25,8 @@
   margin-bottom: 16px;
 }
 
-.button {
+.button,
+.cancleButton {
   background-color: var(--color-main);
   color: white;
   border: none;
@@ -33,4 +34,15 @@
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.cancleButton {
+  background-color: rgb(245, 76, 107);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
 }

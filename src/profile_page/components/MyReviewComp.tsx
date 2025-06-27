@@ -8,6 +8,7 @@ import NoImage from "../../assets/NoImage.png";
 import { api } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import ConfirmModal from "../../global_components/ConfirmModal/ConfirmModal";
 
 interface Props {
   nowReview: Interfaces.Review;
@@ -20,9 +21,14 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const handleSelectPlace = () => {
     navigate(`/place/${review?.placeId}`);
+  };
+
+  const handleClickDelete = () => {
+    setConfirmModalOpen(true);
   };
 
   const handleDeleteReview = async () => {
@@ -34,7 +40,7 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
       setMessage("리뷰 삭제 완료!");
       setTimeout(() => {
         if (review?.reviewId) onDelete(review.reviewId);
-      }, 700);
+      }, 1000);
     } catch (error) {
       console.error("리뷰 삭제 실패:", error);
       setShowModal(true);
@@ -80,11 +86,23 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
               </span>
             ))}
           </div>
-          <button className={style.deleteBtn} onClick={handleDeleteReview}>
+          <button className={style.deleteBtn} onClick={handleClickDelete}>
             <Trash2 size={22} color="#E96563" />
           </button>
         </div>
       </div>
+      {confirmModalOpen && (
+        <ConfirmModal
+          message="정말로 이 리뷰를 삭제하시겠습니까?"
+          onConfirm={() => {
+            handleDeleteReview();
+            setConfirmModalOpen(false);
+          }}
+          onCancel={() => {
+            setConfirmModalOpen(false); // 취소 시 그냥 모달 닫기
+          }}
+        />
+      )}
       {showModal && (
         <AlertModal message={message} onClose={() => setShowModal(false)} />
       )}

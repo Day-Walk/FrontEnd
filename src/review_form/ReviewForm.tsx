@@ -11,6 +11,7 @@ import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../loading/Loading";
+import ConfirmModal from "../global_components/ConfirmModal/ConfirmModal";
 
 const ReviewForm = () => {
   const { placeId } = useParams();
@@ -34,6 +35,7 @@ const ReviewForm = () => {
   const MAX_TAGS = 5;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPlaceInfo = async () => {
@@ -100,6 +102,10 @@ const ReviewForm = () => {
     }
   };
   const [onModalClose, setOnModalClose] = useState<() => void>(() => () => {});
+
+  const handelCancel = () => {
+    setConfirmModalOpen(true);
+  };
 
   const handleSubmitReview = async () => {
     if (!rating || selectedTags.length === 0 || !content) {
@@ -246,12 +252,26 @@ const ReviewForm = () => {
         </div>
 
         <div className={style.buttonRow}>
-          <button className={style.cancel}>취소</button>
+          <button onClick={handelCancel} className={style.cancel}>
+            취소
+          </button>
           <button onClick={handleSubmitReview} className={style.submit}>
             리뷰 등록하기
           </button>
         </div>
       </div>
+      {confirmModalOpen && (
+        <ConfirmModal
+          message="리뷰 작성을 취소하시겠습니까?"
+          onConfirm={() => {
+            navigate(-1);
+            setConfirmModalOpen(false);
+          }}
+          onCancel={() => {
+            setConfirmModalOpen(false); // 취소 시 그냥 모달 닫기
+          }}
+        />
+      )}
       {showModal && (
         <AlertModal
           message={message}
