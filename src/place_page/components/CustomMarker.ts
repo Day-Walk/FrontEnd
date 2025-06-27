@@ -21,11 +21,11 @@ export function CustomMarker(
     position,
     content: div,
     yAnchor: 1,
+    zIndex: place.placeId === selectedPlaceId ? 4 : 2,
   });
   console.log("********", div); // 확인용
-  console.log(overlay); // 확인용
 
   overlay.setMap(map);
 
-  return overlay; // ✅ 반드시 반환해야 외부에서 참조 가능
+  return overlay;
 }

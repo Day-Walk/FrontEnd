@@ -22,6 +22,7 @@ export function CustomMarker(
     position,
     content: div,
     yAnchor: 1,
+    zIndex: place.placeId === selectedPlaceId ? 4 : 2,
   });
 
   overlay.setMap(map);
