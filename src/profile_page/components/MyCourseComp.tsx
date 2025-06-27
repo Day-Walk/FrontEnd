@@ -94,7 +94,7 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
             {isOpen ? (
               <SquareCheck color="var(--color-main)" size={20} />
             ) : (
-              <Square size={20} />
+              <Square color="var(--color-main)" size={20} />
             )}
             <label>&nbsp;공개</label>
           </button>
@@ -103,12 +103,12 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
             onClick={() => setModalOpen(true)}
             className={style.btnCenter}
           >
-            <Pencil size={18} />
+            <Pencil size={20} color="#4BB3DD" />
             <label>&nbsp;수정</label>
           </button>
           &nbsp;&nbsp;&nbsp;
           <button className={style.btnCenter} onClick={handleClickDelete}>
-            <Trash2 size={22} color="#E96563" />
+            <Trash2 size={20} color="#E96563" />
             <label>&nbsp;삭제</label>
           </button>
           {modalOpen && course && (
