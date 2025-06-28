@@ -221,7 +221,7 @@ const Search = () => {
 
           const options = {
             center,
-            level: 5,
+            level: 4,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);

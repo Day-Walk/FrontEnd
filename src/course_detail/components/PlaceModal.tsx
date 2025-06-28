@@ -261,7 +261,7 @@ const PlaceModal = ({
                       리뷰 작성&nbsp;
                     </label>
                     <button>
-                      <Pencil size={22} color="#2c5044" />
+                      <Pencil size={18} color="#2c5044" />
                     </button>
                   </div>
                   &nbsp;

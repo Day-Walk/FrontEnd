@@ -430,6 +430,7 @@
   width: 32px;
   aspect-ratio: 1/1;
   background-color: var(--color-main);
+  border: 2px solid rgb(67, 149, 135);
   border-radius: 999px;
   text-align: center;
   display: flex;
@@ -442,7 +443,9 @@
 
 .selectedMarker {
   animation: boing 1s ease-in-out infinite;
-  background-color: #00715d;
+  /* background-color: #00715d; */
+  background: linear-gradient(130deg, #00b493, #ea8f85);
+  border: 2px solid rgb(51, 105, 95);
 }
 
 .duplicateMarker {

@@ -23,7 +23,8 @@
 .mapMarker {
   width: 32px;
   aspect-ratio: 1/1;
-  background-color: var(--color-main);
+  background: linear-gradient(130deg, #00b493, #ea8f85);
+  border: 2px solid rgb(51, 105, 95);
   border-radius: 999px;
   text-align: center;
   display: flex;

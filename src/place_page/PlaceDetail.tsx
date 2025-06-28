@@ -46,7 +46,7 @@ const PlaceDetail = () => {
     const center = new window.kakao.maps.LatLng(lat, lng);
     const map = new window.kakao.maps.Map(mapRef.current, {
       center,
-      level: 6,
+      level: 4,
     });
     mapInstance.current = map;
   }, [isMapLoaded, lat, lng]);

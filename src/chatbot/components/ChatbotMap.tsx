@@ -67,6 +67,7 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
             key={index}
             position={info.location}
             clickable={true}
+            zIndex={isSelected ? 4 : 2}
           >
             <div
               className={`${styles.map_marker} ${

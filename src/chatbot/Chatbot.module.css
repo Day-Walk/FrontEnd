@@ -71,7 +71,8 @@
 }
 
 .sendBtn {
-  background-color: var(--color-main);
+  /* background-color: var(--color-main); */
+  background: linear-gradient(130deg, #00b493, #ea8f85);
   font-weight: bold;
   color: #fff;
   width: 62px;
@@ -99,7 +100,8 @@
 
 .user_message {
   align-self: end;
-  background-color: var(--color-main);
+  /* background-color: var(--color-main); */
+  background: linear-gradient(130deg, #00b493, #ea8f85);
   color: #fff;
   text-align: left;
 }
@@ -193,10 +195,11 @@
 }
 
 .map_marker {
-  height: 40px;
-  width: 40px;
+  height: 32px;
+  width: 32px;
   /* aspect-ratio: 1/1; */
   background-color: var(--color-main);
+  border: 2px solid rgb(67, 149, 135);
   border-radius: 999px;
   text-align: center;
   display: flex;
@@ -204,12 +207,13 @@
   justify-content: center;
   color: #fff;
   font-weight: bold;
-  font-size: 18px;
-  z-index: 10;
+  font-size: 16px;
 }
 
 .selected_marker {
-  background-color: #00715d;
+  /* background-color: #00715d; */
+  background: linear-gradient(130deg, #00b493, #ea8f85);
+  border: 2px solid rgb(51, 105, 95);
   animation: boing 1s ease-in-out infinite;
 }
 
@@ -268,7 +272,9 @@
   color: white;
   width: 100%;
   border-radius: 10px;
-  background-color: var(--color-main);
+  /* background-color: var(--color-main);*/
+  background: linear-gradient(130deg, #00b493, #ea8f85);
+  /* border: 2px solid rgb(51, 105, 95); */
   padding: 10px 20px;
   margin-top: 20px;
   font-weight: bold;
