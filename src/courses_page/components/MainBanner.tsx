@@ -26,7 +26,7 @@ const MainBanner = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % total);
-    }, 2000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [total, current]);
 
