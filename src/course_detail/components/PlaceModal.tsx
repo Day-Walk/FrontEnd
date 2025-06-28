@@ -345,7 +345,7 @@ const PlaceModal = ({
                 {naverUrl && (
                   <a href={naverUrl} target="_blank" rel="noopener noreferrer">
                     <button style={{ display: "flex", alignItems: "center" }}>
-                      <span>상세 정보 보기&nbsp;</span>
+                      <span>상세 정보 보러가기&nbsp;</span>
                       <CircleChevronRight size={24} />
                     </button>
                   </a>

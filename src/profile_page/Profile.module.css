@@ -54,6 +54,7 @@
 
 .courseBlock {
   margin: 30px 10px;
+  cursor: pointer;
 }
 .header {
   display: flex;
@@ -175,6 +176,7 @@
   margin: 20px;
   border: 1px solid #e5e5e5;
   border-radius: 12px;
+  cursor: pointer;
 }
 
 .reviewTop {
@@ -239,6 +241,7 @@
   margin: 14px 0 8px 0;
 }
 .pBlock {
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
