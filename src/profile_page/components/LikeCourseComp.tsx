@@ -3,7 +3,7 @@ import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { MapPin } from "lucide-react";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";

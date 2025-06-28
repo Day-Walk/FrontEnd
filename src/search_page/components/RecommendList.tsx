@@ -3,7 +3,7 @@ import React from "react";
 import style from "../Search.module.css";
 import { MapPin, Star, ThumbsUp } from "lucide-react";
 import * as Interfaces from "../interfaces/Interface";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 interface Props {
   places: Interfaces.SearchPlace[];
   selectedPlaceId: string;

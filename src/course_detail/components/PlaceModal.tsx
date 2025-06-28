@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { getPlaceUrl } from "./getPlaceUrl";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../../loading/Loading";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import ReactDOM from "react-dom";
 
 const PlaceModal = ({

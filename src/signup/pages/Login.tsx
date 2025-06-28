@@ -1,5 +1,5 @@
 import styles from "../Login.module.css";
-import Logo from "../../assets/DayWalkLogo.png";
+import Logo from "../../assets/DayWalkLogo.webp";
 
 const Login = () => {
   const handleClickLogin = () => {

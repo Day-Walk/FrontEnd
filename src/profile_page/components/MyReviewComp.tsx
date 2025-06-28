@@ -4,7 +4,7 @@ import * as Interfaces from "../interfaces/Interfaces";
 import { MapPin } from "lucide-react";
 import { Star } from "lucide-react";
 import { Trash2 } from "lucide-react";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import { api } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../global_components/AlertModal/AlertModal";

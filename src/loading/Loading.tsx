@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./loading.module.css";
-import ChatBot from "../assets/ChatBot2D.png";
+import ChatBot from "../assets/ChatBot2D.webp";
 
 interface LoadingProps {
   width?: string;
@@ -60,7 +60,7 @@ const Loading2: React.FC<LoadingProps> = ({ width = "300px", style = {} }) => {
   return (
     <LoadingWrapper>
       <img
-        src="../src/assets/goodVersion.png"
+        src="../src/assets/goodVersion.webp"
         style={{
           width: `${width}`,
           transform: flip ? "scaleX(-1)" : "scaleX(1)",

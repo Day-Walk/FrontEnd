@@ -11,7 +11,7 @@ import EditNameModal from "./components/Modals/EditNameModal";
 import Footer from "../global_components/Footer/Footer";
 import { api } from "../utils/api";
 import { useLocation } from "react-router-dom";
-import ChatbotFace from "../assets/ChatBot.png";
+import ChatbotFace from "../assets/ChatBot.webp";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);

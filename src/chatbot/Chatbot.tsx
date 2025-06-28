@@ -6,7 +6,7 @@ import ChatbotMap from "./components/ChatbotMap";
 import { MainButton } from "./components/Buttons";
 import { Modal } from "@mui/material";
 import AddCourseModal from "./components/AddCourseModal";
-import ChatBot from "../assets/ChatBot.png";
+import ChatBot from "../assets/ChatBot.webp";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";

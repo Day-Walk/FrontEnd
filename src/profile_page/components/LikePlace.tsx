@@ -6,7 +6,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../../loading/Loading";
