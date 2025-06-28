@@ -402,3 +402,11 @@
   align-items: center;
   justify-content: center;
 }
+
+.viewDetailButton a {
+  text-decoration: none;
+  color: var(--color-main);
+}
+.viewDetailButton span {
+  margin-bottom: 2px;
+}
