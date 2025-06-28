@@ -23,7 +23,7 @@ const Login = () => {
         <div className={styles.title}>
           서울 여행자를 위한
           <br />
-          AI 투어 가이드 서비스
+          AI 투어 가이드 서비스 🎒
         </div>
         <div className={styles.discription}>
           당신의 하루, 챗봇과 함께 그려보세요.
