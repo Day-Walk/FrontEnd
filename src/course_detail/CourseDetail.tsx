@@ -110,6 +110,7 @@ const CourseDetail = () => {
   }, [courseDetail]);
 
   useEffect(() => {
+    if (!courseDetail) return;
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
@@ -132,7 +133,7 @@ const CourseDetail = () => {
       })
       .catch(console.error);
     setLoading(false);
-  }, []);
+  }, [courseDetail]);
 
   useEffect(() => {
     if (!window.kakao || !selectedPlace || !mapInstance.current) return;

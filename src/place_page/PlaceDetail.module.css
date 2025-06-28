@@ -6,6 +6,7 @@
 .detailRight {
   width: calc(100%);
   position: relative;
+  height: 100%;
 }
 
 @keyframes boing {

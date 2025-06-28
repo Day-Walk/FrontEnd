@@ -12,6 +12,7 @@
 }
 .detailRight {
   width: calc(100% - 380px);
+  height: 100%;
 }
 .placeBlock,
 .placeBlockClick {

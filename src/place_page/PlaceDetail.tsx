@@ -36,10 +36,11 @@ const PlaceDetail = () => {
   }, []);
 
   useEffect(() => {
+    if (!lat || !lng) return;
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => setIsMapLoaded(true))
       .catch(console.error);
-  }, []);
+  }, [lat, lng]);
   useEffect(() => {
     if (!isMapLoaded || !mapRef.current || mapInstance.current) return;
 
