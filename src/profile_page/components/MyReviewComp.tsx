@@ -71,6 +71,7 @@ const MyReviewComp = ({ nowReview, onDelete }: Props) => {
               <MapPin size={14} />
               {review?.address.split(" ").slice(0, 2).join(" ")}
             </div>
+            <br />
             <div>{review?.content}</div>
           </div>
           <div className={style.rStar}>

@@ -104,13 +104,14 @@ const LikePlace = () => {
   return (
     <div className={style.courseWrapper}>
       {currentPagePlaces.length > 0 ? (
-        <>
+        <div>
           <div className={style.likePlaceGrid}>
             {currentPagePlaces.map((p, index) => (
               <div key={index} onClick={(e) => handleSelectPlace(e, p.placeId)}>
                 <div className={style.pBlock}>
                   {p.imgUrl ? (
                     <img
+                      width={130}
                       src={p.imgUrl}
                       alt="img"
                       className={style.likePlaceImg}
@@ -157,7 +158,7 @@ const LikePlace = () => {
               />
             </Stack>
           </div>
-        </>
+        </div>
       ) : (
         <div style={{ margin: "30px 10px", color: "#aaa" }}>
           찜한 장소가 아직 없어요. 😢
