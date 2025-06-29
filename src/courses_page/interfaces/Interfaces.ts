@@ -22,3 +22,13 @@ export interface Place {
   imgUrl: string;
   address: string;
 }
+
+export interface Top4Place {
+  address: string;
+  category: string;
+  clickNum: number;
+  imgUrl: string;
+  name: string;
+  placeId: string;
+  subCategory: string;
+}
