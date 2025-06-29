@@ -7,6 +7,7 @@ export type PlaceType = {
     lat: number;
     lng: number;
   };
+  messageId: string; // Optional, used for linking to messages
 };
 
 export type MessageType = {
@@ -36,6 +37,7 @@ export type MarkerInfo = {
     lng: number;
   };
   placeId: string;
+  messageId: string;
 };
 export interface ChatMessageProps {
   message: ChatResponse;
@@ -45,9 +47,9 @@ export interface ChatMessageProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
   handleClick: () => void;
   loading: boolean;
-
   setInputValue: (value: string) => void;
   openPlaceModal: (open: boolean) => void;
+  messageId: string;
 }
 
 export interface ChatRecordPopUpProps {

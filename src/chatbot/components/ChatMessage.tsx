@@ -24,10 +24,16 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   inputRef,
   handleClick,
   loading,
-
   setInputValue,
   openPlaceModal,
+  messageId,
 }) => {
+  const placeListWithMessageId =
+    message?.placeList?.map((place) => ({
+      ...place,
+      messageId,
+    })) || [];
+
   const handleClickReRecommed = () => {
     const firstLine = message.detail?.split("<br>")[0] ?? "";
 
@@ -59,13 +65,18 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
                   ))}
                 </>
               ) : (
-                <div>{firstLine}</div>
+                lines.map((line, i) => (
+                  <div
+                    key={i}
+                    style={
+                      i === 0 ? undefined : { color: "#aaa", fontSize: "14px" }
+                    }
+                  >
+                    {line.trim()}
+                  </div>
+                ))
               )}
-              {idx !== paragraphs.length - 1 && (
-                <>
-                  <br />
-                </>
-              )}
+              {idx !== paragraphs.length - 1 && <br />}
             </div>
           );
         })}
@@ -79,7 +90,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
       {loading && <LoadingSpinner />}
       {message.placeList && message.placeList.length > 0 && (
         <div onClick={handleClick} className={styles.place_wrapper}>
-          {message?.placeList?.map(
+          {placeListWithMessageId.map(
             (place: Interfaces.PlaceType, idx: number) => (
               <div
                 onClick={() => {
@@ -90,10 +101,16 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
                       lng: place.location.lng,
                     },
                     placeId: place.placeId,
+                    messageId: place.messageId,
                   });
                 }}
                 key={idx}
-                className={`${styles.place_box} ${selectedMarker?.location.lat === place.location.lat && selectedMarker?.location.lng === place.location.lng ? styles.selected_img : ""}`}
+                className={`${styles.place_box} ${
+                  selectedMarker?.placeId === place.placeId &&
+                  selectedMarker?.messageId === place.messageId
+                    ? styles.selected_img
+                    : ""
+                }`}
               >
                 {place.imgUrl ? (
                   <img
@@ -111,9 +128,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
                   <div className={styles.place_address}>
                     <MapPin
                       size={14}
-                      style={{
-                        filter: " drop-shadow(0 0 4px #333)",
-                      }}
+                      style={{ filter: " drop-shadow(0 0 4px #333)" }}
                     />
                     {place.address.split(" ").slice(0, 2).join(" ")}
                   </div>
@@ -131,7 +146,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
             bgColor="#E96563"
             style={{ flexShrink: 0 }}
             onClick={() => {
-              handleModalOpen(message.placeList);
+              handleModalOpen(placeListWithMessageId);
             }}
           >
             내 코스에 추가하기
@@ -147,13 +162,14 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
           <MainButton
             onClick={() => {
               handleClick();
-              if (message.placeList && message.placeList.length > 0) {
+              if (placeListWithMessageId?.length > 0) {
                 setSelectedMarker({
                   location: {
-                    lat: message.placeList[0].location.lat,
-                    lng: message.placeList[0].location.lng,
+                    lat: placeListWithMessageId[0].location.lat,
+                    lng: placeListWithMessageId[0].location.lng,
                   },
-                  placeId: message.placeList[0].placeId,
+                  placeId: placeListWithMessageId[0].placeId,
+                  messageId: placeListWithMessageId[0].messageId,
                 });
               }
             }}
