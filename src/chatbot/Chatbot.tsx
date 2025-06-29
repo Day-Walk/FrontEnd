@@ -15,6 +15,7 @@ import * as Interfaces from "./interfaces/Interface";
 import ChatRecordPopUp from "./components/ChatRecordPopUp";
 import PlaceModal from "../course_detail/components/PlaceModal";
 import { chatLoading, chatLogState } from "../recoil/chatLog";
+import { create } from "@mui/material/styles/createTransitions";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
@@ -140,11 +141,13 @@ const Chatbot = () => {
           const parsed: Interfaces.MessageType["answer"] = JSON.parse(e.data);
           console.log("chatbot 이벤트 수신:", parsed);
 
+          let createAt;
           setChatLog((prev) => {
             if (!prev || !prev.log || prev.log.length === 0) return prev;
 
             const updatedLog = [...prev.log];
             const lastIndex = updatedLog.length - 1;
+            createAt = updatedLog[lastIndex].createAt;
 
             updatedLog[lastIndex] = {
               ...updatedLog[lastIndex],
@@ -162,6 +165,7 @@ const Chatbot = () => {
             setSelectedMarker({
               location: parsed.placeList[0].location,
               placeId: parsed.placeList[0].placeId,
+              messageId: createAt || "",
             });
           }
         } catch (error) {
@@ -333,6 +337,7 @@ const Chatbot = () => {
                     loading={loading && index === chatLog.log.length - 1}
                     setInputValue={setValue}
                     openPlaceModal={setOpenPlaceModal}
+                    messageId={chat.createAt}
                   />
                 ),
               ])}

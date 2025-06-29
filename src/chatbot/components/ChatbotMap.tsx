@@ -35,9 +35,13 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
     lng: 126.9769,
   });
 
-  const handleClickMarker = (location: Location, placeId: string) => {
+  const handleClickMarker = (
+    location: Location,
+    placeId: string,
+    messageId: string,
+  ) => {
     setMapCenter(location);
-    setSelectedMarker({ location, placeId });
+    setSelectedMarker({ location, placeId, messageId });
     console.log(location, placeId);
   };
 
@@ -71,7 +75,9 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
               className={`${styles.map_marker} ${
                 isSelected ? styles.selected_marker : ""
               }`}
-              onClick={() => handleClickMarker(info.location, info.placeId)}
+              onClick={() =>
+                handleClickMarker(info.location, info.placeId, info.messageId)
+              }
             >
               {index + 1}
             </div>
