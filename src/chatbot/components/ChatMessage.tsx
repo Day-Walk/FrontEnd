@@ -65,13 +65,18 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
                   ))}
                 </>
               ) : (
-                <div>{firstLine}</div>
+                lines.map((line, i) => (
+                  <div
+                    key={i}
+                    style={
+                      i === 0 ? undefined : { color: "#aaa", fontSize: "14px" }
+                    }
+                  >
+                    {line.trim()}
+                  </div>
+                ))
               )}
-              {idx !== paragraphs.length - 1 && (
-                <>
-                  <br />
-                </>
-              )}
+              {idx !== paragraphs.length - 1 && <br />}
             </div>
           );
         })}
