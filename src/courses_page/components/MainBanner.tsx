@@ -103,18 +103,26 @@ const MainBanner = () => {
           </span>
         </div>
         <div className={styles.places}>
-          {top4Place?.map((place) => (
+          {top4Place?.map((place, i) => (
             <div
+              onClick={() => navigate(`/place/${place.placeId}`)}
               key={place.placeId}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "10px",
-                padding: "4px",
-              }}
+              className={styles.bannerPlaces}
+              style={{ animationDelay: `${i * 0.2}s` }}
             >
-              <div style={{ display: "flex", gap: "4px" }}>
+              <div>
                 <img src={place.imgUrl} className={styles.top4Img} />
-                <div>{place.name}</div>
+                <div className={styles.bannerIdx}>{i + 1}</div>
+                <div
+                  style={{
+                    display: "flex",
+                    marginLeft: "4px",
+                    marginTop: "4px",
+                  }}
+                >
+                  <div className={styles.bannerName}>{place.name}</div>
+                  <div className={styles.bannerCategory}>{place.category}</div>
+                </div>
               </div>
             </div>
           ))}
