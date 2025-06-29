@@ -36,17 +36,18 @@ const PlaceDetail = () => {
   }, []);
 
   useEffect(() => {
+    if (!lat || !lng) return;
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => setIsMapLoaded(true))
       .catch(console.error);
-  }, []);
+  }, [lat, lng]);
   useEffect(() => {
     if (!isMapLoaded || !mapRef.current || mapInstance.current) return;
 
     const center = new window.kakao.maps.LatLng(lat, lng);
     const map = new window.kakao.maps.Map(mapRef.current, {
       center,
-      level: 6,
+      level: 4,
     });
     mapInstance.current = map;
   }, [isMapLoaded, lat, lng]);

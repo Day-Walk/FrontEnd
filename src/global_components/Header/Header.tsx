@@ -1,5 +1,5 @@
 import styles from "./Header.module.css";
-import Logo from "../../assets/DayWalkLogo.png";
+import Logo from "../../assets/DayWalkLogo.webp";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   BotMessageSquare,

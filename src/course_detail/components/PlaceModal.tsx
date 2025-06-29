@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { getPlaceUrl } from "./getPlaceUrl";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../../loading/Loading";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import ReactDOM from "react-dom";
 
 const PlaceModal = ({
@@ -261,7 +261,7 @@ const PlaceModal = ({
                       리뷰 작성&nbsp;
                     </label>
                     <button>
-                      <Pencil size={22} color="#2c5044" />
+                      <Pencil size={18} color="#2c5044" />
                     </button>
                   </div>
                   &nbsp;
@@ -345,7 +345,7 @@ const PlaceModal = ({
                 {naverUrl && (
                   <a href={naverUrl} target="_blank" rel="noopener noreferrer">
                     <button style={{ display: "flex", alignItems: "center" }}>
-                      <span>상세 정보 보기&nbsp;</span>
+                      <span>상세 정보 보러가기&nbsp;</span>
                       <CircleChevronRight size={24} />
                     </button>
                   </a>

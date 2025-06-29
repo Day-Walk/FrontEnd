@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  padding: 40px;
+  padding: 80px 40px;
   background-color: #f0f0f0;
   box-sizing: border-box;
 }
@@ -26,6 +26,7 @@
 
 .softText {
   color: #878787;
+  font-size: 14px;
 }
 .lastLine_wrapper {
   display: flex;

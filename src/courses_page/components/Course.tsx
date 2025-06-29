@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 
 interface CourseProps extends Interfaces.Course {
   showModal: (msg: string) => void;

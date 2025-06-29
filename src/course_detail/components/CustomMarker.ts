@@ -12,7 +12,6 @@ export function CustomMarker(
     place.location.lat,
     place.location.lng,
   );
-  console.log("******", place, selectedPlaceId);
 
   const div = document.createElement("div");
   div.className = `${markerClass} ${place.placeId === selectedPlaceId ? selectedMarkerClass : ""} ${duplicateMarekerClass}`;

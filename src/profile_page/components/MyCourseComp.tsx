@@ -3,7 +3,7 @@ import style from "../Profile.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
 import { MapPin, Pencil } from "lucide-react";
 import { SquareCheck, Square } from "lucide-react";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import { api } from "../../utils/api";
 import EditCourseModal from "./Modals/EditCourseModal";
 import { useNavigate } from "react-router-dom";

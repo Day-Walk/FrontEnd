@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "../Courses.module.css";
-import Banner1 from "../../assets/Banner1.png";
-import Banner2 from "../../assets/Banner2.png";
-import Banner3 from "../../assets/Banner3.png";
-import Banner4 from "../../assets/Banner4.png";
+import Banner1 from "../../assets/Banner1.webp";
+import Banner2 from "../../assets/Banner2.webp";
+import Banner3 from "../../assets/Banner3.webp";
+import Banner4 from "../../assets/Banner4.webp";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
@@ -28,7 +28,7 @@ const MainBanner = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % total);
-    }, 2000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [total, current]);
 

@@ -2,8 +2,8 @@ import React from "react";
 import styles from "../Chatbot.module.css";
 import { MapPin } from "lucide-react";
 import { MainButton } from "./Buttons";
-import ChatBot from "../../assets/ChatBot.png";
-import NoImage from "../../assets/NoImage.png";
+import ChatBot from "../../assets/ChatBot.webp";
+import NoImage from "../../assets/NoImage.webp";
 import * as Interfaces from "../interfaces/Interface";
 
 const LoadingSpinner = () => {

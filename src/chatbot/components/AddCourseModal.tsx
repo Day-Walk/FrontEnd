@@ -8,7 +8,7 @@ import * as Interfaces from "../interfaces/Interface";
 import { api } from "../../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../../recoil/userInfo";
-import NoImage from "../../assets/NoImage.png";
+import NoImage from "../../assets/NoImage.webp";
 import { useNavigate } from "react-router-dom";
 
 const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(

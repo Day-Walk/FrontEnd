@@ -10,7 +10,7 @@ import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId, userName } from "../recoil/userInfo";
-import RobotImage from "../assets/goodVersion2.jpeg";
+import RobotImage from "../assets/goodVersion2.webp";
 import { Loading1 } from "../loading/Loading";
 
 declare global {
@@ -221,7 +221,7 @@ const Search = () => {
 
           const options = {
             center,
-            level: 5,
+            level: 4,
           };
 
           const map = new window.kakao.maps.Map(mapRef.current, options);

@@ -10,7 +10,7 @@ import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
 import { useRecoilValue } from "recoil";
 import { userId } from "../recoil/userInfo";
-import NoImage from "../assets/NoImage.png";
+import NoImage from "../assets/NoImage.webp";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../loading/Loading";
 declare global {
@@ -110,6 +110,7 @@ const CourseDetail = () => {
   }, [courseDetail]);
 
   useEffect(() => {
+    if (!courseDetail) return;
     loadKakaoMap(import.meta.env.VITE_KAKAOMAP_KEY)
       .then(() => {
         if (mapRef.current && !mapInstance.current) {
@@ -132,7 +133,7 @@ const CourseDetail = () => {
       })
       .catch(console.error);
     setLoading(false);
-  }, []);
+  }, [courseDetail]);
 
   useEffect(() => {
     if (!window.kakao || !selectedPlace || !mapInstance.current) return;
