@@ -93,7 +93,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
                   });
                 }}
                 key={idx}
-                className={`${styles.place_box} ${selectedMarker?.location.lat === place.location.lat && selectedMarker?.location.lng === place.location.lng ? styles.selected_img : ""}`}
+                className={`${styles.place_box} ${selectedMarker?.placeId === place.placeId ? styles.selected_img : ""}`}
               >
                 {place.imgUrl ? (
                   <img

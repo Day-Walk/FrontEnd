@@ -58,9 +58,7 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
       minLevel={8}
     >
       {mapInfo?.map((info, index) => {
-        const isSelected =
-          selectedMarker?.location?.lat === info.location.lat &&
-          selectedMarker?.location?.lng === info.location.lng;
+        const isSelected = selectedMarker?.placeId === info.placeId;
 
         return (
           <CustomOverlayMap
