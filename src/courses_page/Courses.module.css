@@ -260,8 +260,18 @@ button {
   background-color: #333;
 }
 
-.icons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+.top4Wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.places {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.top4Img {
+  width: 30px;
+  height: 30px;
 }

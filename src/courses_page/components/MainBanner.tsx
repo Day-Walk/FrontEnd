@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../Courses.module.css";
 import Banner1 from "../../assets/Banner1.webp";
 import Banner2 from "../../assets/Banner2.webp";
@@ -6,6 +6,8 @@ import Banner3 from "../../assets/Banner3.webp";
 import Banner4 from "../../assets/Banner4.webp";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../utils/api";
+import * as Interfaces from "../interfaces/Interfaces";
 
 const MainBanner = () => {
   const navigate = useNavigate();
@@ -33,6 +35,21 @@ const MainBanner = () => {
   const goToSlide = (idx: number) => setCurrent(idx);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + total) % total);
   const nextSlide = () => setCurrent((prev) => (prev + 1) % total);
+
+  const [top4Place, setTop4Place] = useState<Interfaces.Top4Place[] | []>([]);
+
+  useEffect(() => {
+    const getTop4Place = async () => {
+      try {
+        const res = await api.get("/click-log/place");
+        console.log(res.data);
+        setTop4Place(res.data.searchData);
+      } catch (error) {
+        console.error("Error fetching top 4 places:", error);
+      }
+    };
+    getTop4Place();
+  }, []);
   return (
     <div className={styles.bannerWrapper}>
       <div className={styles.banner}>
@@ -73,12 +90,35 @@ const MainBanner = () => {
           ))}
         </div>
       </div>
-      <div className={styles.icons}>
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} style={{ border: "1px solid #ccc" }}>
-            {i}
-          </div>
-        ))}
+      <div className={styles.top4Wrapper}>
+        <div>
+          오늘 하루 가장 많이 클릭된 장소&nbsp;
+          <span
+            style={{
+              color: "var(--color-main)",
+              fontWeight: "bold",
+            }}
+          >
+            TOP 4!
+          </span>
+        </div>
+        <div className={styles.places}>
+          {top4Place?.map((place) => (
+            <div
+              key={place.placeId}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "10px",
+                padding: "4px",
+              }}
+            >
+              <div style={{ display: "flex", gap: "4px" }}>
+                <img src={place.imgUrl} className={styles.top4Img} />
+                <div>{place.name}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
