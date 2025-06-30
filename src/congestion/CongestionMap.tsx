@@ -8,6 +8,7 @@ import { RotateCcw } from "lucide-react";
 import { api } from "../utils/api";
 import Loading from "../global_components/Loading";
 import AlertModal from "../global_components/AlertModal/AlertModal";
+import { useCongestionStore } from "../zustand/congestionStore";
 
 export interface CongestionData {
   area_congest_lvl: string;
@@ -26,7 +27,7 @@ const MARKS = [
   { value: 6, label: "6" },
   { value: 12, label: "12" },
 ];
-type MarkerValue = 0 | 1 | 2 | 3 | 6 | 12;
+export type MarkerValue = 0 | 1 | 2 | 3 | 6 | 12;
 
 const CongestionMap = () => {
   const [loading, setLoading] = useState(false);
@@ -35,17 +36,11 @@ const CongestionMap = () => {
   const [message, setMessage] = useState<string>("");
 
   const markerText = ["붐빔", "약간붐빔", "보통", "여유"];
+  const setCongestionData = useCongestionStore(
+    (state) => state.setCongestionData,
+  );
+  const clearData = useCongestionStore((state) => state.clearData);
   const [data, setData] = useState<CongestionData[]>([]);
-  const [congestionDatas, setCongestionDatas] = useState<
-    Record<MarkerValue, CongestionData[]>
-  >({
-    0: [],
-    1: [],
-    2: [],
-    3: [],
-    6: [],
-    12: [],
-  });
 
   const getData = async () => {
     setLoading(true);
@@ -78,13 +73,12 @@ const CongestionMap = () => {
       ) {
         setShowModal(true);
         setMessage("혼잡도 예측 정보를 가져올 수 없습니다.");
+        setLoading(false);
+        return;
       }
-      setCongestionDatas((prev) => ({
-        ...prev,
-        [markerValue]: res.data.crowdLevel?.row,
-      }));
 
-      setData(res.data.crowdLevel?.row);
+      setCongestionData(markerValue, res.data.crowdLevel.row);
+      setData(res.data.crowdLevel.row);
     } catch (error) {
       setShowModal(true);
       setMessage("혼잡도 예측 정보를 가져올 수 없습니다.");
@@ -101,40 +95,53 @@ const CongestionMap = () => {
     return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${date.getHours()}시`;
   };
 
+  const congestionDataForCurrent = useCongestionStore(
+    (state) => state.congestionData[markerValue],
+  );
+  const lastFetchedForCurrent = useCongestionStore(
+    (state) => state.lastFetched[markerValue],
+  );
+
   useEffect(() => {
-    if (markerValue === 0) {
-      getData();
-      return;
-    }
-    if (congestionDatas[markerValue]?.length > 0) {
-      setData(congestionDatas[markerValue]);
-    } else {
-      getCrowdData(markerValue);
-    }
-  }, [markerValue]);
+    const currentHourStr = (() => {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const MM = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      const HH = String(now.getHours()).padStart(2, "0");
+      return `${yyyy}${MM}${dd}${HH}`;
+    })();
 
-  // 정시되면 데이터 갱신해야 됨
+    async function fetchData() {
+      if (markerValue === 0) {
+        await getData();
+        return;
+      }
+
+      if (
+        !lastFetchedForCurrent ||
+        lastFetchedForCurrent !== currentHourStr ||
+        congestionDataForCurrent.length === 0
+      ) {
+        await getCrowdData(markerValue);
+      } else {
+        setData(congestionDataForCurrent);
+      }
+    }
+
+    fetchData();
+  }, [markerValue, lastFetchedForCurrent, congestionDataForCurrent]);
+
   useEffect(() => {
-    if (markerValue !== 0) return;
-
-    let currentHour = new Date().getHours();
-
     const interval = setInterval(() => {
       const now = new Date();
-      const nowHour = now.getHours();
-      const nowMinute = now.getMinutes();
-
-      if (nowHour !== currentHour || nowMinute === 0) {
-        currentHour = nowHour;
-        setCongestionDatas((prev) => ({
-          ...prev,
-          0: [],
-        }));
+      if (now.getMinutes() === 0) {
+        clearData();
       }
     }, 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [markerValue]);
+  }, [clearData, markerValue]);
   return (
     <>
       {loading && <Loading />}
