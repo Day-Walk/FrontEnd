@@ -25,7 +25,7 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
   handleClick,
   loading,
   setInputValue,
-  openPlaceModal,
+
   messageId,
 }) => {
   const placeListWithMessageId =
@@ -94,7 +94,6 @@ const ChatMessage: React.FC<Interfaces.ChatMessageProps> = ({
             (place: Interfaces.PlaceType, idx: number) => (
               <div
                 onClick={() => {
-                  openPlaceModal(true);
                   setSelectedMarker({
                     location: {
                       lat: place.location.lat,

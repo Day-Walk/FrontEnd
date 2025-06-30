@@ -48,7 +48,7 @@ export interface ChatMessageProps {
   handleClick: () => void;
   loading: boolean;
   setInputValue: (value: string) => void;
-  openPlaceModal: (open: boolean) => void;
+
   messageId: string;
 }
 

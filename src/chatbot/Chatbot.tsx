@@ -15,7 +15,6 @@ import * as Interfaces from "./interfaces/Interface";
 import ChatRecordPopUp from "./components/ChatRecordPopUp";
 import PlaceModal from "../course_detail/components/PlaceModal";
 import { chatLoading, chatLogState } from "../recoil/chatLog";
-import { create } from "@mui/material/styles/createTransitions";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
@@ -50,7 +49,6 @@ const ChatInput = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handlePressEnter}
-        disabled={loading}
       />
       <MainButton
         onClick={sendChat}
@@ -87,7 +85,6 @@ const Chatbot = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const clickRef = useRef(false);
   const [chatLog, setChatLog] = useRecoilState(chatLogState);
-  const [openPlaceModal, setOpenPlaceModal] = useState<boolean>(false);
 
   const handleOpenCourseSaveModal = (placeList: Interfaces.PlaceType[]) => {
     setSelectedPlaceList(placeList);
@@ -167,6 +164,7 @@ const Chatbot = () => {
               placeId: parsed.placeList[0].placeId,
               messageId: createAt || "",
             });
+            console.log(createAt);
           }
         } catch (error) {
           saveErrorChatLog("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
@@ -336,7 +334,6 @@ const Chatbot = () => {
                     }}
                     loading={loading && index === chatLog.log.length - 1}
                     setInputValue={setValue}
-                    openPlaceModal={setOpenPlaceModal}
                     messageId={chat.createAt}
                   />
                 ),
@@ -365,7 +362,7 @@ const Chatbot = () => {
             zIndex: 10,
           }}
         >
-          {selectedMarker && openPlaceModal && (
+          {selectedMarker && (
             <PlaceModal
               placeId={selectedMarker ? selectedMarker.placeId : ""}
               isPlaceOnly={true}
