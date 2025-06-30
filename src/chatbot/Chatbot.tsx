@@ -8,14 +8,12 @@ import { Modal } from "@mui/material";
 import AddCourseModal from "./components/AddCourseModal";
 import ChatBot from "../assets/ChatBot.webp";
 import AlertModal from "../global_components/AlertModal/AlertModal";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import * as Interfaces from "./interfaces/Interface";
 import ChatRecordPopUp from "./components/ChatRecordPopUp";
 import PlaceModal from "../course_detail/components/PlaceModal";
-import { chatLoading, chatLogState } from "../recoil/chatLog";
 import { useUserStore } from "../zustand/useUserStore";
+import { useChatStore } from "../zustand/chatStore";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
@@ -42,7 +40,9 @@ const ChatInput = ({
 
   return (
     <div
-      className={`${styles.input_wrapper} ${isFocused && !loading ? styles.focused : ""}`}
+      className={`${styles.input_wrapper} ${
+        isFocused && !loading ? styles.focused : ""
+      }`}
     >
       <textarea
         value={inputValue}
@@ -83,41 +83,30 @@ const Chatbot = () => {
     Interfaces.PlaceType[] | null
   >(null);
 
-  const [loading, setLoading] = useRecoilState(chatLoading);
+  const {
+    chatLog,
+    loading,
+    isLoaded,
+    setChatLog,
+    appendchatLog,
+    setIsLoaded,
+    setLoading,
+    updateLastAnswer,
+    updateLastAnswerWithError,
+  } = useChatStore();
+
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [openPopup, setOpenPopup] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const clickRef = useRef(false);
-  const [chatLog, setChatLog] = useRecoilState(chatLogState);
 
   const handleOpenCourseSaveModal = (placeList: Interfaces.PlaceType[]) => {
     setSelectedPlaceList(placeList);
     setOpen(true);
   };
   const handleCloseCourseSaveModal = () => setOpen(false);
-  const saveErrorChatLog = (errorMessage: string) => {
-    setChatLog((prev) => {
-      if (!prev || !prev.log || prev.log.length === 0) return prev;
-
-      const updatedLog = [...prev.log];
-      const lastIndex = updatedLog.length - 1;
-
-      updatedLog[lastIndex] = {
-        ...updatedLog[lastIndex],
-        answer: {
-          placeList: [],
-          detail: errorMessage,
-        },
-      };
-
-      return {
-        ...prev,
-        log: updatedLog,
-      };
-    });
-  };
 
   const connectSSE = (): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -144,36 +133,31 @@ const Chatbot = () => {
           const parsed: Interfaces.MessageType["answer"] = JSON.parse(e.data);
           console.log("chatbot 이벤트 수신:", parsed);
 
-          let createAt;
-          setChatLog((prev) => {
-            if (!prev || !prev.log || prev.log.length === 0) return prev;
+          if (!chatLog || chatLog.length === 0) return;
 
-            const updatedLog = [...prev.log];
-            const lastIndex = updatedLog.length - 1;
-            createAt = updatedLog[lastIndex].createAt;
+          const updatedLog = [...chatLog];
+          const lastIndex = updatedLog.length - 1;
+          updatedLog[lastIndex] = {
+            ...updatedLog[lastIndex],
+            answer: parsed,
+          };
 
-            updatedLog[lastIndex] = {
-              ...updatedLog[lastIndex],
-              answer: parsed,
-            };
-
-            return {
-              ...prev,
-              log: updatedLog,
-            };
-          });
+          updateLastAnswer(parsed);
 
           if (parsed.placeList.length > 0) {
             setSelectedPlaceList(parsed.placeList);
             setSelectedMarker({
               location: parsed.placeList[0].location,
               placeId: parsed.placeList[0].placeId,
-              messageId: createAt || "",
+              messageId: updatedLog[lastIndex].createAt || "",
             });
-            console.log(createAt);
+            console.log(chatLog);
+            console.log(updatedLog[lastIndex].createAt);
           }
         } catch (error) {
-          saveErrorChatLog("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
+          updateLastAnswerWithError(
+            "오류가 발생했습니다. 잠시 후에 다시 이용해주세요.",
+          );
           console.error("chatbot 이벤트 파싱 실패", error);
           newEventSource.close();
           reject(error);
@@ -183,7 +167,9 @@ const Chatbot = () => {
       newEventSource.onerror = (err: any) => {
         console.error("SSE 연결 에러:", err);
         setLoading(false);
-        saveErrorChatLog("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
+        updateLastAnswerWithError(
+          "오류가 발생했습니다. 잠시 후에 다시 이용해주세요.",
+        );
         setIsNewMessage(true);
         newEventSource.close();
         reject(err);
@@ -203,7 +189,7 @@ const Chatbot = () => {
       console.log(res.data);
     } catch (error) {
       console.error(error);
-      saveErrorChatLog("메시지 전송 중 오류가 발생했습니다.");
+      updateLastAnswerWithError("메시지 전송 중 오류가 발생했습니다.");
     }
   };
 
@@ -219,22 +205,18 @@ const Chatbot = () => {
     setLoading(true);
     setIsNewMessage(true);
     try {
-      setChatLog((prev) => ({
-        ...prev,
-        log: [
-          ...(prev?.log || []),
-          {
-            userId: userIdState,
-            question: value,
-            answer: { placeList: [], detail: "" },
-            createAt: new Date().toISOString(),
-          },
-        ],
-      }));
+      appendchatLog({
+        userId: userIdState,
+        question: value,
+        answer: { placeList: [], detail: "" },
+        createAt: new Date().toISOString(),
+      });
       await connectSSE();
       await getChat();
     } catch (error) {
-      saveErrorChatLog("오류가 발생했습니다. 잠시 후에 다시 이용해주세요.");
+      updateLastAnswerWithError(
+        "오류가 발생했습니다. 잠시 후에 다시 이용해주세요.",
+      );
       console.error("sendChat 실패", error);
     }
   };
@@ -272,16 +254,14 @@ const Chatbot = () => {
   }, [chatLog, loading]);
 
   useEffect(() => {
-    if (!chatLog.isLoaded && userIdState) {
+    if (!isLoaded && userIdState) {
       const getChatLog = async () => {
         try {
           const res = await api.get("/chat/log", {
             params: { userId: userIdState },
           });
-          setChatLog({
-            log: res.data.chatLog,
-            isLoaded: true,
-          });
+          setChatLog(res.data.chatLog);
+          setIsLoaded(true);
         } catch (error) {
           console.error("채팅 로그 가져오기 실패:", error);
         }
@@ -289,7 +269,7 @@ const Chatbot = () => {
 
       getChatLog();
     }
-  }, [userIdState, chatLog.isLoaded]);
+  }, [userIdState, isLoaded]);
 
   useEffect(() => {
     if (!loading) {
@@ -316,14 +296,14 @@ const Chatbot = () => {
               handleClickClosePopup={handleClickClosePopup}
             />
           )}
-          {chatLog.log.length === 0 ? (
+          {chatLog.length === 0 ? (
             <div className={styles.empty_chat}>
               <img src={ChatBot} style={{ width: "120px" }} />
               <div className={styles.ask_to}>챗봇에게 물어보세요!</div>
             </div>
           ) : (
             <div className={styles.content}>
-              {chatLog.log.flatMap((chat, index) => [
+              {chatLog.flatMap((chat, index) => [
                 chat.question && (
                   <UserMessage message={chat.question} key={`${index}-q`} />
                 ),
@@ -338,7 +318,7 @@ const Chatbot = () => {
                     handleClick={() => {
                       setSelectedPlaceList(chat.answer.placeList);
                     }}
-                    loading={loading && index === chatLog.log.length - 1}
+                    loading={loading && index === chatLog.length - 1}
                     setInputValue={setValue}
                     messageId={chat.createAt}
                   />
