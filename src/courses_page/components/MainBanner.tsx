@@ -4,6 +4,7 @@ import Banner1 from "../../assets/Banner1.webp";
 import Banner2 from "../../assets/Banner2.webp";
 import Banner3 from "../../assets/Banner3.webp";
 import Banner4 from "../../assets/Banner4.webp";
+import NoImage from "../../assets/NoImage.webp";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
@@ -92,7 +93,7 @@ const MainBanner = () => {
       </div>
       <div className={styles.top4Wrapper}>
         <div>
-          오늘 하루 가장 많이 클릭된 장소&nbsp;
+          최근 가장 많이 클릭된 장소&nbsp;
           <span
             style={{
               color: "var(--color-main)",
@@ -111,7 +112,7 @@ const MainBanner = () => {
               style={{ animationDelay: `${i * 0.2}s` }}
             >
               <div>
-                <img src={place.imgUrl} className={styles.top4Img} />
+                <img src={place.imgUrl ?? NoImage} className={styles.top4Img} />
                 <div className={styles.bannerIdx}>{i + 1}</div>
                 <div
                   style={{
