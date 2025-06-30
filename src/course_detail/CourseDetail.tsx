@@ -35,10 +35,29 @@ const CourseDetail = () => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const detailLeftRef = useRef<HTMLDivElement>(null);
 
-  const handlePlaceClick = (p: Interfaces.CourseDetailPlace) => {
+  const scrollToListItem = (index: number) => {
+    const scrollContainer = detailLeftRef.current;
+    if (!scrollContainer) return;
+
+    const items = scrollContainer.querySelectorAll(
+      `.${style.placeBlock}, .${style.placeBlockClick}`,
+    );
+    if (index < 0) {
+      scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    const el = items[index] as HTMLElement | undefined;
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handlePlaceClick = (p: Interfaces.CourseDetailPlace, index: number) => {
     setSelectedPlaceId(p.placeId);
     setSelectedPlace(p);
+    scrollToListItem(index - 1);
   };
 
   const fetchCourseDetail = async () => {
@@ -81,7 +100,7 @@ const CourseDetail = () => {
           place,
           index,
           selectedPlaceId,
-          () => handlePlaceClick(place),
+          () => handlePlaceClick(place, index),
           style.mapMarker,
           style.selectedMarker,
           // duplicates.some((d) => d.placeId === place.placeId)
@@ -216,7 +235,7 @@ const CourseDetail = () => {
 
   return (
     <div className={style.courseDetailWrapper}>
-      <div className={style.detailLeft}>
+      <div className={style.detailLeft} ref={detailLeftRef}>
         <div>
           <div className={style.courseTitle}>
             <div className={style.headTitle}>
@@ -248,7 +267,7 @@ const CourseDetail = () => {
               return (
                 <div
                   key={i}
-                  onClick={() => handlePlaceClick(p)}
+                  onClick={() => handlePlaceClick(p, i)}
                   className={
                     selectedPlaceId == p.placeId
                       ? style.placeBlockClick
