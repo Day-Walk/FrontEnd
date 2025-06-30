@@ -2,15 +2,13 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { api } from "../../utils/api";
-import { useSetRecoilState } from "recoil";
-import { userId, userName } from "../../recoil/userInfo";
 import Loading from "../../global_components/Loading";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const KakaoCallback = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const setUserId = useSetRecoilState(userId);
-  const setUserName = useSetRecoilState(userName);
+  const { setUserId, setUserName } = useUserStore();
 
   const postLogin = async (kakaoId: number, kakaoName: string) => {
     try {
@@ -21,7 +19,6 @@ const KakaoCallback = () => {
       let nextPage = res.data.userInfo.nextPage;
 
       const { userId, name } = res.data.userInfo;
-
       setUserId(userId);
       setUserName(name);
 

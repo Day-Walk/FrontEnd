@@ -5,20 +5,20 @@ import * as Interfaces from "./interfaces/Interfaces";
 import SearchBox from "./components/SearchBox";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
-import { useRecoilValue } from "recoil";
-import { userId } from "../recoil/userInfo";
 import { api } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../loading/Loading";
 import Footer from "../global_components/Footer/Footer";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import MainBanner from "./components/MainBanner";
+import { useUserStore } from "../zustand/useUserStore";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
     useState<Interfaces.CourseListResponse>();
   const navigate = useNavigate();
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
+
   if (!userIdState || userIdState.length == 0) {
     navigate("/login");
   }

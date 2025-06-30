@@ -8,10 +8,9 @@ import RecommendList from "./components/RecommendList";
 import PlaceList from "./components/PlaceList";
 import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
-import { useRecoilValue } from "recoil";
-import { userId, userName } from "../recoil/userInfo";
 import RobotImage from "../assets/goodVersion2.webp";
 import { Loading1 } from "../loading/Loading";
+import { useUserStore } from "../zustand/useUserStore";
 
 declare global {
   interface Window {
@@ -28,8 +27,9 @@ const Search = () => {
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.SearchPlace | null>(null);
   const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
-  const userNameState = useRecoilValue(userName);
   const [isSearching, setIsSearching] = useState(false);
+  const userIdState = useUserStore((state) => state.userId);
+  const userNameState = useUserStore((state) => state.userName);
 
   const postClickLog = async (placeId: string) => {
     try {
@@ -77,7 +77,6 @@ const Search = () => {
     setIsSearching(true); // 검색 시작 시 로딩 표시
   };
 
-  const userIdState = useRecoilValue(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {

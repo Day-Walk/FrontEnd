@@ -4,10 +4,9 @@ import * as Interfaces from "../interfaces/Interfaces";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import MyReviewComp from "./MyReviewComp";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import { Loading1 } from "../../loading/Loading";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const MyReview = () => {
   const [ReviewListResponse, setReviewListResponse] =
@@ -18,7 +17,7 @@ const MyReview = () => {
   const [reviewPage, setReviewPage] = useState<Interfaces.ReviewPage>();
   // ReviewListResponse.reviewList[nowPage - 1],
 
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
 
   const [deleted, setDeleted] = useState<string>("");
 

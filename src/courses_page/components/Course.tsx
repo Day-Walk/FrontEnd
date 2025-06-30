@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import style from "../Courses.module.css";
 import * as Interfaces from "../interfaces/Interfaces";
-import { Heart, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 import NoImage from "../../assets/NoImage.webp";
+import { useUserStore } from "../../zustand/useUserStore";
 
 interface CourseProps extends Interfaces.Course {
   showModal: (msg: string) => void;
@@ -18,7 +17,8 @@ const Course = ({ showModal, ...nowCourse }: CourseProps) => {
   const [like, setLike] = useState<boolean>(course?.like || false);
   const courseId = nowCourse.courseId;
   const navigate = useNavigate();
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
+
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const dateOnly = nowCourse.createAt.split("T")[0];
 

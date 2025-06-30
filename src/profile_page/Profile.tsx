@@ -5,17 +5,16 @@ import MyReview from "./components/MyReview";
 import LikeCourse from "./components/LikeCourse";
 import LikePlace from "./components/LikePlace";
 import { LogOutIcon, Settings } from "lucide-react";
-import { userName } from "../recoil/userInfo";
-import { useRecoilValue } from "recoil";
 import EditNameModal from "./components/Modals/EditNameModal";
 import Footer from "../global_components/Footer/Footer";
 import { api } from "../utils/api";
 import { useLocation } from "react-router-dom";
 import ChatbotFace from "../assets/ChatBot.webp";
+import { useUserStore } from "../zustand/useUserStore";
 
 const Profile = () => {
   const [menuIndex, setMenuIndex] = useState<number>(0);
-  const userNameState = useRecoilValue(userName);
+  const userNameState = useUserStore((state) => state.userName);
   const [modalOpen, setModalOpen] = useState(false);
   const location = useLocation();
 

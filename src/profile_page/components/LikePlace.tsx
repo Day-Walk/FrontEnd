@@ -3,14 +3,13 @@ import * as Interfaces from "../interfaces/Interfaces";
 import style from "../Profile.module.css";
 import { MapPin, Star } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import NoImage from "../../assets/NoImage.webp";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Loading1 } from "../../loading/Loading";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const LikePlace = () => {
   const [likePlaces, setLikePlaces] = useState<Interfaces.FavoritePlacePage[]>(
@@ -21,7 +20,7 @@ const LikePlace = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
   const navigate = useNavigate();
 
   useEffect(() => {
