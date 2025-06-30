@@ -40,3 +40,15 @@
   font-weight: 600;
   color: black;
 }
+
+.item_list:not(.selected_item):hover .icon,
+.item_list:not(.selected_item):hover span {
+  color: var(--color-main);
+  transition: color 0.3s ease;
+  transform: scale(1.05);
+}
+
+.selected_item span,
+.selected_item .icon {
+  color: #333;
+}

@@ -62,18 +62,17 @@ const HeaderItems = ({
   items,
 }: HeaderItemsProps) => {
   const getIcon = (title: string, selected: boolean) => {
-    const color = selected ? "#333" : "#888";
     switch (title) {
       case "코스보기":
-        return <Map size={20} color={color} />;
+        return <Map size={20} className={styles.icon} />;
       case "장소검색":
-        return <Search size={20} color={color} />;
+        return <Search size={20} className={styles.icon} />;
       case "챗봇":
-        return <BotMessageSquare size={20} color={color} />;
+        return <BotMessageSquare size={20} className={styles.icon} />;
       case "혼잡도":
-        return <Radio size={20} color={color} />;
+        return <Radio size={20} className={styles.icon} />;
       case "마이페이지":
-        return <CircleUserRound size={20} color={color} />;
+        return <CircleUserRound size={20} className={styles.icon} />;
       default:
         return null;
     }
@@ -85,14 +84,12 @@ const HeaderItems = ({
         const isSelected = selectedItem === item.url;
         return (
           <li
-            className={styles.item_list}
+            className={`${styles.item_list} ${isSelected ? styles.selected_item : ""}`}
             key={item.title}
             onClick={() => handleClick(item.url)}
           >
             {getIcon(item.title, isSelected)}
-            <span className={isSelected ? styles.selected_item : ""}>
-              {item.title}
-            </span>
+            <span>{item.title}</span>
           </li>
         );
       })}
