@@ -59,6 +59,7 @@ const CourseDetail = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
   const markerOverlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
+  const [mapInstanceReady, setMapInstanceReady] = useState(false);
 
   // 마커 렌더링 함수
   const renderMarkers = () => {
@@ -130,6 +131,7 @@ const CourseDetail = () => {
           const map = new window.kakao.maps.Map(mapRef.current, options);
           mapInstance.current = map;
         }
+        setMapInstanceReady(true);
       })
       .catch(console.error);
     setLoading(false);
@@ -147,8 +149,10 @@ const CourseDetail = () => {
   }, [selectedPlace]);
 
   useEffect(() => {
-    renderMarkers();
-  }, [courseDetail, selectedPlaceId]);
+    if (mapInstanceReady && courseDetail?.placeList?.length) {
+      renderMarkers();
+    }
+  }, [mapInstanceReady, courseDetail, selectedPlaceId]);
 
   useEffect(() => {
     setLike(courseDetail?.like || false);
