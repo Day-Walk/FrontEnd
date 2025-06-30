@@ -1,9 +1,5 @@
 import style from "../Courses.module.css";
 import { Search } from "lucide-react";
-import { useState } from "react";
-import { api } from "../../utils/api";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 
 interface SearchBoxProps {
   query: string;

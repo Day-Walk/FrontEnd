@@ -1,13 +1,12 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import style from "../Profile.module.css";
 import Course from "./MyCourseComp";
 import * as Interfaces from "../interfaces/Interfaces";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import { api } from "../../utils/api";
-import { userId } from "../../recoil/userInfo";
-import { useRecoilValue } from "recoil";
 import { Loading1 } from "../../loading/Loading";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const MyCourse = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -17,7 +16,8 @@ const MyCourse = () => {
   const [nowPage, setNowPage] = useState<number>(1);
   const [coursePage, setCoursePage] = useState<Interfaces.CoursePage>();
   // coursePagesData.courseList[nowPage - 1],
-  const userIdState = useRecoilValue(userId);
+
+  const userIdState = useUserStore((state) => state.userId);
 
   const [deleted, setDeleted] = useState<string>("");
 

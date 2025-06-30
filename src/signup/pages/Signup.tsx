@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import styles from "../Signup.module.css";
 import { ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { userName } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const Gender = {
   남: 0,
@@ -85,7 +84,7 @@ const Signup = () => {
   const isFinished =
     userInfo.userName && userInfo.age !== null && userInfo.gender !== null;
 
-  const setUserName = useSetRecoilState(userName);
+  const { setUserName } = useUserStore();
   const navigate = useNavigate();
   const handleClickNextBtn = async () => {
     if (!isFinished) {

@@ -5,17 +5,17 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { MapPin } from "lucide-react";
 import NoImage from "../../assets/NoImage.webp";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const LikeCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
   const [like, setLike] = useState<boolean>(true);
   const courseId = nowCourse.courseId;
   const navigate = useNavigate();
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
+
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
 

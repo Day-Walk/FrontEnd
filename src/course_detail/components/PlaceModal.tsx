@@ -5,8 +5,6 @@ import * as rInterfaces from "../interfaces/ReviewInterface";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { CircleChevronRight, Pencil, CircleUserRound } from "lucide-react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 import { api } from "../../utils/api";
 import { Stack, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +13,7 @@ import AlertModal from "../../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../../loading/Loading";
 import NoImage from "../../assets/NoImage.webp";
 import ReactDOM from "react-dom";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const PlaceModal = ({
   placeId,
@@ -34,7 +33,7 @@ const PlaceModal = ({
   const [nowPage, setNowPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(true); // false = 모달을 왼쪽으로 숨김
   const [slideDirection, setSlideDirection] = useState("");
-  const currentUserId = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
   const [like, setLike] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
@@ -60,7 +59,7 @@ const PlaceModal = ({
       setLoading(true);
       try {
         const placeRes = await api.get(
-          `/place?placeId=${placeId}&userId=${currentUserId}`,
+          `/place?placeId=${placeId}&userId=${userIdState}`,
         );
         setSelectedPlace(placeRes.data.placeInfo);
         if (
@@ -102,7 +101,7 @@ const PlaceModal = ({
 
   const handleLike = async () => {
     const body = {
-      userId: currentUserId,
+      userId: userIdState,
       placeId: placeId,
     };
 

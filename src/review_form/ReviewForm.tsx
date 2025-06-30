@@ -7,15 +7,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Rating from "react-rating";
 import * as Interfaces from "./interfaces/Interface";
 import { api } from "../utils/api";
-import { useRecoilValue } from "recoil";
-import { userId } from "../recoil/userInfo";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../loading/Loading";
 import ConfirmModal from "../global_components/ConfirmModal/ConfirmModal";
+import { useUserStore } from "../zustand/useUserStore";
 
 const ReviewForm = () => {
   const { placeId } = useParams();
-  // const placeId = "15741ea9-bea3-48e5-a1e0-f678774c4b91";
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -23,7 +21,8 @@ const ReviewForm = () => {
     setShowModal(true);
     setMessage("잘못된 접근입니다. 장소 ID가 없습니다.");
   }
-  const userIdState = useRecoilValue(userId);
+
+  const userIdState = useUserStore((state) => state.userId);
   const [rating, setRating] = useState(5);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [image, setImage] = useState<File | null>(null);

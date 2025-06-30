@@ -8,11 +8,10 @@ import PlaceModal from "./components/PlaceModal";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { CustomMarker } from "./components/CustomMarker";
 import { api } from "../utils/api";
-import { useRecoilValue } from "recoil";
-import { userId } from "../recoil/userInfo";
 import NoImage from "../assets/NoImage.webp";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import { Loading1 } from "../loading/Loading";
+import { useUserStore } from "../zustand/useUserStore";
 declare global {
   interface Window {
     kakao: any;
@@ -30,7 +29,8 @@ const CourseDetail = () => {
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>("");
   const [selectedPlace, setSelectedPlace] =
     useState<Interfaces.CourseDetailPlace | null>(null);
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
+
   const [like, setLike] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");

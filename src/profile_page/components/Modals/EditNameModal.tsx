@@ -1,19 +1,18 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { userId, userName } from "../../../recoil/userInfo";
 import style from "../../Profile.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { api } from "../../../utils/api";
 import AlertModal from "../../../global_components/AlertModal/AlertModal";
+import { useUserStore } from "../../../zustand/useUserStore";
 
 interface Props {
   onClose: () => void;
 }
 
 const EditNameModal = ({ onClose }: Props) => {
-  const [userNameState, setUserNameState] = useRecoilState(userName);
-  const [newName, setNewName] = useState(userNameState); // 로컬 상태로 복사
-  const userIdState = useRecoilValue(userId);
+  const { userName, setUserName } = useUserStore();
+  const [newName, setNewName] = useState(userName); // 로컬 상태로 복사
+  const userIdState = useUserStore((state) => state.userId);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -28,7 +27,7 @@ const EditNameModal = ({ onClose }: Props) => {
         });
         setShowModal(true);
         setMessage("닉네임 변경 완료!");
-        setUserNameState(nameTrim);
+        setUserName(nameTrim);
         localStorage.setItem("userName", nameTrim);
         setTimeout(() => {
           setShowModal(false);

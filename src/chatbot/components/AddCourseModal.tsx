@@ -6,10 +6,9 @@ import { MainButton } from "./Buttons";
 import AlertModal from "../../global_components/AlertModal/AlertModal";
 import * as Interfaces from "../interfaces/Interface";
 import { api } from "../../utils/api";
-import { useRecoilValue } from "recoil";
-import { userId } from "../../recoil/userInfo";
 import NoImage from "../../assets/NoImage.webp";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../zustand/useUserStore";
 
 const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
   ({ courseInfo, handleCloseCourseSaveModal }, ref) => {
@@ -22,8 +21,8 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
     const [showModal, setShowModal] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
     const [courseId, setCourseId] = useState<string>("");
+    const userIdState = useUserStore((state) => state.userId);
 
-    const userIdState = useRecoilValue(userId);
     const navigate = useNavigate();
 
     const handleClickCompleteBtn = async () => {

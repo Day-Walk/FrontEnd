@@ -15,6 +15,7 @@ import * as Interfaces from "./interfaces/Interface";
 import ChatRecordPopUp from "./components/ChatRecordPopUp";
 import PlaceModal from "../course_detail/components/PlaceModal";
 import { chatLoading, chatLogState } from "../recoil/chatLog";
+import { useUserStore } from "../zustand/useUserStore";
 
 const PLACE_HOLDER =
   "ex - 홍대에서 연인과 데이트 할 건데,\n분위기 좋은 코스를 추천해줘.";
@@ -71,7 +72,7 @@ const Chatbot = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const userIdState = useRecoilValue(userId);
+  const userIdState = useUserStore((state) => state.userId);
   const [open, setOpen] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isNewMessage, setIsNewMessage] = useState(false);

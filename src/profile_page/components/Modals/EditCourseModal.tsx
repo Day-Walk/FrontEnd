@@ -1,5 +1,3 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { userId, userName } from "../../../recoil/userInfo";
 import style from "../../Profile.module.css";
 import { useState } from "react";
 import { CircleAlert } from "lucide-react";
