@@ -28,14 +28,17 @@ const ChatInput = ({
   sendChat,
   loading,
 }: Interfaces.ChatInputProps) => {
+  const [isComposing, setIsComposing] = useState(false);
+
   const handlePressEnter = async (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
   ) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !isComposing) {
       e.preventDefault();
       await sendChat();
     }
   };
+
   return (
     <div
       className={`${styles.input_wrapper} ${isFocused && !loading ? styles.focused : ""}`}
@@ -49,6 +52,8 @@ const ChatInput = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handlePressEnter}
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={() => setIsComposing(false)}
       />
       <MainButton
         onClick={sendChat}
@@ -208,6 +213,7 @@ const Chatbot = () => {
       setMessage("메시지를 입력해주세요.");
       return;
     }
+    setValue("");
 
     setLoading(true);
     setIsNewMessage(true);
@@ -224,7 +230,6 @@ const Chatbot = () => {
           },
         ],
       }));
-      setValue("");
       await connectSSE();
       await getChat();
     } catch (error) {
