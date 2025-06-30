@@ -97,6 +97,7 @@ const Courses = () => {
       console.error("검색 실패:", error);
     }
     setNowQuery(searchQuery);
+    setLoading(false);
   };
 
   return (
