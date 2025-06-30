@@ -297,6 +297,7 @@ button {
   transform: scale(1.04) !important;
   background-color: #f0f0f0;
   border-radius: 8px;
+  cursor: pointer;
 }
 .bannerIdx {
   position: absolute;

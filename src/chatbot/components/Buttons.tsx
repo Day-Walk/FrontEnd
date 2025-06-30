@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./AddCourseModal.module.css";
 
 type ButtonProps = {
   fontSize?: number;
@@ -29,6 +30,7 @@ export const MainButton: React.FC<ButtonProps> = ({
     <button
       onClick={onClick}
       disabled={disabled}
+      className={styles.mainBtn}
       style={{
         fontSize: `${fontSize}px`,
         color: fontColor,
