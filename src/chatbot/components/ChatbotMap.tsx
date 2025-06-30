@@ -42,7 +42,6 @@ const ChatbotMap: React.FC<ChatbotMap> = ({
   ) => {
     setMapCenter(location);
     setSelectedMarker({ location, placeId, messageId });
-    console.log(location, placeId);
   };
 
   useEffect(() => {

@@ -39,21 +39,17 @@ const ReviewForm = () => {
   useEffect(() => {
     const fetchPlaceInfo = async () => {
       try {
-        console.log("userIdState", userIdState);
         const placeResponse = await api.get<Interfaces.PlaceTagResponse>(
           `/tag/all/place?placeId=${placeId}`,
         );
         if (placeResponse.status === 200) {
           setPlaceInfo(placeResponse.data.placeInfo);
-          console.log("장소 정보:", placeResponse.data.placeInfo);
         } else {
           console.error("장소 정보를 불러오는 데 실패했습니다.");
-          console.log("placeId", placeId);
         }
         setLoading(false);
       } catch (error) {
         console.error("장소 정보를 불러오는 중 오류 발생:", error);
-        console.log("placeId", placeId);
         setLoading(false);
       }
     };
@@ -90,7 +86,6 @@ const ReviewForm = () => {
       formData.append("file", file);
 
       const response = await api.post("/image", formData);
-      console.log("***", response.data);
       const imageUrl = response.data.imageUrl;
       setImage(file);
       setUploadImgUrl(imageUrl);
@@ -124,7 +119,6 @@ const ReviewForm = () => {
         content,
       });
 
-      console.log("리뷰 등록 성공:", response.data);
       setMessage("리뷰가 등록되었습니다!");
       setShowModal(true);
       setOnModalClose(

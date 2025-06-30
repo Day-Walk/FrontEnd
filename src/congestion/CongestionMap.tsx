@@ -112,7 +112,7 @@ const CongestionMap = () => {
       return `${yyyy}${MM}${dd}${HH}`;
     })();
 
-    async function fetchData() {
+    const fetchData = async () => {
       if (markerValue === 0) {
         await getData();
         return;
@@ -127,7 +127,7 @@ const CongestionMap = () => {
       } else {
         setData(congestionDataForCurrent);
       }
-    }
+    };
 
     fetchData();
   }, [markerValue, lastFetchedForCurrent, congestionDataForCurrent]);

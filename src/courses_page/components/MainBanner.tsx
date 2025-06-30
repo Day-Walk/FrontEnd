@@ -43,7 +43,7 @@ const MainBanner = () => {
     const getTop4Place = async () => {
       try {
         const res = await api.get("/click-log/place");
-        console.log(res.data);
+
         setTop4Place(res.data.searchData);
       } catch (error) {
         console.error("Error fetching top 4 places:", error);

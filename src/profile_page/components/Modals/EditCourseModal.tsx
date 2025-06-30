@@ -38,7 +38,7 @@ const EditCourseModal = ({
       } catch (error) {
         setShowModal(true);
         setMessage("코스 이름 변경 중 오류가 발생했습니다.");
-        console.log(error);
+        console.error(error);
       }
     }
   };

@@ -61,9 +61,6 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
   const handleCourseClick = () => {
     navigate(`/course/${course?.courseId}`);
   };
-  useEffect(() => {
-    console.log(course);
-  }, [course]);
 
   const handleDeleteCourse = async () => {
     try {

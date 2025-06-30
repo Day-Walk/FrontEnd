@@ -116,7 +116,6 @@ const Chatbot = () => {
       );
 
       newEventSource.addEventListener("connect", (e: any) => {
-        console.log("연결 이벤트 수신:", e.data);
         resolve();
       });
 
@@ -131,7 +130,6 @@ const Chatbot = () => {
 
         try {
           const parsed: Interfaces.MessageType["answer"] = JSON.parse(e.data);
-          console.log("chatbot 이벤트 수신:", parsed);
 
           if (!chatLog || chatLog.length === 0) return;
 
@@ -151,8 +149,6 @@ const Chatbot = () => {
               placeId: parsed.placeList[0].placeId,
               messageId: updatedLog[lastIndex].createAt || "",
             });
-            console.log(chatLog);
-            console.log(updatedLog[lastIndex].createAt);
           }
         } catch (error) {
           updateLastAnswerWithError(
@@ -185,8 +181,6 @@ const Chatbot = () => {
           question: value,
         },
       });
-
-      console.log(res.data);
     } catch (error) {
       console.error(error);
       updateLastAnswerWithError("메시지 전송 중 오류가 발생했습니다.");

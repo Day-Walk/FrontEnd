@@ -58,7 +58,6 @@ const Courses = () => {
       setCoursePagesData(clonedData);
       setCoursePage(clonedData.courseList[nowPage - 1]);
       setLoading(false);
-      console.log("Fetched courses:", clonedData);
     } catch (error) {
       console.error("Error fetching courses:", error);
       setLoading(false);

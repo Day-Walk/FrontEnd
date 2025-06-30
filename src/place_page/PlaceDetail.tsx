@@ -12,9 +12,6 @@ declare global {
 
 const PlaceDetail = () => {
   const { placeId } = useParams();
-  console.log(placeId);
-  // if (loading) return <div>로딩 중...</div>;
-  // if (error) return <div>{error}</div>;
   // 상태 정의
   const [lat, setLat] = useState<number>(37.5665);
   const [lng, setLng] = useState<number>(126.978);
@@ -54,9 +51,6 @@ const PlaceDetail = () => {
 
   // 마커 생성 (lat/lng 변경 시 CustomMarker 재실행)
   useEffect(() => {
-    console.log("mapInstance.current:", mapInstance.current);
-    console.log("isReady:", isReady);
-    console.log("lat/lng:", lat, lng);
     if (!mapInstance.current || !isReady || !placeId) return;
 
     const map = mapInstance.current;
@@ -68,7 +62,6 @@ const PlaceDetail = () => {
     }
 
     // 새로운 마커 생성 및 등록
-    console.log("CustomMarker 호출됨");
     const overlay = CustomMarker(
       map,
       {

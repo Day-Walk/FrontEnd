@@ -36,7 +36,7 @@ const EditNameModal = ({ onClose }: Props) => {
       } catch (error) {
         setShowModal(true);
         setMessage("닉네임 변경 중 오류가 발생했습니다.");
-        console.log(error);
+        console.error(error);
       }
     }
   };

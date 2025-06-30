@@ -27,7 +27,6 @@ const MyReview = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      console.log("userIdState", userIdState);
       try {
         const response = await api.get<Interfaces.ReviewListResponse>(
           `/review/all/user?userId=${userIdState}`,
@@ -35,7 +34,6 @@ const MyReview = () => {
         setReviewListResponse(response.data);
         setReviewPage(response.data.reviewList[nowPage - 1]);
         setLoading(false);
-        console.log("Fetched courses:", response.data);
       } catch (error) {
         console.error("Error fetching courses:", error);
         setLoading(false);

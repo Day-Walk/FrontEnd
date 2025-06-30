@@ -144,7 +144,6 @@ const UserLike = () => {
   const navigate = useNavigate();
 
   const handleClickCompleteBtn = async () => {
-    console.log(selectedTagList);
     if (!isFinished()) {
       return;
     }

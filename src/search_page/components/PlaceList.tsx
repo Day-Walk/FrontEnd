@@ -19,7 +19,6 @@ const RecommendedList: React.FC<Props> = ({
   itemRefs,
   startIndex,
 }) => {
-  console.log("***", startIndex);
   return (
     <div>
       {places.map((p, i) => {

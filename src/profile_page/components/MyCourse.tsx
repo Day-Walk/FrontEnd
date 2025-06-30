@@ -27,7 +27,6 @@ const MyCourse = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      console.log("userIdState", userIdState);
       try {
         const response = await api.get<Interfaces.CourseListResponse>(
           `/course/all/user?userId=${userIdState}`,
@@ -35,7 +34,6 @@ const MyCourse = () => {
         setCoursePagesData(response.data);
         setCoursePage(response.data.courseList[nowPage - 1]);
         setLoading(false);
-        console.log("Fetched courses:", response.data);
       } catch (error) {
         console.error("Error fetching courses:", error);
         setLoading(false);

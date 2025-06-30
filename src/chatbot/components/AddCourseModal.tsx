@@ -26,7 +26,6 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
     const navigate = useNavigate();
 
     const handleClickCompleteBtn = async () => {
-      console.log(addCourseInfo);
       if (!addCourseInfo.title.trim()) {
         setShowModal(true);
         setMessage("코스 이름을 입력해주세요.");
@@ -42,7 +41,6 @@ const AddCourseModal = forwardRef<HTMLDivElement, Interfaces.AddCourseProps>(
         });
         const courseId = res.data.courseId;
         setCourseId(courseId);
-        console.log(res.data);
         setShowModal(true);
         setMessage("코스가 저장되었습니다.");
       } catch (error) {

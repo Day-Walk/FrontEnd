@@ -23,7 +23,6 @@ export function CustomMarker(
     yAnchor: 1,
     zIndex: place.placeId === selectedPlaceId ? 4 : 2,
   });
-  console.log("********", div); // 확인용
 
   overlay.setMap(map);
 

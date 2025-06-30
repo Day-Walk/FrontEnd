@@ -38,14 +38,13 @@ const Search = () => {
         userId: userIdState,
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const detailLeftRef = useRef<HTMLDivElement>(null);
 
   const scrollToListItem = (index: number) => {
-    console.log("scrollToListItem", index);
     const scrollContainer = detailLeftRef.current;
     if (!scrollContainer) return;
 
@@ -89,9 +88,8 @@ const Search = () => {
         const data = res.data.searchData;
         setRecommendedPlaces(data["recommendList"]);
         setRegularPlaces(data["placeList"]);
-        console.log(data);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       } finally {
         setIsSearching(false); // 검색 종료 후 로딩 해제
         setIsModalOpen(false); // 모달 닫기
@@ -99,10 +97,6 @@ const Search = () => {
     };
     getResults();
   }, [searchKeyword]);
-
-  useEffect(() => {
-    console.log(selectedPlaceId);
-  }, [selectedPlaceId]);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -153,7 +147,6 @@ const Search = () => {
       recommendedPlaces || [],
       regularPlaces || [],
     );
-    console.log(duplicates);
 
     if (recommendedPlaces) {
       recommendedPlaces.forEach((place, index) => {
