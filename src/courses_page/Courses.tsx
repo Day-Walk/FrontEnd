@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import style from "./Courses.module.css";
 import Course from "./components/Course";
 import * as Interfaces from "./interfaces/Interfaces";
@@ -12,6 +12,7 @@ import Footer from "../global_components/Footer/Footer";
 import AlertModal from "../global_components/AlertModal/AlertModal";
 import MainBanner from "./components/MainBanner";
 import { useUserStore } from "../zustand/useUserStore";
+import { useDebouncedSearch } from "../utils/useDebouncedSearch";
 
 const Courses = () => {
   const [coursePagesData, setCoursePagesData] =
@@ -71,7 +72,8 @@ const Courses = () => {
     } else {
       fetchSearchResults(query, sort);
     }
-  }, [sort, nowPage]);
+    setLoading(false);
+  }, [nowPage]);
 
   // 검색결과 저장
   const handleSearchResults = (data: Interfaces.CourseListResponse) => {
@@ -99,6 +101,30 @@ const Courses = () => {
     setNowQuery(searchQuery);
     setLoading(false);
   };
+
+  const debouncedSearch = useDebouncedSearch(
+    (searchText: string, sort: string) => {
+      fetchSearchResults(searchText, sort);
+    },
+    300,
+    [userIdState],
+  );
+  useEffect(() => {
+    if (query.length === 0) {
+      fetchCourses();
+    } else {
+      debouncedSearch(query, sort);
+    }
+  }, [query]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (query.length === 0) {
+      fetchCourses();
+    } else {
+      fetchSearchResults(query, sort);
+    }
+  }, [sort]);
 
   return (
     <div className={style.contentArea}>
