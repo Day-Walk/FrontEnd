@@ -19,18 +19,18 @@ import PrivateRouter from "./utils/PrivateRouter";
 
 const App = () => (
   <Routes>
-    <Route element={<PrivateRouter />}>
-      <Route element={<HeaderLayout />}>
-        <Route path="/" element={<Courses />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/course/:id" element={<CourseDetail />} />
-        <Route path="/chatbot" element={<Chatbot />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/congestion" element={<CongestionMap />} />
-        <Route path="/review/:placeId" element={<ReviewForm />} />
-        <Route path="/place/:placeId" element={<PlaceDetail />} />
-      </Route>
+    {/* <Route element={<PrivateRouter />}> */}
+    <Route element={<HeaderLayout />}>
+      <Route path="/" element={<Courses />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/course/:id" element={<CourseDetail />} />
+      <Route path="/chatbot" element={<Chatbot />} />
+      <Route path="/search" element={<Search />} />
+      <Route path="/congestion" element={<CongestionMap />} />
+      <Route path="/review/:placeId" element={<ReviewForm />} />
+      <Route path="/place/:placeId" element={<PlaceDetail />} />
     </Route>
+    {/* </Route> */}
     <Route element={<SignupLayout />}>
       <Route path="/signup" element={<Signup />} />
       <Route path="/signup/user-like" element={<UserLike />} />
