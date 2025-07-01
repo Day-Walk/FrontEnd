@@ -11,7 +11,14 @@ import { useUserStore } from "../../zustand/useUserStore";
 
 const LikeCourseList = (nowCourse: Interfaces.Course) => {
   const [course, setCourse] = useState<Interfaces.Course | null>(nowCourse);
-  const [like, setLike] = useState<boolean>(true);
+  // const [like, setLike] = useState<boolean>(true);
+  const [like, setLike] = useState<boolean>(nowCourse.like ?? true);
+
+  useEffect(() => {
+    if (course?.like !== undefined) {
+      setLike(course.like);
+    }
+  }, [course]);
   const courseId = nowCourse.courseId;
   const navigate = useNavigate();
   const userIdState = useUserStore((state) => state.userId);
@@ -19,9 +26,9 @@ const LikeCourseList = (nowCourse: Interfaces.Course) => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    setLike(course?.like || true);
-  }, [course]);
+  // useEffect(() => {
+  //   setLike(course?.like || true);
+  // }, [course]);
 
   const LikeIcon = () => {
     return like ? (
@@ -70,9 +77,9 @@ const LikeCourseList = (nowCourse: Interfaces.Course) => {
           <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
           코스
         </div>
-        <div className={style.like}>
+        <div onClick={handleLike} className={style.like}>
           <div className={style.likeNum}>{course?.courseLike}&nbsp;</div>
-          <div onClick={handleLike}>
+          <div>
             <LikeIcon />
           </div>
         </div>

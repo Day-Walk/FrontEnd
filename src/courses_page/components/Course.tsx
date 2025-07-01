@@ -91,9 +91,9 @@ const Course = ({ showModal, ...nowCourse }: CourseProps) => {
             {dateOnly}
           </div>
         </div>
-        <div className={style.like}>
+        <div onClick={handleLike} className={style.like}>
           <div>{course?.courseLike}&nbsp;</div>
-          <div onClick={handleLike}>
+          <div>
             <LikeIcon />
           </div>
         </div>
