@@ -70,56 +70,60 @@ const LikeCourseList = (nowCourse: Interfaces.Course) => {
   };
 
   return (
-    <div className={style.courseBlock}>
-      <div className={style.header}>
-        <div onClick={handleCourseClick} className={style.title}>
-          "{course?.userName}" 님의{" "}
-          <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
-          코스
-        </div>
-        <div onClick={handleLike} className={style.like}>
-          <div className={style.likeNum}>{course?.courseLike}&nbsp;</div>
-          <div>
-            <LikeIcon />
+    <>
+      <div className={style.courseBlock}>
+        <div className={style.header}>
+          <div onClick={handleCourseClick} className={style.title}>
+            "{course?.userName}" 님의{" "}
+            <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
+            코스
           </div>
-        </div>
-      </div>
-      <div onClick={handleCourseClick} className={style.coursePlaceList}>
-        {course?.placeList.map((place, idx) => (
-          <div key={place.placeId} className={style.placeBlock}>
-            {place.imgUrl ? (
-              <img
-                src={place.imgUrl}
-                alt={place.placeName}
-                className={style.placeImg}
-              />
-            ) : (
-              <img src={NoImage} className={style.placeImg} />
-            )}
-
-            <div className={style.placeInfo}>
-              <div className={style.idx}>{idx + 1}</div>
-              {place.placeName.length < 9 ? (
-                <div className={style.placeName}>{place.placeName}</div>
-              ) : (
-                <div className={style.placeNameEllipsis}>{place.placeName}</div>
-              )}
-
-              <div className={style.address}>
-                <MapPin
-                  size={14}
-                  style={{ filter: " drop-shadow(0 0 4px #333)" }}
-                />
-                {place.address.split(" ").slice(0, 2).join(" ")}
-              </div>
+          <div onClick={handleLike} className={style.like}>
+            <div className={style.likeNum}>{course?.courseLike}&nbsp;</div>
+            <div>
+              <LikeIcon />
             </div>
           </div>
-        ))}
+        </div>
+        <div onClick={handleCourseClick} className={style.coursePlaceList}>
+          {course?.placeList.map((place, idx) => (
+            <div key={place.placeId} className={style.placeBlock}>
+              {place.imgUrl ? (
+                <img
+                  src={place.imgUrl}
+                  alt={place.placeName}
+                  className={style.placeImg}
+                />
+              ) : (
+                <img src={NoImage} className={style.placeImg} />
+              )}
+
+              <div className={style.placeInfo}>
+                <div className={style.idx}>{idx + 1}</div>
+                {place.placeName.length < 9 ? (
+                  <div className={style.placeName}>{place.placeName}</div>
+                ) : (
+                  <div className={style.placeNameEllipsis}>
+                    {place.placeName}
+                  </div>
+                )}
+
+                <div className={style.address}>
+                  <MapPin
+                    size={14}
+                    style={{ filter: " drop-shadow(0 0 4px #333)" }}
+                  />
+                  {place.address.split(" ").slice(0, 2).join(" ")}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       {showModal && (
         <AlertModal message={message} onClose={() => setShowModal(false)} />
       )}
-    </div>
+    </>
   );
 };
 

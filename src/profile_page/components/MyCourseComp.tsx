@@ -84,74 +84,81 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
   };
 
   return (
-    <div className={style.courseBlock}>
-      <div className={style.header}>
-        <div onClick={handleCourseClick} className={style.title}>
-          <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
-          코스
-        </div>
-        <div className={style.sideButtons}>
-          <button onClick={handleToggleVisibility} className={style.btnCenter}>
-            {isOpen ? (
-              <SquareCheck color="var(--color-main)" size={20} />
-            ) : (
-              <Square color="var(--color-main)" size={20} />
-            )}
-            <label>&nbsp;공개</label>
-          </button>
-          &nbsp;&nbsp;&nbsp;
-          <button
-            onClick={() => setModalOpen(true)}
-            className={style.btnCenter}
-          >
-            <Pencil size={20} color="#4BB3DD" />
-            <label>&nbsp;수정</label>
-          </button>
-          &nbsp;&nbsp;&nbsp;
-          <button className={style.btnCenter} onClick={handleClickDelete}>
-            <Trash2 size={20} color="#E96563" />
-            <label>&nbsp;삭제</label>
-          </button>
-          {modalOpen && course && (
-            <EditCourseModal
-              onClose={() => setModalOpen(false)}
-              courseId={course.courseId}
-              courseTitle={course.title}
-              onUpdateTitle={handleUpdateTitle}
-            />
-          )}
-        </div>
-      </div>
-      <div onClick={handleCourseClick} className={style.coursePlaceList}>
-        {course?.placeList.map((place, idx) => (
-          <div key={place.placeId} className={style.placeBlock}>
-            {place.imgUrl ? (
-              <img
-                src={place.imgUrl}
-                alt={place.placeName}
-                className={style.placeImg}
-              />
-            ) : (
-              <img src={NoImage} className={style.placeImg} />
-            )}
-            <div className={style.placeInfo}>
-              <div className={style.idx}>{idx + 1}</div>
-              {place.placeName.length < 9 ? (
-                <div className={style.placeName}>{place.placeName}</div>
+    <>
+      <div className={style.courseBlock}>
+        <div className={style.header}>
+          <div onClick={handleCourseClick} className={style.title}>
+            <span style={{ color: "var(--color-main)" }}>{course?.title}</span>{" "}
+            코스
+          </div>
+          <div className={style.sideButtons}>
+            <button
+              onClick={handleToggleVisibility}
+              className={style.btnCenter}
+            >
+              {isOpen ? (
+                <SquareCheck color="var(--color-main)" size={20} />
               ) : (
-                <div className={style.placeNameEllipsis}>{place.placeName}</div>
+                <Square color="var(--color-main)" size={20} />
               )}
-              <div className={style.address}>
-                <MapPin
-                  size={14}
-                  style={{ filter: " drop-shadow(0 0 4px #333)" }}
+              <label>&nbsp;공개</label>
+            </button>
+            &nbsp;&nbsp;&nbsp;
+            <button
+              onClick={() => setModalOpen(true)}
+              className={style.btnCenter}
+            >
+              <Pencil size={20} color="#4BB3DD" />
+              <label>&nbsp;수정</label>
+            </button>
+            &nbsp;&nbsp;&nbsp;
+            <button className={style.btnCenter} onClick={handleClickDelete}>
+              <Trash2 size={20} color="#E96563" />
+              <label>&nbsp;삭제</label>
+            </button>
+          </div>
+        </div>
+        <div onClick={handleCourseClick} className={style.coursePlaceList}>
+          {course?.placeList.map((place, idx) => (
+            <div key={place.placeId} className={style.placeBlock}>
+              {place.imgUrl ? (
+                <img
+                  src={place.imgUrl}
+                  alt={place.placeName}
+                  className={style.placeImg}
                 />
-                {place.address.split(" ").slice(0, 2).join(" ")}
+              ) : (
+                <img src={NoImage} className={style.placeImg} />
+              )}
+              <div className={style.placeInfo}>
+                <div className={style.idx}>{idx + 1}</div>
+                {place.placeName.length < 9 ? (
+                  <div className={style.placeName}>{place.placeName}</div>
+                ) : (
+                  <div className={style.placeNameEllipsis}>
+                    {place.placeName}
+                  </div>
+                )}
+                <div className={style.address}>
+                  <MapPin
+                    size={14}
+                    style={{ filter: " drop-shadow(0 0 4px #333)" }}
+                  />
+                  {place.address.split(" ").slice(0, 2).join(" ")}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+      {modalOpen && course && (
+        <EditCourseModal
+          onClose={() => setModalOpen(false)}
+          courseId={course.courseId}
+          courseTitle={course.title}
+          onUpdateTitle={handleUpdateTitle}
+        />
+      )}
       {confirmModalOpen && (
         <ConfirmModal
           message="정말로 이 코스를 삭제하시겠습니까?"
@@ -167,7 +174,7 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
       {showModal && (
         <AlertModal message={message} onClose={() => setShowModal(false)} />
       )}
-    </div>
+    </>
   );
 };
 
