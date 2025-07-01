@@ -131,8 +131,6 @@ const Chatbot = () => {
         try {
           const parsed: Interfaces.MessageType["answer"] = JSON.parse(e.data);
 
-          if (!chatLog || chatLog.length === 0) return;
-
           const updatedLog = [...chatLog];
           const lastIndex = updatedLog.length - 1;
           updatedLog[lastIndex] = {
