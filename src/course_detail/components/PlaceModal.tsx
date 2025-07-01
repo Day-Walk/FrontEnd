@@ -292,16 +292,16 @@ const PlaceModal = ({
                 ))}
               </div>
               <div>
-                <p style={{ lineHeight: "24px", fontSize: "14px" }}>
+                <div style={{ lineHeight: "24px", fontSize: "14px" }}>
                   {selectedPlace?.content &&
                     selectedPlace.content
                       .replaceAll("<br>", ".") // <br>을 마침표로 대체
                       .split(".")
                       .map((line, idx) => {
                         const trimmed = line.trim();
-                        return trimmed ? <p key={idx}>{trimmed}.</p> : null;
+                        return trimmed ? <div key={idx}>{trimmed}.</div> : null;
                       })}
-                </p>
+                </div>
               </div>
               <br />
               <br />
@@ -327,17 +327,17 @@ const PlaceModal = ({
               </div>
               <div>
                 <div className={style.modalSubTitle}>전화번호</div>
-                <p>
+                <div>
                   {selectedPlace?.phoneNum.map((num) => (
-                    <p
+                    <div
                       key={num}
                       className={style.phoneNum}
                       style={{ lineHeight: "20px" }}
                     >
                       {num}
-                    </p>
+                    </div>
                   ))}
-                </p>
+                </div>
               </div>
 
               <div className={style.viewDetailButton}>
@@ -366,7 +366,7 @@ const PlaceModal = ({
                   {reviewList &&
                     reviewList.page &&
                     reviewList.page.map((review, index) => (
-                      <>
+                      <React.Fragment key={review.createAt}>
                         <div key={index} className={style.reviewBlock}>
                           <div className={style.reviewHeader}>
                             <span className={style.reviewUserName}>
@@ -410,7 +410,7 @@ const PlaceModal = ({
                             ))}
                           </div>
                         </div>
-                      </>
+                      </React.Fragment>
                     ))}
 
                   <div className={style.paginationWrapper}>
