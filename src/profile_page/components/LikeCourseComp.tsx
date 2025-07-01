@@ -99,7 +99,10 @@ const LikeCourseList = (nowCourse: Interfaces.Course) => {
               )}
 
               <div className={style.address}>
-                <MapPin size={14} />
+                <MapPin
+                  size={14}
+                  style={{ filter: " drop-shadow(0 0 4px #333)" }}
+                />
                 {place.address.split(" ").slice(0, 2).join(" ")}
               </div>
             </div>

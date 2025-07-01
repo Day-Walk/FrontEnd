@@ -227,6 +227,9 @@
   font-size: 14px;
   color: #9d9d9d;
   margin: 8px 0;
+  display: flex;
+  /* justify-content: end; */
+  align-items: center;
 }
 .rStar {
   display: flex;

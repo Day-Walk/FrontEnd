@@ -93,6 +93,9 @@
 
 .address {
   font-size: 12px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
 .courseList {
   position: relative;
