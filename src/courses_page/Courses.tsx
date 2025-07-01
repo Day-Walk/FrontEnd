@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./Courses.module.css";
 import Course from "./components/Course";
 import * as Interfaces from "./interfaces/Interfaces";
@@ -20,9 +20,12 @@ const Courses = () => {
   const navigate = useNavigate();
   const userIdState = useUserStore((state) => state.userId);
 
-  if (!userIdState || userIdState.length == 0) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (!userIdState || userIdState.length === 0) {
+      navigate("/login");
+    }
+  }, [userIdState, navigate]);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [nowPage, setNowPage] = useState<number>(1);
   const [sort, setSort] = useState<string>("like"); // like or latest
@@ -46,60 +49,52 @@ const Courses = () => {
     value: number,
   ) => {
     setNowPage(value);
-    setCoursePage(coursePagesData?.courseList[value - 1]);
+    if (coursePagesData?.courseList) {
+      setCoursePage(coursePagesData.courseList[value - 1]);
+    }
   };
 
   const fetchCourses = async () => {
     try {
+      setLoading(true);
       const response = await api.get<Interfaces.CourseListResponse>(
         `/course/all?sort=${sort}&userId=${userIdState}`,
       );
       const clonedData = JSON.parse(JSON.stringify(response.data));
       setCoursePagesData(clonedData);
-      setCoursePage(clonedData.courseList[nowPage - 1]);
-      setLoading(false);
+      setNowPage(1);
+      setCoursePage(clonedData.courseList[0]);
     } catch (error) {
       console.error("Error fetching courses:", error);
+    } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-    if (query.length == 0) {
-      fetchCourses();
-    } else {
-      fetchSearchResults(query, sort);
-    }
-    setLoading(false);
-  }, [nowPage]);
-
-  // 검색결과 저장
   const handleSearchResults = (data: Interfaces.CourseListResponse) => {
     setCoursePagesData(data);
     setNowPage(1);
     setCoursePage(data.courseList[0]);
   };
 
-  const [query, setQuery] = useState<string>("");
-  const [nowQuery, setNowQuery] = useState<string>("");
-
   const fetchSearchResults = async (searchQuery: string, sortOrder: string) => {
     try {
+      setLoading(true);
       const url =
         searchQuery.length <= 0
           ? `/course/all?sort=${sortOrder}&userId=${userIdState}`
           : `/course/search?searchStr=${encodeURIComponent(searchQuery)}&sort=${sortOrder}&userId=${userIdState}`;
 
-      const response = await api.get(url);
-      const data = response.data;
-      handleSearchResults(data);
+      const response = await api.get<Interfaces.CourseListResponse>(url);
+      handleSearchResults(response.data);
     } catch (error) {
       console.error("검색 실패:", error);
+    } finally {
+      setLoading(false);
     }
-    setNowQuery(searchQuery);
-    setLoading(false);
   };
+
+  const [query, setQuery] = useState<string>("");
 
   const debouncedSearch = useDebouncedSearch(
     (searchText: string, sort: string) => {
@@ -108,6 +103,7 @@ const Courses = () => {
     300,
     [userIdState],
   );
+
   useEffect(() => {
     if (query.length === 0) {
       fetchCourses();
@@ -117,13 +113,18 @@ const Courses = () => {
   }, [query]);
 
   useEffect(() => {
-    setLoading(true);
     if (query.length === 0) {
       fetchCourses();
     } else {
       fetchSearchResults(query, sort);
     }
   }, [sort]);
+
+  useEffect(() => {
+    if (coursePagesData?.courseList) {
+      setCoursePage(coursePagesData.courseList[nowPage - 1]);
+    }
+  }, [nowPage, coursePagesData]);
 
   return (
     <div className={style.contentArea}>
@@ -136,23 +137,25 @@ const Courses = () => {
             onSearch={() => fetchSearchResults(query, sort)}
           />
         </div>
+
         {!loading && coursePage ? (
           <>
             <div className={style.sortWrapper}>
               <button
-                className={sort == "like" ? style.click : undefined}
+                className={sort === "like" ? style.click : undefined}
                 onClick={() => setSort("like")}
               >
                 인기순
               </button>
               <p>&nbsp;|&nbsp;</p>
               <button
-                className={sort == "latest" ? style.click : undefined}
+                className={sort === "latest" ? style.click : undefined}
                 onClick={() => setSort("latest")}
               >
                 최신순
               </button>
             </div>
+
             <div>
               {coursePage &&
                 coursePage.page.map((c, i) => (
@@ -172,10 +175,11 @@ const Courses = () => {
                   </div>
                 ))}
             </div>
+
             <div className={style.paginationWrapper}>
               <Stack spacing={2}>
                 <Pagination
-                  count={coursePagesData?.courseList.length}
+                  count={coursePagesData?.courseList.length || 0}
                   page={nowPage}
                   onChange={handleChangePage}
                 />
@@ -197,10 +201,11 @@ const Courses = () => {
           </div>
         ) : (
           <div className={style.noCourse}>
-            "{nowQuery}" 검색어에 해당하는 코스가 없어요. 😢
+            "{query}" 검색어에 해당하는 코스가 없어요. 😢
           </div>
         )}
       </div>
+
       {showModal && (
         <AlertModal
           message={modalMessage}
@@ -210,6 +215,7 @@ const Courses = () => {
           }}
         />
       )}
+
       {isHovering && !(mousePos.x === 0 && mousePos.y === 0) && (
         <div
           style={{
@@ -224,6 +230,7 @@ const Courses = () => {
           코스 클릭해서 자세히 보기 →
         </div>
       )}
+
       <Footer />
     </div>
   );
