@@ -2,13 +2,10 @@ import styles from "../Login.module.css";
 import Logo from "../../assets/DayWalkLogo.webp";
 
 const Login = () => {
-  const handleClickLogin = () => {
-    const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
-    const REDIRECT_URI = "https://day-walk.vercel.app/auth/kakao-callback";
+  const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+  const REDIRECT_URI = "https://day-walk.vercel.app/auth/kakao-callback";
 
-    const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
-    window.location.href = url;
-  };
+  const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
 
   return (
     <div className={styles.background}>
@@ -41,7 +38,7 @@ const Login = () => {
             하루 걸음이 추천 장소부터, <br />
             맞춤형 코스까지 제안해드립니다!
           </div>
-          <div onClick={handleClickLogin} className={styles.kakao_login}></div>
+          <a className={styles.kakao_login} href={url}></a>
         </div>
       </div>
     </div>
