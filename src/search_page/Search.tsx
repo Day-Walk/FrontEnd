@@ -301,12 +301,12 @@ const Search = () => {
                 />
                 <hr color="#e5e5e5" style={{ margin: "20px" }} />
               </>
-            ) : (
+            ) : regularPlaces?.length == 0 ? (
               <div className={style.courseTitleNone}>
                 <img src={RobotImage} width={150} />
                 <div>검색 결과가 없어요.</div>
               </div>
-            ))}
+            ) : undefined)}
 
           {regularPlaces && (
             <PlaceList
