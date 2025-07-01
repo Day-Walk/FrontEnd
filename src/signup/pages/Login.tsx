@@ -3,7 +3,7 @@ import Logo from "../../assets/DayWalkLogo.webp";
 
 const Login = () => {
   const handleClickLogin = () => {
-    const REST_API_KEY = "e3325f522736f4e123141deaf49845ae";
+    const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
     const REDIRECT_URI = "https://day-walk.vercel.app/auth/kakao-callback";
 
     const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
