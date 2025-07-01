@@ -48,15 +48,29 @@
   flex-shrink: 0;
 }
 
+.menuList li:not(.click):hover {
+  color: #333;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
 .click {
   background-color: white;
   color: #333 !important;
 }
 
 .courseBlock {
-  margin: 30px 10px;
+  margin: 20px 10px;
   cursor: pointer;
+  padding: 10px;
 }
+.courseBlock:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease-in-out;
+  background-color: rgb(238, 238, 238);
+  border-radius: 12px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
