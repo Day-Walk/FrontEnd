@@ -44,7 +44,11 @@ const MyCourseList = ({ nowCourse, onDelete }: Props) => {
       await api.put("/course/visible", { courseId: course.courseId });
       setIsOpen(!isOpen);
       setShowModal(true);
-      setMessage("코스 공개설정 변경 완료!");
+      course.visible
+        ? setMessage("코스 비공개 설정 완료!")
+        : setMessage("코스 공개설정 완료!");
+
+      setCourse({ ...course, visible: !course.visible });
     } catch (error) {
       console.error("공개설정 변경 실패:", error);
       setShowModal(true);
