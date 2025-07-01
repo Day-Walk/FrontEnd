@@ -72,15 +72,21 @@ const Search = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const onSearch = (keyword: string) => {
-    setSearchKeyword(keyword);
-    setIsSearching(true); // 검색 시작 시 로딩 표시
+    if (isSearching) return;
+    if (keyword === searchKeyword) {
+      setSearchKeyword("");
+      setTimeout(() => setSearchKeyword(keyword), 0);
+    } else {
+      setSearchKeyword(keyword);
+    }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (searchKeyword.length == 0) return;
+    if (searchKeyword.length == 0 || isSearching) return;
     const getResults = async () => {
+      setIsSearching(true);
       try {
         const res = await api.get(
           `/place/search?searchStr=${searchKeyword}&userId=${userIdState}`,

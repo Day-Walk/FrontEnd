@@ -32,7 +32,7 @@
   width: 100%;
   /* background-color: #e5e5e5;*/
   background: linear-gradient(130deg, #00b493, #ea8f85);
-  padding: 8px 0;
+  padding: 8px;
   border-radius: 12px;
 }
 
@@ -45,6 +45,7 @@
   -o-border-radius: 12px;
   color: #fff;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .click {
