@@ -337,4 +337,5 @@ button {
   margin-top: 6px;
   margin-left: 6px;
   border-radius: 8px;
+  flex-shrink: 0;
 }
